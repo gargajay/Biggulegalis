@@ -24,9 +24,9 @@
         }
     </style>
     <!-- Main CSS-->
-    <link rel="stylesheet" type="text/css" href="{{dynamicCacheVersion('assets/css/main.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{dynamicCacheVersion('public/assets/css/main.css')}}">
     <!-- Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="{{dynamicCacheVersion('assets/css/custom.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{dynamicCacheVersion('public/assets/css/custom.css')}}">
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -44,13 +44,13 @@
     </main>
 </body>
 <!-- Essential javascripts for application to work-->
-<script src="{{dynamicCacheVersion('assets/js/jquery-3.3.1.min.js')}}"></script>
-<script src="{{dynamicCacheVersion('assets/js/popper.min.js')}}"></script>
-<script src="{{dynamicCacheVersion('assets/js/bootstrap.min.js')}}"></script>
-<script src="{{dynamicCacheVersion('assets/js/main.js')}}"></script>
-<script src="{{dynamicCacheVersion('assets/js/admin.js')}}"></script>
+<script src="{{dynamicCacheVersion('public/assets/js/jquery-3.3.1.min.js')}}"></script>
+<script src="{{dynamicCacheVersion('public/assets/js/popper.min.js')}}"></script>
+<script src="{{dynamicCacheVersion('public/assets/js/bootstrap.min.js')}}"></script>
+<script src="{{dynamicCacheVersion('public/assets/js/main.js')}}"></script>
+<script src="{{dynamicCacheVersion('public/assets/js/admin.js')}}"></script>
 <!-- The javascript plugin to display page loading on top-->
-<script src="{{dynamicCacheVersion('assets/js/plugins/pace.min.js')}}"></script>
-<script src="{{dynamicCacheVersion('assets/js/login.js')}}"></script>
+<script src="{{dynamicCacheVersion('public/assets/js/plugins/pace.min.js')}}"></script>
+<script src="{{dynamicCacheVersion('public/assets/js/login.js')}}"></script>
 
 </html>

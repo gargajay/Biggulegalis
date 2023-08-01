@@ -18,35 +18,18 @@ class AdminUser extends Seeder
             [
                 'first_name' => 'Super',
                 'last_name' => 'Admin',
-                'email' => 'strengthenapp@gmail.com',
-                'password' => bcrypt('r^Fx33sbJ8SoQ!'),
+                'email' => 'biggulapp@gmail.com',
+                'password' => bcrypt('Admin@123'),
                 'user_type' => 'admin',
                 'country_code' => '+1',
                 'mobile' => '9988776655'
             ],
-            [
-                'first_name' => 'Official',
-                'last_name' => 'Admin',
-                'email' => 'office3.cepoch@gmail.com',
-                'password' => bcrypt('Ql9@!cN38sm2'),
-                'user_type' => 'admin',
-                'country_code' => '+1',
-                'mobile' => '9988776655'
-            ],
-            [
-                'first_name' => 'Developer',
-                'last_name' => 'Admin',
-                'email' => 'venu@cepoch.com',
-                'password' => bcrypt('o5^usmPfg1R5'),
-                'user_type' => 'admin',
-                'country_code' => '+1',
-                'mobile' => '9988776655'
-            ],
+           
             [
                 'first_name' => 'Admin',
                 'last_name' => 'Admin',
-                'email' => 'admin@yopmail.com',
-                'password' => bcrypt('Admin@123'),
+                'email' => 'admin@admin.com',
+                'password' => bcrypt('Admin@1234'),
                 'user_type' => 'admin',
                 'country_code' => '+91',
                 'mobile' => '9898989898'

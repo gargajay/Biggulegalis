@@ -1,0 +1,407 @@
+.hide {
+  display: none !important;
+}
+
+.marginR15 {
+  margin-right: 15px;
+}
+
+.marginR19 {
+  margin-right: 19px;
+}
+
+/********************************************************************************************loader css*************************/
+
+.web-loader {
+  position: fixed;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  background: rgba(8, 8, 8, .6);
+  top: 0;
+  left: 0;
+}
+
+.web-loader .spinner-border {
+  height: 48px !important;
+  width: 48px !important;
+  border: 5px solid currentColor;
+  border-right-color: transparent;
+}
+
+
+/********************************************************************************************scroll css*************************/
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* width */
+::-webkit-scrollbar:horizontal {
+  height: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track:horizontal {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb:horizontal {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+
+.login-content .login-box .login-form,
+.login-content .login-box .forget-form {
+  position: unset !important;
+}
+
+.login-content .login-box {
+  min-height: 200px;
+}
+
+
+/* header{align-items: center;}
+header .pilot-company-logo {display: flex;align-items: center;max-width: 182px;height:40px;padding:0 4px;}
+header .pilot-company-logo img{width:100%;height:100%;}
+header .app-sidebar__toggle{width: 50px;}
+.app-sidebar{overflow: hidden;}
+.app-sidebar .app-sidebar__user .app-sidebar__user-avatar{border-radius: 0px !important;}
+.app-sidebar .app-menu li .treeview-menu{overflow-y: auto;}
+.treeview.is-expanded .treeview-menu{max-height:60vh;}*/
+.app-content .tile .dataTables_filter {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+.app-content .tile .dataTables_info {
+  position: absolute;
+  left: 20px;
+  bottom: 44px;
+}
+
+.app-content .tile .dataTables_paginate {
+  position: absolute;
+  bottom: 25px;
+  right: 20px;
+}
+
+.app-content .tile .dataTables_length {
+  position: absolute;
+  top: 20px;
+}
+
+.app-content .tile .dt-buttons {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+}
+
+.app-content .tile table {
+  margin: 48px 0 60px !important;
+}
+
+.expandCompressTableColumn {
+  cursor: pointer;
+}
+
+main table thead tr:nth-child(2) th {
+  min-width: 180px;
+}
+
+main table thead tr:nth-child(2) th input {
+  width: calc(100% - 25px);
+}
+
+main table thead tr:nth-child(2) th i {
+  padding-left: 8px;
+}
+
+
+
+/* @media (min-width: 768px)
+{
+  .sidebar-mini.sidenav-toggled .treeview-menu {padding: 0;}
+  .sidebar-mini.sidenav-toggled .treeview:hover .app-menu__label{width: 220px;}
+  .sidebar-mini.sidenav-toggled .treeview-menu a{text-overflow: ellipsis;overflow: hidden;width:213px;white-space: nowrap;display: inline-block;}
+}
+
+.bs-tooltip-left .arrow{
+  display: none;
+}
+
+.tooltip {
+  left: 221px !important;
+}
+
+.datepicker.dropdown-menu {
+  top: 233px !important;
+} */
+
+
+
+.modal-content {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #FFF;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  /*border-radius: 0.3rem;*/
+  outline: 0;
+  border-radius: 0;
+}
+
+.modal-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+  /*border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;*/
+  background-color: var(--my-primary-color);
+  color: white;
+  border-radius: 0;
+}
+
+.modal-body {
+  position: relative;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  padding: 1rem;
+  border-radius: 0;
+}
+
+.modal-footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  padding: 1rem;
+  border-top: 1px solid #e9ecef;
+  background-color: #f3f7f9;
+  border-radius: 0;
+}
+
+
+.form-control {
+  border: 1px solid #ced4da;
+  border-radius: 0px;
+}
+
+.app-sidebar__user-avatar {
+  width: 45px;
+  height: 45px;
+}
+
+
+
+/***************************************************************************************************form validation css ***********************/
+/* Color of invalid field */
+.has-error .form-control {
+  border: 1px solid #c23321 !important;
+}
+
+.has-warning .form-control {
+  border: 1px solid #c23321 !important;
+}
+
+/* Color of valid field */
+.has-success .form-control {
+  border: 1px solid #28a745 !important;
+}
+
+/* Color of invalid field */
+.has-error .form-control-file {
+  border: 1px solid #c23321 !important;
+}
+
+.has-warning .form-control-file {
+  border: 1px solid #c23321 !important;
+}
+
+/* Color of valid field */
+.has-success .form-control-file {
+  border: 1px solid #28a745 !important;
+}
+
+/* Color of invalid field */
+.has-error .form-control-feedback {
+  color: #c23321 !important;
+}
+
+.has-warning .form-control-feedback {
+  color: #c23321 !important;
+}
+
+/* Color of valid field */
+.has-success .form-control-feedback {
+  color: #28a745 !important;
+}
+
+.fv-form-bootstrap4:not(.form-inline) label~.fv-control-feedback {
+  top: 29px;
+  right: -16px;
+}
+
+/***************************************************************************************************notification Css ***********************/
+.notify-alert button:not(.close) {
+  position: absolute;
+  bottom: -30px;
+  right: 0;
+}
+
+.text-black {
+  color: #212529;
+}
+
+/**************************************************************************************************************************/
+.input-group-text {
+  border: 1px solid #ced4da;
+  border-radius: 0px;
+}
+
+.select2-container--default .select2-selection--single {
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 0px;
+}
+
+.has-success .select2-selection--single {
+  border: 1px solid #28a745;
+}
+
+.has-warning .select2-selection--single {
+  border: 1px solid #c23321;
+}
+
+
+
+
+.custom-file-label {
+  border: 1px solid #ced4da;
+  border-radius: 0px;
+}
+
+
+.custom-file-label::after {
+  height: calc(1.5em + 0.83rem);
+}
+
+
+
+.datatable-option-btn i {
+  margin: 0px !important;
+}
+
+.datatable-option-btn {
+  margin-right: 10px;
+}
+
+.datatable-option-btn:last-child {
+  margin-right: 0px;
+}
+
+.dataTable tbody tr td:first-child {
+  text-align: center;
+  min-width: 125px !important;
+}
+
+.dataTable thead tr th:first-child {
+  width: 100px;
+  text-align: center;
+}
+
+
+.page-error h1 {
+  margin: 10px;
+  color: #dc3545;
+  font-size: 37px;
+}
+
+
+.btn .icon,
+.btn .fa {
+  font-size: 12px;
+}
+
+
+.dataTables_processing.card {
+  background-color: #fff0;
+  border: 0px;
+}
+
+td .btn .icon,
+td .btn .fa {
+  font-size: 13px;
+}
+
+td .btn-sm,
+td .btn-group-sm>.btn {
+  padding: 0px 4px;
+}
+
+.table th,
+.table td {
+  padding: 6px;
+}
+
+table.table-bordered.dataTable th:last-child,
+table.table-bordered.dataTable th {
+  border-right-width: 1px;
+  border-left-width: 1px;
+  border-bottom-width: 1px;
+}
+
+
+.table .thead-dark th {
+  color: #FFF;
+  background-color: var(--my-primary-color);
+  border-color: var(--my-seventh-color);
+}

@@ -41,7 +41,7 @@ class AuthController extends Controller
             'enrolment_number' => ['required', 'string', 'max:255',],
             'gender' => ['required', 'in:' . implode(',', GENDER)],
             'password' => ['required', 'strong_password'],
-            'full_name' => ['required', 'string', 'max:255',],
+            'full_name' => ['sometimes', 'string', 'max:255',],
             'first_name' => ['nullable', 'string', 'max:255',],
             'last_name' => ['nullable', 'string', 'max:255'],
             'device_token' => ['nullable', 'max:255'],

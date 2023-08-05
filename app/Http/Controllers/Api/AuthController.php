@@ -370,7 +370,7 @@ class AuthController extends Controller
         DB::beginTransaction();
 
         // $otp = generateOTP(OTP_LENGHT);
-        $otp = 0000;
+        $otp = 1234;
         $successArray = [];
 
         if ($request->email) {

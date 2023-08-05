@@ -45,7 +45,7 @@ class TehsilsSeeder extends Seeder
             $state = DB::table('state_bar_councils')->where('name', $stateName)->first();
             if ($state) {
                 foreach ($districts as $districtName => $tehsils) {
-                    $district = DB::table('district_bar_association')->where('name', $districtName)->first();
+                    $district = DB::table('district_bar_associations')->where('name', $districtName)->first();
                     if ($district) {
                         foreach ($tehsils as $tehsilName) {
                             Tehsil::firstOrCreate([

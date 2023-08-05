@@ -56,7 +56,7 @@ class HomeController extends Controller
 
     public function getCountries(Request $request)
     {
-        $data = Country::where('status','true')->first();
-        return Helper::SuccessReturn($data, 'ARTIFACT_OF_THE_WEEK_FETCHED');
+        $data = Country::where('status', 1)->get();
+        return Helper::SuccessReturn($data, 'COUNTRY_DATA_FETCH');
     }
 }

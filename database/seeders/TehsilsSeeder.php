@@ -42,12 +42,12 @@ class TehsilsSeeder extends Seeder
         
         foreach ($districtsAndTehsils as $stateName => $districts) {
             $state = DB::table('state_bar_councils')->where('name', $stateName)->first();
+            dd('Reached this point in the seeder.');
             if ($state) {
                 foreach ($districts as $districtName => $tehsils) {
                     $district = DB::table('district_bar_associations')->where('name', $districtName)->first();
                     if ($district) {
                         foreach ($tehsils as $tehsilName) {
-                            dd('Reached this point in the seeder.');
                             Tehsil::firstOrCreate([
                                 'name' => $tehsilName,
                                 'district_bar_association_id' => $district->id,

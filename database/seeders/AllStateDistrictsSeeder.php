@@ -165,7 +165,7 @@ class AllStateDistrictsSeeder extends Seeder
         ];
 
         foreach ($statesWithDistricts as $stateData) {
-            $state = DB::table('states')->where('name', $stateData['name'])->first();
+            $state = DB::table('state_bar_councils')->where('name', $stateData['name'])->first();
             if ($state) {
                 foreach ($stateData['districts'] as $districtName) {
                     DistrictBarAssociation::firstOrCreate([

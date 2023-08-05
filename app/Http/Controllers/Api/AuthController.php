@@ -436,8 +436,10 @@ class AuthController extends Controller
              
             if (!$OtpVerificationObject->save()) {
                 // if the data cannot be saved
+                dd(123);
                 PublicException::Error('SOMETHING_WENT_WRONG');
             }
+            dd($OtpVerificationObject);
             return Helper::SuccessReturn($OtpVerificationObject, 'OTP_SEND_SUCCESS');
             $messageBody = 'Your verification code is ' . $otp . '. This code will expire in ' . secondsToTimeFormat(OTP_EXPIRE_TIME) . '.';
             if (Helper::SendMessage([$phoneNumber], $messageBody)) {

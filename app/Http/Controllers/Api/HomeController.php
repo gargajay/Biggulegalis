@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
+use App\Models\Country;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -58,7 +59,5 @@ class HomeController extends Controller
     $data = Country::where('status','true')->first();
 
     return Helper::SuccessReturn($data, 'ARTIFACT_OF_THE_WEEK_FETCHED');
-
-    return Helper::FalseReturn('NOT_FOUND');
     }
 }

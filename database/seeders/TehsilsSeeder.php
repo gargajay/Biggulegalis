@@ -9,6 +9,7 @@ class TehsilsSeeder extends Seeder
 {
     public function run()
     {
+        dd(123);
         info('Reached this point in the seeder.');
         $districtsAndTehsils = [
             // Punjab

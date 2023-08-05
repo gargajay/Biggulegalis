@@ -36,7 +36,7 @@ class AuthController extends Controller
         // validate rules for input
         $rules = [
             // 'country_code' => ['required_with:phone', 'max:255'],
-            'phone' => ['nullable','iunique:users,phone,user_type,' . USER_TYPE['USER'], 'max:255'],
+            'phone' => ['required','iunique:users,phone,user_type,' . USER_TYPE['USER'], 'max:255'],
             'email' => ['required', 'email:strict', 'iunique:users,email,user_type,' . USER_TYPE['USER'], 'max:255'],
             'enrolment_number' => ['required', 'string', 'max:255',],
             'gender' => ['required', 'in:' . implode(',', GENDER)],
@@ -114,6 +114,7 @@ class AuthController extends Controller
             'hobby',
             'complete_status',
             'blood_type',
+            'enrolment_number',
         ]);
 
 
@@ -167,7 +168,7 @@ class AuthController extends Controller
 
         // Define rules for input validation
         $rules = [
-            'email' => ['required', 'email:strict', 'iexists:users,email,user_type,' . USER_TYPE['USER'], 'max:255'],
+            'phone' => ['required', 'phone:strict', 'iexists:users,phone,user_type,' . USER_TYPE['USER'], 'max:255'],
             'password' => ['required', 'max:50'],
             'device_token' => ['nullable', 'max:255'],
             'device_type' => ['required', 'nullable', 'in:' . implode(',', DEVICE_TYPE)],
@@ -183,7 +184,7 @@ class AuthController extends Controller
         DB::beginTransaction();
 
         // Verify user credentials using Auth::validate()
-        if (!Auth::attempt(['email' => $request->email, 'password' => $request->password, 'user_type' => USER_TYPE['USER']])) {
+        if (!Auth::attempt(['phone' => $request->phone, 'password' => $request->password, 'user_type' => USER_TYPE['USER']])) {
             PublicException::Error('LOGIN_FAILED');
         }
 

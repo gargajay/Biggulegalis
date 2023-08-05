@@ -23,6 +23,6 @@ class DistrictBarAssociation extends Model
 
     public function stateBarCouncil()
     {
-        return $this->belongsTo(StateBarCouncil::class);
+        return $this->belongsTo(StateBarCouncil::class)->with('country');
     }
 }

@@ -6,8 +6,10 @@ use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
 use App\Models\Country;
+use App\Models\DistrictBarAssociation;
 use App\Models\Post;
 use App\Models\StateBarCouncil;
+use App\Models\Tehsil;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -87,7 +89,7 @@ class HomeController extends Controller
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
 
-        $data = Country::where('status', 1)->get();
+        $data = DistrictBarAssociation::where('state_bar_council_id', $request->state_id)->with('stateBarCouncil')->first();
         return Helper::SuccessReturn($data, 'DISTRICT_DATA_FETCH');
         PublicException::Error('SOMETHING_WENT_WRONG');
     }
@@ -102,7 +104,7 @@ class HomeController extends Controller
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
 
-        $data = Country::where('status', 1)->get();
+        $data = Tehsil::where('district_bar_association_id', $request->district_id)->with('districtBarAssociation')->first();
         return Helper::SuccessReturn($data, 'TEHSIL_DATA_FETCH');
         PublicException::Error('SOMETHING_WENT_WRONG');
     }

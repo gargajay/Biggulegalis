@@ -24,7 +24,7 @@ class Tehsil extends Model
 
     public function districtBarAssociation()
     {
-        return $this->belongsTo(DistrictBarAssociation::class);
+        return $this->belongsTo(DistrictBarAssociation::class)->with('stateBarCouncil');
     }
    
 }

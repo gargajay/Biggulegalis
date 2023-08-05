@@ -389,7 +389,7 @@ class AuthController extends Controller
             $OtpVerificationObject->contact = $request->email;
             $OtpVerificationObject->mode = OTP_MODE['EMAIL'];
             $OtpVerificationObject->otp = $otp;
-            $OtpVerificationObject->purpose = $request->purpose;
+            $OtpVerificationObject->purpose = $request->otp_purpose;
             $OtpVerificationObject->token = randomString(20);
 
             // if the data cannot be saved
@@ -431,7 +431,7 @@ class AuthController extends Controller
             $OtpVerificationObject->contact = $phoneNumber;
             $OtpVerificationObject->mode = OTP_MODE['SMS'];
             $OtpVerificationObject->otp = 1234;
-            $OtpVerificationObject->purpose = $request->purpose;
+            $OtpVerificationObject->purpose = $request->otp_purpose;
             $OtpVerificationObject->token = randomString(20);
              
             if (!$OtpVerificationObject->save()) {

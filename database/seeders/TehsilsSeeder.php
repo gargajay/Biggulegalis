@@ -9,6 +9,7 @@ class TehsilsSeeder extends Seeder
 {
     public function run()
     {
+        info('Reached this point in the seeder.');
         $districtsAndTehsils = [
             // Punjab
             ['name' => 'Punjab', 'districts' => [
@@ -38,7 +39,7 @@ class TehsilsSeeder extends Seeder
             ]],
             // ... Add more states and districts
         ];
-        info('Reached this point in the seeder.');
+        
         foreach ($districtsAndTehsils as $stateName => $districts) {
             $state = DB::table('state_bar_councils')->where('name', $stateName)->first();
             if ($state) {

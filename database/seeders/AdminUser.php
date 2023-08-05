@@ -22,7 +22,7 @@ class AdminUser extends Seeder
                 'password' => bcrypt('Admin@123'),
                 'user_type' => 'admin',
                 'country_code' => '+1',
-                'mobile' => '9988776655'
+                'phone' => '9988776655'
             ],
            
             [
@@ -32,7 +32,7 @@ class AdminUser extends Seeder
                 'password' => bcrypt('Admin@1234'),
                 'user_type' => 'admin',
                 'country_code' => '+91',
-                'mobile' => '9898989898'
+                'phone' => '9898989898'
             ]
         ];
 

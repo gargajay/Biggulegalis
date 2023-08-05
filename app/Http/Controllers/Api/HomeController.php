@@ -74,7 +74,7 @@ class HomeController extends Controller
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
 
-        $data = StateBarCouncil::where('country_id', $request->country_id)->with('country')->first();
+        $data = StateBarCouncil::where('country_id', $request->country_id)->with('country')->get();
         return Helper::SuccessReturn($data, 'STATE_DATA_FETCH');
         PublicException::Error('SOMETHING_WENT_WRONG');
     }
@@ -89,7 +89,7 @@ class HomeController extends Controller
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
 
-        $data = DistrictBarAssociation::where('state_bar_council_id', $request->state_id)->with('stateBarCouncil')->first();
+        $data = DistrictBarAssociation::where('state_bar_council_id', $request->state_id)->with('stateBarCouncil')->get();
         return Helper::SuccessReturn($data, 'DISTRICT_DATA_FETCH');
         PublicException::Error('SOMETHING_WENT_WRONG');
     }
@@ -104,7 +104,7 @@ class HomeController extends Controller
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
 
-        $data = Tehsil::where('district_bar_association_id', $request->district_id)->with('districtBarAssociation')->first();
+        $data = Tehsil::where('district_bar_association_id', $request->district_id)->with('districtBarAssociation')->get();
         return Helper::SuccessReturn($data, 'TEHSIL_DATA_FETCH');
         PublicException::Error('SOMETHING_WENT_WRONG');
     }

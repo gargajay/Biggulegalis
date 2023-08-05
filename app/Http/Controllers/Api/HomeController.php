@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Address;
 use App\Models\Country;
 use App\Models\Post;
+use App\Models\StateBarCouncil;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -71,7 +72,7 @@ class HomeController extends Controller
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
 
-        $data = Country::where('status', 1)->get();
+        $data = StateBarCouncil::where('country_id', $request->country_id)->with('country')->first();
         return Helper::SuccessReturn($data, 'STATE_DATA_FETCH');
         PublicException::Error('SOMETHING_WENT_WRONG');
     }

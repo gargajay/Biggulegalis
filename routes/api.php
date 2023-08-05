@@ -58,6 +58,7 @@ Route::group([], function () {
 
         /******************************-----HOME SCREEN API-----************************************/
         Route::get('home', [HomeController::class, 'home']);
+        Route::get('get-countries', [HomeController::class, 'getCountries']);
 
 
         /******************************-----USER API-----************************************/

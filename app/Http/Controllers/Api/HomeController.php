@@ -19,7 +19,7 @@ class HomeController extends Controller
         return Helper::SuccessReturnPagination($posts['data'], $posts['totalPages'], $posts['nextPageUrl'], 'POST_FETCH');
     }
 
-    public function getCountries(Request $request)
+    public function filterMembers(Request $request)
     {
         $members = User::with('addresses')->where('id', '!=', Auth::id())->where('user_type', USER_TYPE['USER'])
         ->select('id', 'full_name', 'image', 'address_id');
@@ -51,5 +51,14 @@ class HomeController extends Controller
         }
         $members = newPagination($members->latest());
         return Helper::SuccessReturn($members,'MEMBERS_FETCH');
+    }
+
+    public function getCountries(Request $request){
+
+    $data = Country::where('status','true')->first();
+
+    return Helper::SuccessReturn($data, 'ARTIFACT_OF_THE_WEEK_FETCHED');
+
+    return Helper::FalseReturn('NOT_FOUND');
     }
 }

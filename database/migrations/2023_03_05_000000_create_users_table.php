@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('last_name')->nullable();
             $table->string('email')->nullable();
             $table->string('country_code')->nullable();
-            $table->string('phone')->nullable();
+            $table->string('phone');
             $table->string('enrolment_number')->nullable();
             $table->string('user_type')->default('user'); // User,Admin,SuperAdmin
             $table->string('facebook_id')->nullable()->comment('for type 1');
@@ -72,6 +72,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
+            $table->unique(['phone', 'enrolment_number', 'deleted_at']);
         });
     }
 

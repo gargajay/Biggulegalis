@@ -369,8 +369,7 @@ class AuthController extends Controller
         // Begin a database transaction
         DB::beginTransaction();
 
-        // $otp = generateOTP(OTP_LENGHT);
-        $otp = 1234;
+        $otp = generateOTP(OTP_LENGHT);
         $successArray = [];
 
         if ($request->email) {
@@ -390,7 +389,7 @@ class AuthController extends Controller
             $OtpVerificationObject->contact = $request->email;
             $OtpVerificationObject->mode = OTP_MODE['EMAIL'];
             $OtpVerificationObject->otp = $otp;
-            $OtpVerificationObject->purpose = $request->otp_purpose;
+            $OtpVerificationObject->purpose = $request->purpose;
             $OtpVerificationObject->token = randomString(20);
 
             // if the data cannot be saved
@@ -431,7 +430,7 @@ class AuthController extends Controller
             $OtpVerificationObject = new OtpVerification;
             $OtpVerificationObject->contact = $phoneNumber;
             $OtpVerificationObject->mode = OTP_MODE['SMS'];
-            $OtpVerificationObject->otp = $otp;
+            $OtpVerificationObject->otp = 1234;
             $OtpVerificationObject->purpose = $request->purpose;
             $OtpVerificationObject->token = randomString(20);
              

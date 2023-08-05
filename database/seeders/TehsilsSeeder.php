@@ -9,8 +9,7 @@ class TehsilsSeeder extends Seeder
 {
     public function run()
     {
-        dd(123);
-        info('Reached this point in the seeder.');
+
         $districtsAndTehsils = [
             // Punjab
             ['name' => 'Punjab', 'districts' => [
@@ -48,6 +47,7 @@ class TehsilsSeeder extends Seeder
                     $district = DB::table('district_bar_associations')->where('name', $districtName)->first();
                     if ($district) {
                         foreach ($tehsils as $tehsilName) {
+                            dd('Reached this point in the seeder.');
                             Tehsil::firstOrCreate([
                                 'name' => $tehsilName,
                                 'district_bar_association_id' => $district->id,

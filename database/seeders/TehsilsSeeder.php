@@ -50,7 +50,7 @@ class TehsilsSeeder extends Seeder
                         foreach ($tehsils as $tehsilName) {
                             Tehsil::firstOrCreate([
                                 'name' => $tehsilName,
-                                'district_id' => $district->id,
+                                'district_bar_association_id' => $district->id,
                             ]);
                         }
                     }

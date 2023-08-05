@@ -168,7 +168,7 @@ class AuthController extends Controller
 
         // Define rules for input validation
         $rules = [
-            'phone' => ['required','phone_verify', 'iexists:users,phone,user_type,' . USER_TYPE['USER'], 'max:255'],
+            'phone' => ['required', 'iexists:users,phone,user_type,' . USER_TYPE['USER'], 'max:255'],
             'password' => ['required', 'max:50'],
             'device_token' => ['nullable', 'max:255'],
             'device_type' => ['required', 'nullable', 'in:' . implode(',', DEVICE_TYPE)],

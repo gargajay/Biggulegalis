@@ -7,7 +7,7 @@ defined('USER_TYPE') or define("USER_TYPE", ['USER' => 'user', 'ADMIN' => 'admin
 defined('DEVICE_TYPE') or define("DEVICE_TYPE", ['ANDROID' => 'A', 'IOS' => 'I']);
 defined('SOCIAL_PLATFORM') or define("SOCIAL_PLATFORM", [1 => 'facebook_id', 2 => 'google_id', 3 => 'apple_id', 4 => 'twitter_id', 5 => 'instagram_id']);
 defined('OTP_MODE') or define("OTP_MODE", ['EMAIL' => '1', 'SMS' => '2']);
-defined('OTP_PURPOSE') or define("OTP_PURPOSE", ['FORGOT' => 1]);
+defined('OTP_PURPOSE') or define("OTP_PURPOSE", ['FORGOT' => 1, 'SIGNUP' => 2]);
 defined('PUSH_NOTIFICATION_USER_SETTING') or define("PUSH_NOTIFICATION_USER_SETTING", ['ON' => '1', 'OFF' => '2']);
 defined('PROFILE_COMPLETE') or define("PROFILE_COMPLETE", ['NO' => '1', 'YES' => '2']);
 defined('TRANSLATE_LANGUAGE') or define("TRANSLATE_LANGUAGE", ['en' => 'English', 'es' => 'Spanish']);

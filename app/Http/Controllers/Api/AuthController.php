@@ -60,7 +60,7 @@ class AuthController extends Controller
 
         // Begin database transaction
         DB::beginTransaction();
-dd($request->all());
+// dd($request->all());
         //add address
         $addressObject = new Address();
         $addressObject->type = ADDRESS_TYPE['USER_ADDRESS'];

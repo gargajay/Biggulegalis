@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('country_code')->nullable();
             $table->string('phone')->nullable();
+            $table->string('enrolment_number')->nullable();
             $table->string('user_type')->default('user'); // User,Admin,SuperAdmin
             $table->string('facebook_id')->nullable()->comment('for type 1');
             $table->string('google_id')->nullable()->comment('for type 2');

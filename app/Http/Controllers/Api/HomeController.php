@@ -54,10 +54,9 @@ class HomeController extends Controller
         return Helper::SuccessReturn($members,'MEMBERS_FETCH');
     }
 
-    public function getCountries(Request $request){
-
-    $data = Country::where('status','true')->first();
-
-    return Helper::SuccessReturn($data, 'ARTIFACT_OF_THE_WEEK_FETCHED');
+    public function getCountries(Request $request)
+    {
+        $data = Country::where('status','true')->first();
+        return Helper::SuccessReturn($data, 'ARTIFACT_OF_THE_WEEK_FETCHED');
     }
 }

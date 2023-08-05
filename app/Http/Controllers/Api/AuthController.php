@@ -35,13 +35,15 @@ class AuthController extends Controller
     {
         // validate rules for input
         $rules = [
+            // 'country_code' => ['required_with:phone', 'max:255'],
+            'phone' => ['nullable','iunique:users,phone,user_type,' . USER_TYPE['USER'], 'max:255'],
+            'email' => ['required', 'email:strict', 'iunique:users,email,user_type,' . USER_TYPE['USER'], 'max:255'],
+            'enrolment_number' => ['required', 'string', 'max:255',],
+            'gender' => ['required', 'in:' . implode(',', GENDER)],
+            'password' => ['required', 'strong_password'],
             'full_name' => ['required', 'string', 'max:255',],
             'first_name' => ['nullable', 'string', 'max:255',],
             'last_name' => ['nullable', 'string', 'max:255'],
-            'email' => ['required', 'email:strict', 'iunique:users,email,user_type,' . USER_TYPE['USER'], 'max:255'],
-            // 'country_code' => ['required_with:phone', 'max:255'],
-            'phone' => ['nullable','iunique:users,phone,user_type,' . USER_TYPE['USER'], 'max:255'],
-            'password' => ['required', 'strong_password'],
             'device_token' => ['nullable', 'max:255'],
             'device_type' => ['required', 'in:' . implode(',', DEVICE_TYPE)],
             'image' => ['nullable', 'mimes:jpg,png,jpeg,gif'],
@@ -58,7 +60,7 @@ class AuthController extends Controller
 
         // Begin database transaction
         DB::beginTransaction();
-
+dd($request->all());
         //add address
         $addressObject = new Address();
         $addressObject->type = ADDRESS_TYPE['USER_ADDRESS'];

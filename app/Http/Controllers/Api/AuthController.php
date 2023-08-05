@@ -433,16 +433,17 @@ class AuthController extends Controller
             $OtpVerificationObject->otp = $otp;
             $OtpVerificationObject->purpose = $request->purpose;
             $OtpVerificationObject->token = randomString(20);
+             
             if (!$OtpVerificationObject->save()) {
                 // if the data cannot be saved
                 PublicException::Error('SOMETHING_WENT_WRONG');
             }
-
-            // $messageBody = 'Your verification code is ' . $otp . '. This code will expire in ' . secondsToTimeFormat(OTP_EXPIRE_TIME) . '.';
-            // if (Helper::SendMessage([$phoneNumber], $messageBody)) {
-            //     $successArray['phone_token'] = $OtpVerificationObject->token;
-            //     $successArray['phone_resend_time'] = OTP_RESEND_TIME;
-            // }
+            return Helper::SuccessReturn($OtpVerificationObject, 'OTP_SEND_SUCCESS');
+            $messageBody = 'Your verification code is ' . $otp . '. This code will expire in ' . secondsToTimeFormat(OTP_EXPIRE_TIME) . '.';
+            if (Helper::SendMessage([$phoneNumber], $messageBody)) {
+                $successArray['phone_token'] = $OtpVerificationObject->token;
+                $successArray['phone_resend_time'] = OTP_RESEND_TIME;
+            }
         }
 
         if ($successArray) {

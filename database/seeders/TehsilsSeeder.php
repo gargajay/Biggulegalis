@@ -38,14 +38,13 @@ class TehsilsSeeder extends Seeder
             ]],
             // ... Add more states and districts
         ];
-
+        info('Reached this point in the seeder.');
         foreach ($districtsAndTehsils as $stateName => $districts) {
             $state = DB::table('state_bar_councils')->where('name', $stateName)->first();
             if ($state) {
                 foreach ($districts as $districtName => $tehsils) {
                     $district = DB::table('district_bar_associations')->where('name', $districtName)->first();
                     if ($district) {
-                        info("Inserting tehsil: {$district->id}");
                         foreach ($tehsils as $tehsilName) {
                             Tehsil::firstOrCreate([
                                 'name' => $tehsilName,

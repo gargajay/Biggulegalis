@@ -438,11 +438,11 @@ class AuthController extends Controller
                 PublicException::Error('SOMETHING_WENT_WRONG');
             }
 
-            $messageBody = 'Your verification code is ' . $otp . '. This code will expire in ' . secondsToTimeFormat(OTP_EXPIRE_TIME) . '.';
-            if (Helper::SendMessage([$phoneNumber], $messageBody)) {
-                $successArray['phone_token'] = $OtpVerificationObject->token;
-                $successArray['phone_resend_time'] = OTP_RESEND_TIME;
-            }
+            // $messageBody = 'Your verification code is ' . $otp . '. This code will expire in ' . secondsToTimeFormat(OTP_EXPIRE_TIME) . '.';
+            // if (Helper::SendMessage([$phoneNumber], $messageBody)) {
+            //     $successArray['phone_token'] = $OtpVerificationObject->token;
+            //     $successArray['phone_resend_time'] = OTP_RESEND_TIME;
+            // }
         }
 
         if ($successArray) {

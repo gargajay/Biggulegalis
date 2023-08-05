@@ -10,7 +10,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $data = ['page_title' => 'Dashboard', 'page_icon' => 'fa-dashboard'];
+        $data = ['page_title' => '1222', 'page_icon' => 'fa-dashboard'];
         $data['totalUser'] = User::where('user_type', USER_TYPE['USER'])->count();
 
         $data['monthlyUserData'] = lastOneYearMontlyData(User::where('user_type', USER_TYPE['USER']));

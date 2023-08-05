@@ -42,6 +42,7 @@ class AdminUser extends Seeder
                 'email' =>  $value['email'],
                 'password' =>  $value['password'],
                 'user_type' =>  $value['user_type'],
+                'phone' =>  $value['phone'],
             ];
 
             if(isset($value['first_name']) && !empty($value['first_name'])){

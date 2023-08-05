@@ -19,7 +19,7 @@ class HomeController extends Controller
         return Helper::SuccessReturnPagination($posts['data'], $posts['totalPages'], $posts['nextPageUrl'], 'POST_FETCH');
     }
 
-    public function filterMembers(Request $request)
+    public function getCountries(Request $request)
     {
         $members = User::with('addresses')->where('id', '!=', Auth::id())->where('user_type', USER_TYPE['USER'])
         ->select('id', 'full_name', 'image', 'address_id');

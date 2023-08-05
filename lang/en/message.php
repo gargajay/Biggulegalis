@@ -118,4 +118,11 @@ return [
     'SUBSCRIPTION_UPDATED' => 'Subscription updated successfully.',
     'SUBSCRIPTION_DETAILS' => 'Subscription details fetched successfully.',
     'SUBSCRIPTION_FAILED' => 'Error occurred, please contact Customer Support.',
+
+    'COUNTRY_DATA_FETCH' => 'Country list fetched successfully.',
+    'STATE_DATA_FETCH' => 'State fetched successfully.',
+    'DISTRICT_DATA_FETCH' => 'District fetched successfully.',
+    'TEHSIL_DATA_FETCH' => 'Tehsil fetched successfully.',
+
+    
 ];

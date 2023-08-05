@@ -15,8 +15,14 @@ class DistrictBarAssociation extends Model
         'state_bar_council_id',
     ];
 
+    protected $hidden = [
+        'deleted_at',
+        'created_at',
+        'updated_at',
+    ];
+
     public function stateBarCouncil()
     {
-        return $this->belongsTo('App\Models\StateBarCouncil');
+        return $this->belongsTo(StateBarCouncil::class);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
+use App\Exceptions\PublicException;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
@@ -58,5 +58,51 @@ class HomeController extends Controller
     {
         $data = Country::where('status', 1)->get();
         return Helper::SuccessReturn($data, 'COUNTRY_DATA_FETCH');
+        PublicException::Error('SOMETHING_WENT_WRONG');
+    }
+
+    public function getState(Request $request)
+    {
+        // validate rules for item input
+        $rules = [
+
+            'country_id' => ['required',  'iexists:countries,id,'],
+        ];
+        // validate input data using the Validator method of the PublicException class
+        PublicException::Validator($request->all(), $rules);
+
+        $data = Country::where('status', 1)->get();
+        return Helper::SuccessReturn($data, 'STATE_DATA_FETCH');
+        PublicException::Error('SOMETHING_WENT_WRONG');
+    }
+
+    public function getDistrict(Request $request)
+    {
+        // validate rules for item input
+        $rules = [
+
+            'state_id' => ['required',  'iexists:state_bar_councils,id,'],
+        ];
+        // validate input data using the Validator method of the PublicException class
+        PublicException::Validator($request->all(), $rules);
+
+        $data = Country::where('status', 1)->get();
+        return Helper::SuccessReturn($data, 'DISTRICT_DATA_FETCH');
+        PublicException::Error('SOMETHING_WENT_WRONG');
+    }
+
+    public function getTehsil(Request $request)
+    {
+        // validate rules for item input
+        $rules = [
+
+            'district_id' => ['required',  'iexists:district_bar_associations,id,'],
+        ];
+        // validate input data using the Validator method of the PublicException class
+        PublicException::Validator($request->all(), $rules);
+
+        $data = Country::where('status', 1)->get();
+        return Helper::SuccessReturn($data, 'TEHSIL_DATA_FETCH');
+        PublicException::Error('SOMETHING_WENT_WRONG');
     }
 }

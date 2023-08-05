@@ -16,10 +16,16 @@ class Tehsil extends Model
         'district_bar_association_id',
     ];
 
-    // Define the relationship with DistrictBarAssociation model
+    protected $hidden = [
+        'deleted_at',
+        'created_at',
+        'updated_at',
+    ];
+
     public function districtBarAssociation()
     {
         return $this->belongsTo(DistrictBarAssociation::class);
     }
+   
 }
 

@@ -13,4 +13,10 @@ class Country extends Model
         'description',
         'status',
     ];
+
+    protected $hidden = [
+        'deleted_at',
+        'created_at',
+        'updated_at',
+    ];
 }

@@ -488,23 +488,15 @@ class AuthController extends Controller
         // Check if the OTP matches
         if ($OtpVerificationObject->otp == $request->otp) {
             $OtpVerificationObject->is_otp_verified = true;
-            // Extract country code and phone number from contact
-        preg_match('/\+(\d+)\s(.+)/', $OtpVerificationObject->contact, $matches);
-
-        if (count($matches) >= 3) {
-            $countryCode = $matches[1];
-            $phone = $matches[2];
-
-            $userTemp = User::where('country_code', $countryCode)
-                ->where('phone', $phone)
-                ->first();
-
+            $countryCode = substr($OtpVerificationObject->contact, 1, 2); 
+            $PhoneNumber = substr($OtpVerificationObject->contact, 3);
+            $userTemp = User::where('country_code', $countryCode)->where('phone', $PhoneNumber)->first();
             if ($userTemp) {
                 $userTemp->update(['account_verified' => true]);
                 PublicException::NotSave($userTemp->save());
-                PublicException::NotSave($OtpVerificationObject->save());
             }
-        } 
+            // if data not save show error
+            PublicException::NotSave($OtpVerificationObject->save());
 
             return Helper::SuccessReturn([], 'OTP_VERIFY_SUCCESS');
         }

@@ -55,7 +55,8 @@ class User extends Authenticatable
         'stripe_id',
         'blocked',
         'default_subscription_plan_id',
-        'cancel_subscription'
+        'cancel_subscription',
+        'account_verified'
     ];
 
 
@@ -124,6 +125,7 @@ class User extends Authenticatable
         'blocked' => 'boolean',
         'default_subscription_plan_id' => 'integer',
         'cancel_subscription' => 'boolean',
+        'account_verified' => 'boolean',
     ];
 
 

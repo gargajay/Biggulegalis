@@ -490,6 +490,7 @@ class AuthController extends Controller
             $OtpVerificationObject->is_otp_verified = true;
             $countryCode = substr($OtpVerificationObject->contact, 1, 2); 
             $PhoneNumber = substr($OtpVerificationObject->contact, 3);
+            dd($countryCode  , $PhoneNumber);
             $userTemp = User::where('country_code', $countryCode)->where('phone', $PhoneNumber)->first();
             if ($userTemp) {
                 $userTemp->update(['account_verified' => true]);

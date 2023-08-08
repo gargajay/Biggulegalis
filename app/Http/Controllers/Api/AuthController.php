@@ -489,6 +489,7 @@ class AuthController extends Controller
         if ($OtpVerificationObject->otp == $request->otp) {
             $OtpVerificationObject->is_otp_verified = true;
             $userTemp = User::where('phone', $OtpVerificationObject->contact)->first();
+            dd($userTemp);
             if ($userTemp) {
                 $userTemp->update(['account_verified' => true]);
             }

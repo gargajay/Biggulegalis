@@ -488,8 +488,10 @@ class AuthController extends Controller
         // Check if the OTP matches
         if ($OtpVerificationObject->otp == $request->otp) {
             $OtpVerificationObject->is_otp_verified = true;
-
-            // if data not save show error
+            $userTemp = User::where('phone', $OtpVerificationObject->contact)->first();
+            if ($userTemp) {
+                $userTemp->update(['account_verified' => true]);
+            }
             PublicException::NotSave($OtpVerificationObject->save());
 
             return Helper::SuccessReturn([], 'OTP_VERIFY_SUCCESS');

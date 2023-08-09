@@ -35,7 +35,7 @@ class AuthController extends Controller
     {
         // validate rules for input
         $rules = [
-            // 'country_code' => ['required_with:phone', 'max:255'],
+            'country_code' => ['required_with:phone', 'max:255'],
             'phone' => ['required','iunique:users,phone,user_type,' . USER_TYPE['USER'], 'max:255'],
             'email' => ['required', 'email:strict', 'iunique:users,email,user_type,' . USER_TYPE['USER'], 'max:255'],
             'enrolment_number' => ['required', 'string', 'max:255',],
@@ -168,6 +168,7 @@ class AuthController extends Controller
 
         // Define rules for input validation
         $rules = [
+            'country_code' => ['required_with:phone', 'max:255'],
             'phone' => ['required', 'iexists:users,phone,user_type,' . USER_TYPE['USER'], 'max:255'],
             'password' => ['required', 'max:50'],
             'device_token' => ['nullable', 'max:255'],

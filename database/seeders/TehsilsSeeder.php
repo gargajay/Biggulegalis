@@ -12,7 +12,8 @@ class TehsilsSeeder extends Seeder
 
         $districtsAndTehsils = [
             // Punjab
-            ['name' => 'Punjab', 'districts' => [
+            ['name' => 'Punjab',
+             'districts' => [
                 'Amritsar' => ['Ajnala', 'Amritsar', 'Baba Bakala', 'Fatehgarh Churian', 'Jandiala Guru', 'Patti', 'Rajasansi', 'Rayya'],
                 'Barnala' => ['Barnala', 'Handiaya', 'Sehna'],
                 'Bathinda' => ['Bathinda', 'Maur', 'Rampura Phul', 'Sangat', 'Talwandi Sabo'],
@@ -45,7 +46,6 @@ class TehsilsSeeder extends Seeder
             if ($state) {
                 foreach ($districts as $districtName => $tehsils) {
                     $district = DB::table('district_bar_associations')->where('name', $districtName)->first();
-                    dd($district);
                     if ($district) {
                         foreach ($tehsils as $tehsilName) {
                             Tehsil::firstOrCreate([

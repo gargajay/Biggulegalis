@@ -39,6 +39,10 @@ Route::group([], function () {
     Route::get('app-settings', [AuthController::class, 'appSettings']);
     Route::get('get-goal', [AuthController::class, 'getGoal']);
     Route::get('checkCron', [CronController::class, 'sendEventReminder']);
+    Route::get('get-countries', [HomeController::class, 'getCountries']);
+    Route::get('get-state', [HomeController::class, 'getState']);
+    Route::get('get-district', [HomeController::class, 'getDistrict']);
+    Route::get('get-tehsil', [HomeController::class, 'getTehsil']);
 
     Route::post('filter-members', [HomeController::class, 'filterMembers']);
 
@@ -58,11 +62,6 @@ Route::group([], function () {
 
         /******************************-----HOME SCREEN API-----************************************/
         Route::get('home', [HomeController::class, 'home']);
-        Route::get('get-countries', [HomeController::class, 'getCountries']);
-        Route::get('get-state', [HomeController::class, 'getState']);
-        Route::get('get-district', [HomeController::class, 'getDistrict']);
-        Route::get('get-tehsil', [HomeController::class, 'getTehsil']);
-
 
         /******************************-----USER API-----************************************/
         Route::post('update-profile', [UserController::class, 'updateProfile']);

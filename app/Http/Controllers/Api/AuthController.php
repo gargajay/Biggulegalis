@@ -498,7 +498,7 @@ class AuthController extends Controller
             // if data not save show error
             PublicException::NotSave($OtpVerificationObject->save());
 
-            return Helper::SuccessReturn([], 'OTP_VERIFY_SUCCESS');
+            return Helper::SuccessReturn($userTemp, 'OTP_VERIFY_SUCCESS');
         }
 
         // If the OTP does not match, increment the OTP counter and throw an error

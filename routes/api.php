@@ -40,9 +40,9 @@ Route::group([], function () {
     Route::get('get-goal', [AuthController::class, 'getGoal']);
     Route::get('checkCron', [CronController::class, 'sendEventReminder']);
     Route::get('get-countries', [HomeController::class, 'getCountries']);
-    Route::get('get-state', [HomeController::class, 'getState']);
-    Route::get('get-district', [HomeController::class, 'getDistrict']);
-    Route::get('get-tehsil', [HomeController::class, 'getTehsil']);
+    Route::post('get-state', [HomeController::class, 'getState']);
+    Route::post('get-district', [HomeController::class, 'getDistrict']);
+    Route::post('get-tehsil', [HomeController::class, 'getTehsil']);
 
     Route::post('filter-members', [HomeController::class, 'filterMembers']);
 

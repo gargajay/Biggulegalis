@@ -42,8 +42,7 @@ class TehsilsSeeder extends Seeder
         ];
         
         foreach ($districtsAndTehsils as $stateName => $districts) {
-            dd($stateName);
-            $state = DB::table('state_bar_councils')->where('name', $stateName)->first();
+            $state = DB::table('state_bar_councils')->where('name', $districtsAndTehsils['Punjab'])->first();
             dd($state);
             if ($state) {
                 foreach ($districts as $districtName => $tehsils) {

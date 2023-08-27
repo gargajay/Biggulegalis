@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Address;
 use App\Models\BlockedUser;
+use App\Models\GroupRole;
+use App\Models\UserAssociation;
 use Aws\Credentials\Credentials;
 use Aws\Sts\StsClient;
 use Illuminate\Http\Request;
@@ -30,7 +32,7 @@ class UserController extends Controller
             'full_name' => ['required', 'string', 'max:255'],
             'first_name' => ['string', 'max:255', 'nullable'],
             'last_name' => ['nullable', 'string', 'max:255'],
-            'email' => ['required', 'email:strict', 'iunique:users,email,user_type,' . USER_TYPE['USER'] . ',' . Auth::id(), 'max:255'],
+            'email' => ['email:strict', 'iunique:users,email,user_type,' . USER_TYPE['USER'] . ',' . Auth::id(), 'max:255'],
             // 'phone' => ['nullable', 'iunique:users,phone,user_type,' . USER_TYPE['USER'] . ',' . Auth::id(), 'max:255'],
             // 'country_code' => ['required_with:phone', 'max:255'],
             'image' => ['nullable', 'mimes:jpg,png,jpeg,gif'],
@@ -38,8 +40,15 @@ class UserController extends Controller
             'date_of_birth' => ['nullable','string'],
             'biography' => ['nullable', 'max:255'],
             'gender' => ['nullable', 'in:' . implode(',', GENDER)]
+
         ];
           
+        if(!empty($request->is_role_info))
+        {
+                $rules['user_role'] = ['nullable', 'iexists:group_role,id', 'integer'];
+                $rules['association_id'] = ['nullable','integer'];
+                $rules['association_type'] = ['nullable','integer'];
+        }
 
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
@@ -109,6 +118,21 @@ class UserController extends Controller
             'longitude',
         ]);
 
+        // user associations
+
+        if(!empty($request->is_role_info))
+        {
+           $userAssociation =  UserAssociation::where('user_id',$userObject->id)->first() ?? new UserAssociation();
+           $userAssociation = Helper::UpdateObjectIfKeyNotEmpty($userAssociation, [
+            'user_role_id',
+            'association_id',
+            'association_type'
+           ]);
+
+           $userAssociation->user_id = $userObject->id;
+           PublicException::NotSave($userAssociation->save());
+        }
+
         // $addressObject = Helper::MakeGeolocation($addressObject, $request->longitude, $request->latitude);
 
         // if data not save show error
@@ -136,6 +160,14 @@ class UserController extends Controller
 
         return Helper::SuccessReturn($userObject, 'PROFILE_FETCHED');
     }
+
+    public function getGroupRoleList(Request $request)
+    {
+        $dataList = GroupRole::get();
+
+        return Helper::SuccessReturn($dataList, 'GROUP_ROLE_DATA_FETCH');
+    }
+
 
 
     /**

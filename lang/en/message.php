@@ -123,6 +123,7 @@ return [
     'STATE_DATA_FETCH' => 'State fetched successfully.',
     'DISTRICT_DATA_FETCH' => 'District fetched successfully.',
     'TEHSIL_DATA_FETCH' => 'Tehsil fetched successfully.',
+    'GROUP_ROLE_DATA_FETCH' => 'Role list successfully.',
 
     
 ];

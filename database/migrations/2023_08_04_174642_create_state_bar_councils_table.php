@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('state_bar_councils', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->integer('permission_type')->default(1)->comment("1=>Open ,2 =>Invite only, 3=> Close");
             $table->text('description')->nullable();
             $table->boolean('status')->default(true); // Set the default value to true
             $table->unsignedBigInteger('country_id'); // Foreign key column

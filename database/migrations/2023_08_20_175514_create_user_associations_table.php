@@ -13,18 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tehsils', function (Blueprint $table) {
+        Schema::create('user_association', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('permission_type')->default(1)->comment("1=>Open ,2 =>Invite only, 3=> Close");
-            $table->text('description')->nullable();
+            $table->unsignedBigInteger('user_id'); // Foreign key column
+            $table->integer('user_role_id')->default(0);
             $table->boolean('status')->default(true); // Set the default value to true
-            $table->unsignedBigInteger('district_bar_association_id'); // Foreign key column
+            $table->integer('association_id'); 
+            $table->integer('association_type'); 
             $table->timestamps();
             $table->softDeletes();
         
             // Define the foreign key relationship
-            $table->foreign('district_bar_association_id')->references('id')->on('district_bar_associations')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tehsils');
+        Schema::dropIfExists('user_assocations');
     }
 };

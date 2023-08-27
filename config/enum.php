@@ -2,6 +2,8 @@
 
 
 defined('GENDER') or define("GENDER", ['male', 'female','other']);
+defined('PERMISSION_TYPE') or define("PERMISSION_TYPE", ['open' =>1, 'invite' =>2,'close'=>3]);
+defined('ASSOCIATION_TYPE') or define("ASSOCIATION_TYPE", ['bar_council_of_india' =>1, 'state_bar_councils' =>2,'district_bar_councils'=>3,'tehsil'=>4]);
 defined('ACCOUNT_TYPE') or define("ACCOUNT_TYPE", ['NORMAL' => 1, 'SOCIAL' => 2, 'BOTH' => 3]);
 defined('USER_TYPE') or define("USER_TYPE", ['USER' => 'user', 'ADMIN' => 'admin']);
 defined('DEVICE_TYPE') or define("DEVICE_TYPE", ['ANDROID' => 'A', 'IOS' => 'I']);

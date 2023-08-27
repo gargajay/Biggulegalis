@@ -135,9 +135,9 @@ class User extends Authenticatable
     ];
 
     public static $customRelations = [
-        'Auth' => ['addresses'],
-        'Profile' => ['addresses'],
-        'Update' => ['addresses']
+        'Auth' => ['addresses','userAssociation'],
+        'Profile' => ['addresses','userAssociation'],
+        'Update' => ['addresses','userAssociation']
     ];
 
    
@@ -196,7 +196,12 @@ class User extends Authenticatable
         return $this->belongsTo(Address::class, 'address_id');
     }
 
-    public function getStatusAttribute()
+    public function userAssociation()
+    {
+        return $this->hasOne(UserAssociation::class, 'user_id')->with('userRole');
+    }
+
+    public function getStatusAttribu()
     {
         if ($this->deleted_at === null) {
             return 'Active';

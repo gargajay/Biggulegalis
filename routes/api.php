@@ -64,6 +64,9 @@ Route::group([], function () {
         Route::get('home', [HomeController::class, 'home']);
 
         /******************************-----USER API-----************************************/
+        
+        Route::get('get-group-role-list', [UserController::class, 'getGroupRoleList']);
+
         Route::post('update-profile', [UserController::class, 'updateProfile']);
         Route::post('edit-address', [UserController::class, 'editAddress']);
         Route::get('get-profile', [UserController::class, 'getProfile']);

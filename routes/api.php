@@ -3,7 +3,7 @@
 use App\Exceptions\PublicException;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CronController;
-use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\LinkController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PostController;
@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\Api\GalleryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,7 +39,7 @@ Route::group([], function () {
     Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
     Route::get('app-settings', [AuthController::class, 'appSettings']);
     Route::get('get-goal', [AuthController::class, 'getGoal']);
-    Route::get('checkCron', [CronController::class, 'sendEventReminder']);
+    Route::get('checkCron', [CronController::class, 'sendLinkReminder']);
     Route::get('get-countries', [HomeController::class, 'getCountries']);
     Route::post('get-state', [HomeController::class, 'getState']);
     Route::post('get-district', [HomeController::class, 'getDistrict']);
@@ -91,12 +92,17 @@ Route::group([], function () {
         Route::post('get-post-detail', [PostController::class, 'getpostDetail']);
         Route::post('get-comment', [PostController::class, 'getComment']);
 
-        /******************************-----EVENT API-----************************************/
-        Route::get('get-members', [EventController::class, 'getMembers']);
-        Route::post('get-event', [EventController::class, 'getEvent']);
-        Route::get('get-event-details', [EventController::class, 'getEventDetails']);
-        Route::post('event', [EventController::class, 'event']); // add/update event
-        Route::post('delete-event', [EventController::class, 'deleteEvent']);
+        /******************************-----Link API-----************************************/
+        Route::post('get-link', [LinkController::class, 'getLink']);
+        Route::post('get-link-details', [LinkController::class, 'getLinkDetails']);
+        Route::post('link', [LinkController::class, 'link']); // add/update link
+        Route::post('delete-link', [LinkController::class, 'deleteLink']);
+
+        /******************************-----Galley API-----************************************/
+        Route::post('get-gallery', [GalleryController::class, 'getGallery']);
+        Route::post('get-gallery-details', [GalleryController::class, 'getGalleryDetails']);
+        Route::post('gallery', [GalleryController::class, 'gallery']); // add/update link
+        Route::post('delete-gallery', [GalleryController::class, 'deleteGallery']);
 
         /******************************-----CHAT API-----************************************/
         Route::post('chat-group', [GroupController::class, 'chatGroup']);

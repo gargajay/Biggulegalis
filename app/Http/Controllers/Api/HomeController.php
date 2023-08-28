@@ -5,6 +5,7 @@ use App\Exceptions\PublicException;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
+use App\Models\Association;
 use App\Models\Country;
 use App\Models\DistrictBarAssociation;
 use App\Models\Post;
@@ -59,9 +60,8 @@ class HomeController extends Controller
 
     public function getCountries(Request $request)
     {
-        $data = Country::where('status', 1)->get();
+        $data = Association::where(['status'=>1,'parent_id'=>0])->get();
         return Helper::SuccessReturn($data, 'COUNTRY_DATA_FETCH');
-        PublicException::Error('SOMETHING_WENT_WRONG');
     }
 
     public function getState(Request $request)
@@ -69,12 +69,12 @@ class HomeController extends Controller
         // validate rules for item input
         $rules = [
 
-            'country_id' => ['required',  'iexists:countries,id,'],
+            'country_id' => ['required'],
         ];
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
 
-        $data = StateBarCouncil::where('country_id', $request->country_id)->with('country')->get();
+        $data = Association::where('parent_id', $request->country_id)->with('country')->get();
         return Helper::SuccessReturn($data, 'STATE_DATA_FETCH');
         PublicException::Error('SOMETHING_WENT_WRONG');
     }
@@ -84,12 +84,11 @@ class HomeController extends Controller
         // validate rules for item input
         $rules = [
 
-            'state_id' => ['required',  'iexists:state_bar_councils,id,'],
+            'state_id' => ['required'],
         ];
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
-
-        $data = DistrictBarAssociation::where('state_bar_council_id', $request->state_id)->with('stateBarCouncil')->get();
+        $data = Association::where('parent_id', $request->state_id)->with('stateBarCouncil')->get();
         return Helper::SuccessReturn($data, 'DISTRICT_DATA_FETCH');
         PublicException::Error('SOMETHING_WENT_WRONG');
     }
@@ -99,12 +98,12 @@ class HomeController extends Controller
         // validate rules for item input
         $rules = [
 
-            'district_id' => ['required',  'iexists:district_bar_associations,id,'],
+            'district_id' => ['required'],
         ];
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
 
-        $data = Tehsil::where('district_bar_association_id', $request->district_id)->with('districtBarAssociation')->get();
+        $data = Association::where('parent_id', $request->district_id)->with('districtBarAssociation')->get();
         return Helper::SuccessReturn($data, 'TEHSIL_DATA_FETCH');
         PublicException::Error('SOMETHING_WENT_WRONG');
     }

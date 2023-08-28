@@ -175,7 +175,7 @@ class Helper
 
         // Generate the public link for the file.
         $path = match ($fileInfo['storage']) {
-            'local' => asset('/' . $fileInfo['path'] . '/' . $fileName),
+            'local' => asset('/public/' . $fileInfo['path'] . '/' . $fileName),
             's3' => config('filesystems.disks.s3.url') . '/' . $fileName,
             default => null,
         };

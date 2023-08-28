@@ -126,7 +126,6 @@ class UserController extends Controller
            $userAssociation = Helper::UpdateObjectIfKeyNotEmpty($userAssociation, [
             'user_role_id',
             'association_id',
-            'association_type'
            ]);
 
            $userAssociation->user_id = $userObject->id;

@@ -179,6 +179,7 @@ class PushNotification
         $users = array_combine(array_column($users, 'id'), $users);
         foreach ($data as $value) {
             foreach ($value['receiver_id'] as $receiverId) {
+              //  dd($users);
                 if (isset($users[$receiverId])) {
 
                     $notificationObject = new Notification();

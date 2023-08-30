@@ -15,7 +15,7 @@ class NotificationController extends Controller
     {
         $notificationObject = Notification::where('received_by', Auth::id())->where('read', false)->orderBy('id', 'desc');
         $notificationObject = newPagination($notificationObject);
-        return Helper::SuccessReturnPagination($notificationObject['data'], $notificationObject['totalPages'], $notificationObject['nextPageUrl'], 'NOTIFICATION_FETCHED');
+        return Helper::SuccessReturn($notificationObject, 'NOTIFICATION_FETCHED');
     }
 
 

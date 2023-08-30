@@ -125,4 +125,8 @@ return [
     'TEHSIL_DATA_FETCH' => 'Tehsil fetched successfully.',
     'GROUP_ROLE_DATA_FETCH' => 'Role list fetched successfully.',
     'MEMBER_FETCH' => 'Member list fetched successfully.',    
+
+    
+
+    'JOINED_MEMBER' => 'New member joined in association.',
 ];

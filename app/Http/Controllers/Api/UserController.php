@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Exceptions\PublicException;
 use App\Helper\Helper;
+use App\Helper\PushNotification;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Address;
@@ -122,7 +123,14 @@ class UserController extends Controller
 
         if(!empty($request->is_role_info))
         {
-           $userAssociation =  UserAssociation::where('user_id',$userObject->id)->first() ?? new UserAssociation();
+            $new = false;
+           $userAssociation =  UserAssociation::where('user_id',$userObject->id)->first();
+
+           if(empty($userAssociation)){
+             $new = true;
+            $userAssociation =  new UserAssociation();
+           }
+           
            $userAssociation = Helper::UpdateObjectIfKeyNotEmpty($userAssociation, [
             'user_role_id',
             'association_id',
@@ -130,6 +138,16 @@ class UserController extends Controller
 
            $userAssociation->user_id = $userObject->id;
            PublicException::NotSave($userAssociation->save());
+
+
+           $userData = [
+            'id' => Auth::id(),
+            'full_name' => Auth::user()->full_name,
+            'image' => Auth::user()->image,
+           ];
+
+
+
         }
 
         // $addressObject = Helper::MakeGeolocation($addressObject, $request->longitude, $request->latitude);
@@ -140,6 +158,27 @@ class UserController extends Controller
         $userObject->address_id = $addressObject->id;
         // if data not save show error
         PublicException::NotSave($userObject->save());
+
+        if($new){
+
+            $members =   UserAssociation::where('association_id',$request->association_id)->where('user_id','!=',$userObject->id)->pluck('user_id')->toArray();
+
+           foreach ($members as $member) {
+            $checkUser = User::where('id', $member)->first();
+            if (!empty($checkUser)) {
+                    $notificationData = [[
+                    'receiver_id' => $members,
+                    'title' => ['New Member Joined Assoication'],
+                    'body' => ['JOINED_MEMBER'],
+                    'type' => 'NEW_MEMBER',
+                    'app_notification_data' => $userData,
+                    'model_id' => $userObject->id,
+                    'model_name' => get_class($checkUser),
+                ]];
+                PushNotification::Notification($notificationData, true, false, $userObject->id);
+            }
+        }
+        }
 
         $newImagePath = Helper::FileUpload('image', USER_IMAGE_INFO);
         if ($newImagePath) {

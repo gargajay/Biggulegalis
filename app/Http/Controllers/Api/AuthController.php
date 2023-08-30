@@ -60,8 +60,7 @@ class AuthController extends Controller
 
         // Begin database transaction
         DB::beginTransaction();
-// dd($request->all());
-        //add address
+
         $addressObject = new Address();
         $addressObject->type = ADDRESS_TYPE['USER_ADDRESS'];
         $addressObject->latitude = $request->latitude;
@@ -117,28 +116,7 @@ class AuthController extends Controller
             'enrolment_number',
         ]);
 
-
-        
-
-        // set the object properties with the input data
-        // $userObject->first_name = $request->first_name;
-        // $userObject->last_name = $request->last_name;
-        // $userObject->full_name = $request->full_name;
-        // $userObject->email = $request->email;
-        // $userObject->phone = $request->phone;
-        // $userObject->country_code = $request->country_code;
         $userObject->password = bcrypt($request->password);
-        // $userObject->timezone = $request->timezone;
-        // $userObject->date_of_birth = $request->date_of_birth;
-        // $userObject->biography = $request->biography;
-      
-
-        // // set device token and type
-        // $userObject->device_token = $request->device_token;
-        // $userObject->device_type = $request->device_type;
-
-        // //save address id
-        // $userObject->address_id = $addressObject->id;
 
         // if data not save show error
         PublicException::NotSave($userObject->save());
@@ -164,8 +142,6 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-
-
         // Define rules for input validation
         $rules = [
             'country_code' => ['required_with:phone', 'max:255'],
@@ -225,8 +201,6 @@ class AuthController extends Controller
         // Return success response with the user object and message
         return Helper::SuccessReturn($userObject->load(User::$customRelations['Auth'])->append(User::$customAppend['Auth']), 'LOGIN_SUCCESSFUL');
     }
-
-
 
     /**
      * This function handles social login of a user

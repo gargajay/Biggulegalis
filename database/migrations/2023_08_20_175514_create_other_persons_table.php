@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('user_id')->nullable();
             $table->string('name')->nullable();
             $table->string('work')->nullable();
-            $table->string('contect_no')->nullable();
+            $table->string('contact_no')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
             $table->softDeletes();

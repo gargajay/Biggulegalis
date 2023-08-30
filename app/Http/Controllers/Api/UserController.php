@@ -28,6 +28,7 @@ class UserController extends Controller
 
     public function updateProfile(Request $request)
     {
+        $new = false;
         // validate rules for input
         $rules = [
             'full_name' => ['nullable', 'string', 'max:255'],
@@ -123,7 +124,7 @@ class UserController extends Controller
 
         if(!empty($request->is_role_info))
         {
-            $new = false;
+            
            $userAssociation =  UserAssociation::where('user_id',$userObject->id)->first();
 
            if(empty($userAssociation)){

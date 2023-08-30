@@ -116,7 +116,7 @@ class HomeController extends Controller
         ];
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
-        $userIds =   UserAssociation::where('association_id',$request->assocation_id)->pluck('user_id');
+        $userIds =   UserAssociation::where('association_id',$request->association_id)->pluck('user_id');
         $data =  User::whereIn('id',$userIds)->paginate(10);
         return Helper::SuccessReturn($data, 'MEMBER_FETCH');
     }

@@ -154,7 +154,7 @@ class UserController extends Controller
     public function getProfile(Request $request)
     {
         $userId = $request->user_id ?? Auth::id();
-        $userObject = User::where('id', $userId)->first();
+        $userObject = User::where('id', $userId)->with('userAssociation','addresses')->first();
         $userObject->makeVisible(['date_of_birth', 'biography', 'gender', 'is_profile_completed', 'push_notification', 'language']);
 
         return Helper::SuccessReturn($userObject, 'PROFILE_FETCHED');

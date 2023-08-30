@@ -154,7 +154,7 @@ class AuthController extends Controller
         // generate an access token for the user
         $userObject->access_token = $userObject->createToken($userObject->id . ' token')->accessToken;
 
-        return Helper::SuccessReturn($userObject, 'REGISTRATION_SUCCESSFUL');
+        return Helper::SuccessReturn($userObject->load(User::$customRelations['Auth']), 'REGISTRATION_SUCCESSFUL');
     }
 
 

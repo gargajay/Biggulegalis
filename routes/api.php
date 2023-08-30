@@ -49,6 +49,9 @@ Route::group([], function () {
 
     Route::post('get-gallery', [GalleryController::class, 'getGallery']);
     Route::post('get-gallery-details', [GalleryController::class, 'getGalleryDetails']);
+    Route::post('member-list', [HomeController::class, 'getAllMembers']);
+
+
 
     Route::post('filter-members', [HomeController::class, 'filterMembers']);
 

@@ -12,6 +12,7 @@ use App\Models\Post;
 use App\Models\StateBarCouncil;
 use App\Models\Tehsil;
 use App\Models\User;
+use App\Models\UserAssociation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -105,6 +106,18 @@ class HomeController extends Controller
 
         $data = Association::where('parent_id', $request->district_id)->with('districtBarAssociation')->get();
         return Helper::SuccessReturn($data, 'TEHSIL_DATA_FETCH');
-        PublicException::Error('SOMETHING_WENT_WRONG');
+    }
+
+
+    public function getAllMembers(Request $request)
+    {
+        $rules = [
+            'association_id' => ['required'],
+        ];
+        // validate input data using the Validator method of the PublicException class
+        PublicException::Validator($request->all(), $rules);
+        $userIds =   UserAssociation::where('assocation_id',$request->assocation_id)->pluck('user_id');
+        $data =  User::whereIn('id',$userIds)->paginate(10);
+        return Helper::SuccessReturn($data, 'MEMBER_FETCH');
     }
 }

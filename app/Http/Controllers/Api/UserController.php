@@ -29,7 +29,7 @@ class UserController extends Controller
     {
         // validate rules for input
         $rules = [
-            'full_name' => ['required', 'string', 'max:255'],
+            'full_name' => ['nullable', 'string', 'max:255'],
             'first_name' => ['string', 'max:255', 'nullable'],
             'last_name' => ['nullable', 'string', 'max:255'],
             'email' => ['email:strict', 'iunique:users,email,user_type,' . USER_TYPE['USER'] . ',' . Auth::id(), 'max:255'],

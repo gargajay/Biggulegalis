@@ -44,6 +44,11 @@ Route::group([], function () {
     Route::post('get-state', [HomeController::class, 'getState']);
     Route::post('get-district', [HomeController::class, 'getDistrict']);
     Route::post('get-tehsil', [HomeController::class, 'getTehsil']);
+    Route::post('get-link', [LinkController::class, 'getLink']);
+    Route::post('get-link-details', [LinkController::class, 'getLinkDetails']);
+
+    Route::post('get-gallery', [GalleryController::class, 'getGallery']);
+    Route::post('get-gallery-details', [GalleryController::class, 'getGalleryDetails']);
 
     Route::post('filter-members', [HomeController::class, 'filterMembers']);
 
@@ -93,14 +98,12 @@ Route::group([], function () {
         Route::post('get-comment', [PostController::class, 'getComment']);
 
         /******************************-----Link API-----************************************/
-        Route::post('get-link', [LinkController::class, 'getLink']);
-        Route::post('get-link-details', [LinkController::class, 'getLinkDetails']);
+   
         Route::post('link', [LinkController::class, 'link']); // add/update link
         Route::post('delete-link', [LinkController::class, 'deleteLink']);
 
         /******************************-----Galley API-----************************************/
-        Route::post('get-gallery', [GalleryController::class, 'getGallery']);
-        Route::post('get-gallery-details', [GalleryController::class, 'getGalleryDetails']);
+       
         Route::post('gallery', [GalleryController::class, 'gallery']); // add/update link
         Route::post('delete-gallery', [GalleryController::class, 'deleteGallery']);
 

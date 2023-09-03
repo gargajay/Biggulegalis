@@ -8,6 +8,8 @@ use App\Models\Address;
 use App\Models\Association;
 use App\Models\Country;
 use App\Models\DistrictBarAssociation;
+use App\Models\Gallery;
+use App\Models\Link;
 use App\Models\Post;
 use App\Models\StateBarCouncil;
 use App\Models\Tehsil;
@@ -70,7 +72,7 @@ class HomeController extends Controller
         // validate rules for item input
         $rules = [
 
-            'country_id' => ['required'],
+            // 'country_id' => ['required'],
         ];
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
@@ -85,11 +87,17 @@ class HomeController extends Controller
         // validate rules for item input
         $rules = [
 
-            'state_id' => ['required'],
+            // 'state_id' => ['required'],
         ];
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
-        $data = Association::where('parent_id', $request->state_id)->with('stateBarCouncil')->get();
+        
+        $data = Association::latest();
+
+        if(!empty($request->state_id)){
+            $data = $data->where('parent_id', $request->state_id);
+         }
+         $data = $data->with('stateBarCouncil')->get();
         return Helper::SuccessReturn($data, 'DISTRICT_DATA_FETCH');
         PublicException::Error('SOMETHING_WENT_WRONG');
     }
@@ -99,12 +107,18 @@ class HomeController extends Controller
         // validate rules for item input
         $rules = [
 
-            'district_id' => ['required'],
+            // 'district_id' => ['required'],
         ];
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
 
-        $data = Association::where('parent_id', $request->district_id)->with('districtBarAssociation')->get();
+        $data = Association::latest();
+
+        if(!empty($request->district_id)){
+            $data = $data->where('parent_id', $request->district_id);
+         }
+         $data = $data->with('districtBarAssociation')->get();
+
         return Helper::SuccessReturn($data, 'TEHSIL_DATA_FETCH');
     }
 
@@ -112,14 +126,72 @@ class HomeController extends Controller
     public function getAllMembers(Request $request)
     {
         $rules = [
-            'association_id' => ['required'],
+            // 'association_id' => ['required'],
         ];
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
-        $userIds =   UserAssociation::where('association_id',$request->association_id)->pluck('user_id');
+        $userIds =   UserAssociation::latest();
+
+        if(!empty($request->association_id)){
+            $userIds =  $userIds->where('association_id',$request->association_id);
+        }
+         $userIds = $userIds->pluck('user_id');
         $users =  User::whereIn('id',$userIds);
         $data = newPagination($users->latest());
 
         return Helper::SuccessReturn($data, 'MEMBER_FETCH');
+    }
+
+
+    public function getAssociationDetail(Request $request)
+    {
+        $rules = [
+            'association_id' => ['required'],
+        ];
+        // validate input data using the Validator method of the PublicException class
+        PublicException::Validator($request->all(), $rules);
+
+        $association = Association::where('id', $request->association_id)->first();
+
+        $userIds =   UserAssociation::where('association_id',$association->id)->pluck('user_id');
+        $members =   User::select('full_name','email','enrolment_number','phone','image','gender','biography')->with('userAssociation')->whereIn('id',$userIds)->latest()->get();
+        $gallerys = Gallery::where('association_id', $request->association_id)->latest()->get();
+
+        $president_id =   UserAssociation::where('association_id',$association->id)->where('user_role_id',4)->pluck('user_id');
+
+        $president = User::select('full_name','email','enrolment_number','phone','image','gender','biography')->whereIn('id',$president_id)->with('userAssociation')->first();
+
+        $links = Link::where('association_id', $request->association_id)->latest()->get();
+    
+
+        $associationTabs = [
+            [
+                'id' =>1,
+                'type' => 'overview',
+                'information' => $association->description,
+                'president'=>$president
+            ],
+            [
+                'id' =>2,
+                'type' => 'members',
+                'information' => $members
+            ],
+            [
+                'id' =>3,
+                'type' => 'gallery',
+                'information' => $gallerys
+            ],
+            [
+                'id' =>4,
+                'type' => 'links',
+                'information' => $links
+            ],
+        ];
+
+        $association->tabs = $associationTabs;
+        
+
+        return Helper::SuccessReturn($association, 'ASSOCIATION_FETCH');
+
     }
 }

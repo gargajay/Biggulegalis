@@ -11,6 +11,8 @@ use App\Http\Controllers\Web\SubscriptionPlanController;
 use App\Http\Controllers\Web\TranslateController;
 use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Web\WorkoutHoursController;
+use App\Http\Controllers\Web\AssociationController;
+use App\Models\Association;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,13 +55,22 @@ Route::group([], function () {
         Route::get('user-status/{id}', [UserController::class, 'changeStatus'])->where('id', '[0-9]+')->name('user.status');
         Route::get('user-delete/{id}', [UserController::class, 'deleteRow'])->where('id', '[0-9]+')->name('user.delete');
 
-        /******************************-----Goal ROUTE-----************************************/
-        Route::get('goal', [GoalController::class, 'index'])->name('goal');
-        Route::post('goal-data', [GoalController::class, 'getData'])->name('goal.data');
-        Route::get('goal-form/{id?}', [GoalController::class, 'form'])->where('id', '[0-9]+')->name('goal.form');
-        Route::post('goal-form-save/{id?}', [GoalController::class, 'formSave'])->where('id', '[0-9]+')->name('goal.form.save');
-        Route::get('goal-status/{id}', [GoalController::class, 'changeStatus'])->where('id', '[0-9]+')->name('goal.status');
-        Route::get('goal-delete/{id}', [GoalController::class, 'deleteRow'])->where('id', '[0-9]+')->name('goal.delete');
+        /******************************-----Association ROUTE-----************************************/
+        Route::get('association', [AssociationController::class, 'index'])->name('association');
+        Route::post('association-data', [AssociationController::class, 'getData'])->name('association.data');
+        Route::get('association-form/{id?}', [AssociationController::class, 'form'])->where('id', '[0-9]+')->name('association.form');
+        Route::post('association-form-save/{id?}', [AssociationController::class, 'formSave'])->where('id', '[0-9]+')->name('association.form.save');
+        Route::get('association-status/{id}', [AssociationController::class, 'changeStatus'])->where('id', '[0-9]+')->name('association.status');
+        Route::get('association-delete/{id}', [AssociationController::class, 'deleteRow'])->where('id', '[0-9]+')->name('association.delete');
+
+
+         /******************************-----Goal ROUTE-----************************************/
+         Route::get('goal', [GoalController::class, 'index'])->name('goal');
+         Route::post('goal-data', [GoalController::class, 'getData'])->name('goal.data');
+         Route::get('goal-form/{id?}', [GoalController::class, 'form'])->where('id', '[0-9]+')->name('goal.form');
+         Route::post('goal-form-save/{id?}', [GoalController::class, 'formSave'])->where('id', '[0-9]+')->name('goal.form.save');
+         Route::get('goal-status/{id}', [GoalController::class, 'changeStatus'])->where('id', '[0-9]+')->name('goal.status');
+         Route::get('goal-delete/{id}', [GoalController::class, 'deleteRow'])->where('id', '[0-9]+')->name('goal.delete');
 
 
          /******************************-----WOKOUT HOURS ROUTE-----************************************/

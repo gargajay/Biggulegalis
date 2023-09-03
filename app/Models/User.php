@@ -201,7 +201,7 @@ class User extends Authenticatable
         return $this->hasOne(UserAssociation::class, 'user_id')->with('userRole');
     }
 
-    public function getStatusAttribu()
+    public function getStatusAttribute()
     {
         if ($this->deleted_at === null) {
             return 'Active';

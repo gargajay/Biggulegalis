@@ -447,10 +447,14 @@ class Helper
         foreach ($searchColumnArray as $key => $columnName) {
             if (is_numeric($key)) {
                 if ($first) {
-                    $modelObject->whereRaw('CAST(' . $columnName . ' AS VARCHAR) LIKE ?', ['%' . $searchValue . '%']);
+                    $modelObject->whereRaw($columnName . ' LIKE ?', ['%' . $searchValue . '%']);
+
+                    // $modelObject->whereRaw('CAST(' . $columnName . ' AS TEXT) LIKE ?', ['%' . $searchValue . '%']);
                     $first = false;
                 } else {
-                    $modelObject->orWhereRaw('CAST(' . $columnName . ' AS VARCHAR) LIKE ?', ['%' . $searchValue . '%']);
+                    // $modelObject->orWhereRaw('CAST(' . $columnName . ' AS TEXT) LIKE ?', ['%' . $searchValue . '%']);
+                    $modelObject->orwhereRaw($columnName . ' LIKE ?', ['%' . $searchValue . '%']);
+
                 }
             } else {
                 $modelObject->with($key);

@@ -25,6 +25,8 @@
         }
     </style>
 
+
+
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="{{dynamicCacheVersion('public/assets/css/main.css')}}">
     <link rel="stylesheet" type="text/css" href="{{dynamicCacheVersion('public/assets/css/animate.css')}}">
@@ -36,6 +38,7 @@
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Data Table-->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.4.0/css/buttons.dataTables.min.css" />
+
 
 
 </head>
@@ -99,6 +102,8 @@
 <script src="{{dynamicCacheVersion('public/assets/js/jquery.validate.min.js')}}"></script>
 <!-- The javascript plugin to display page loading on top-->
 <script src="{{dynamicCacheVersion('public/assets/js/plugins/pace.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js"></script>
+
 
 <!-- Page specific javascripts-->
 <script type="text/javascript" src="{{dynamicCacheVersion('public/assets/js/plugins/bootstrap-notify.min.js')}}"></script>

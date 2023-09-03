@@ -124,7 +124,10 @@ return [
     'DISTRICT_DATA_FETCH' => 'District fetched successfully.',
     'TEHSIL_DATA_FETCH' => 'Tehsil fetched successfully.',
     'GROUP_ROLE_DATA_FETCH' => 'Role list fetched successfully.',
-    'MEMBER_FETCH' => 'Member list fetched successfully.',    
+    'MEMBER_FETCH' => 'Member list fetched successfully.',   
+    'ASSOCIATION_FETCH' => 'Association details fetched successfully.',   
+    
+    
 
     
 

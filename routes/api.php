@@ -46,6 +46,7 @@ Route::group([], function () {
     Route::post('get-tehsil', [HomeController::class, 'getTehsil']);
     Route::post('get-link', [LinkController::class, 'getLink']);
     Route::post('get-link-details', [LinkController::class, 'getLinkDetails']);
+    Route::post('get-association-detail', [HomeController::class, 'getAssociationDetail']);
 
     Route::post('get-gallery', [GalleryController::class, 'getGallery']);
     Route::post('get-gallery-details', [GalleryController::class, 'getGalleryDetails']);

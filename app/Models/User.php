@@ -152,6 +152,65 @@ class User extends Authenticatable
     //     $this->attributes['full_name'] = ucwords(strtolower($value ?? trim($this->attributes['first_name'] . ' ' . $this->attributes['last_name'])));
     // }
 
+    public static function getAllPermissions()
+    {
+        return [
+            [
+                'id' =>1,
+                'name' =>'Cleark Add',
+                'is_selected' =>false
+            ],
+            [
+                'id' =>2,
+                'name' =>'Announcements',
+                'is_selected' =>false
+            ],
+            [
+                'id' =>3,
+                'name' =>'Invitation',
+                'is_selected' =>false
+            ],
+            [
+                'id' =>4,
+                'name' =>'Gallery',
+                'is_selected' =>false
+            ],
+        ];
+    }
+
+    public function tabs(){
+
+        $members =   User::select('full_name','email','enrolment_number','phone','image','gender','biography')->with('userAssociation')->latest()->get();
+        $gallerys = Gallery::where('user_id', auth::id())->latest()->get();
+        $links = Link::where('user_id',auth::id())->latest()->get();
+    
+
+      return   $associationTabs = [
+            [
+                'id' =>1,
+                'type' => 'Clearks',
+                'information' => $members,
+            ],
+            [
+                'id' =>2,
+                'type' => 'Announcments',
+                'information' => $links
+            ],
+            [
+                'id' =>3,
+                'type' => 'gallery',
+                'information' => $gallerys
+            ],
+            [
+                'id' =>4,
+                'type' => 'links',
+                'information' => $links
+            ],
+        ];
+
+        
+    }
+
     protected function setFirstNameAttribute($value)
     {
         $this->attributes['first_name'] = ucwords(strtolower($value));

@@ -154,12 +154,12 @@ class HomeController extends Controller
         $association = Association::where('id', $request->association_id)->first();
 
         $userIds =   UserAssociation::where('association_id',$association->id)->pluck('user_id');
-        $members =   User::select('full_name','email','enrolment_number','phone','image','gender','biography')->with('userAssociation')->whereIn('id',$userIds)->latest()->get();
+        $members =   User::with('userAssociation')->whereIn('id',$userIds)->latest()->get();
         $gallerys = Gallery::where('association_id', $request->association_id)->latest()->get();
 
         $president_id =   UserAssociation::where('association_id',$association->id)->where('user_role_id',4)->pluck('user_id');
 
-        $president = User::select('full_name','email','enrolment_number','phone','image','gender','biography')->with('userAssociation')->whereIn('id',$president_id)->latest()->first();
+        $president = User::with('userAssociation')->whereIn('id',$president_id)->latest()->first();
 
         $links = Link::where('association_id', $request->association_id)->latest()->get();
     

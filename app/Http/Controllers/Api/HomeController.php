@@ -159,7 +159,7 @@ class HomeController extends Controller
 
         $president_id =   UserAssociation::where('association_id',$association->id)->where('user_role_id',4)->pluck('user_id');
 
-        $president = User::select('full_name','email','enrolment_number','phone','image','gender','biography')->whereIn('id',$president_id)->with('userAssociation')->first();
+        $president = User::select('full_name','email','enrolment_number','phone','image','gender','biography')->whereIn('id',$president_id)->with('userAssociation')->latest()->first();
 
         $links = Link::where('association_id', $request->association_id)->latest()->get();
     

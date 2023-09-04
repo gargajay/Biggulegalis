@@ -63,7 +63,7 @@ class HomeController extends Controller
 
     public function getCountries(Request $request)
     {
-        $data = Association::where(['status'=>1,'parent_id'=>0])->get();
+        $data = Association::where(['parent_id'=>0])->get();
         return Helper::SuccessReturn($data, 'COUNTRY_DATA_FETCH');
     }
 

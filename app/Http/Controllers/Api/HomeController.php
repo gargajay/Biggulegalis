@@ -168,8 +168,9 @@ class HomeController extends Controller
             [
                 'id' =>1,
                 'type' => 'overview',
-                'information' => $association->description,
-                'president'=>$president
+                'information' => [],
+                'president'=>$president,
+                'description'=>$association->description
             ],
             [
                 'id' =>2,

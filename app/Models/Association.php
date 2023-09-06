@@ -15,6 +15,7 @@ class Association extends Model
     protected $fillable = [
         'name',
         'description',
+        'status',
         'parent_id',
         'permission_type',
         'location'
@@ -43,14 +44,14 @@ class Association extends Model
       return $this->belongsTo(self::class,'parent_id')->where('association_type',3)->with('stateBarCouncil');
     }
 
-    public function getStatusAttribute()
-    {
-        if ($this->deleted_at === null) {
-            return 'Active';
-        } else {
-            return 'Inactive';
-        }
-    }
+    // public function getStatusAttribute()
+    // {
+    //     if ($this->deleted_at === null) {
+    //         return 'Active';
+    //     } else {
+    //         return 'Inactive';
+    //     }
+    // }
 
     public function getParentAttribute()
     {

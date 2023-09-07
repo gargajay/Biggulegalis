@@ -77,7 +77,8 @@ class HomeController extends Controller
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
 
-        $data = Association::where('parent_id', $request->country_id)->with('country')->get();
+        $country_id = $request->country_id ?? 1;
+        $data = Association::where('parent_id', $country_id)->with('country')->get();
         return Helper::SuccessReturn($data, 'STATE_DATA_FETCH');
         PublicException::Error('SOMETHING_WENT_WRONG');
     }

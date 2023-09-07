@@ -79,7 +79,7 @@ Route::group([], function () {
 
         Route::post('update-profile', [UserController::class, 'updateProfile']);
         Route::post('edit-address', [UserController::class, 'editAddress']);
-        Route::get('get-profile', [UserController::class, 'getProfile']);
+        Route::post('get-profile', [UserController::class, 'getProfile']);
         Route::get('s3-token', [UserController::class, 'generateS3SecurityToken']);
         // update subscription
         // Route::post('update-susbcription', [SubscriptionController::class, 'updateSubscription']);

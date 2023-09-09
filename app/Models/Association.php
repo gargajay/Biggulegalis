@@ -29,6 +29,8 @@ class Association extends Model
 
     ];
 
+    protected $appends = ['is_child'];
+
     public function country()
     {
         return $this->belongsTo(self::class,'parent_id')->where('association_type',1);
@@ -78,5 +80,13 @@ class Association extends Model
         }else if($value=='4') {
             return 'Teshil/Other';
         }
+    }
+
+    public function getIsChildAttribute(){
+       $exit =  Association::where('parent_id',$this->id)->first();
+       if(!empty($exit)){
+        return true;
+       }
+       return false;
     }
 }

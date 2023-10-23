@@ -9,8 +9,10 @@ use App\Models\Association;
 use App\Models\Country;
 use App\Models\DistrictBarAssociation;
 use App\Models\Gallery;
+use App\Models\Announcement;
 use App\Models\Link;
 use App\Models\Post;
+use App\Models\Quote;
 use App\Models\StateBarCouncil;
 use App\Models\Tehsil;
 use App\Models\User;
@@ -163,6 +165,8 @@ class HomeController extends Controller
         $president = User::with('userAssociation')->whereIn('id',$president_id)->latest()->first();
 
         $links = Link::where('association_id', $request->association_id)->latest()->get();
+        $announcements = Announcement::where('association_id', $request->association_id)->latest()->get();
+        $quotes = Quote::where('association_id', $request->association_id)->latest()->get();
     
 
         $associationTabs = [
@@ -188,6 +192,16 @@ class HomeController extends Controller
                 'type' => 'links',
                 'information' => $links
             ],
+            [
+                'id' =>5,
+                'type' => 'quotes',
+                'information' => $quotes
+            ],
+            [
+                'id' =>6,
+                'type' => 'announcements',
+                'information' => $announcements
+            ],
         ];
 
         $association->tabs = $associationTabs;
@@ -195,5 +209,94 @@ class HomeController extends Controller
 
         return Helper::SuccessReturn($association, 'ASSOCIATION_FETCH');
 
+    }
+
+
+    public function Quote(Request $request)
+    {
+        $rules = [
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable'],
+            'id' => ['nullable', 'integer', 'iexists:quotes,id'],
+            'association_id' => ['required', 'integer', 'iexists:associations,id']
+
+        ];
+
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
+        $id = $request->id;
+        $quote = !empty($id) ? Quote::find($request->id) : new Quote;
+        $quote->user_id = Auth::id();
+        $quote = Helper::UpdateObjectIfKeyNotEmpty($quote, [
+            'name',
+            'description',
+            'association_id'
+        ]);
+
+        $quote->user_id = Auth::id();
+       
+        // if data not save show error
+    
+        PublicException::NotSave($quote->save());
+        // add quote members
+      
+        return Helper::SuccessReturn($quote->load('association'), !empty($id) ? 'QUOTE_UPDATED' : 'QUOTE_ADDED');
+    }
+
+    public function deleteQuote(Request $request)
+    {
+        $rules = [
+            'id' => ['required', 'integer', 'iexists:quotes,id']
+        ];
+
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
+        Quote::find($request->id)->delete();
+        return Helper::SuccessReturn(null, 'QUOTE_DELETED');
+    }
+
+    // annocements
+
+    public function announcement(Request $request)
+    {
+        $rules = [
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable'],
+            'id' => ['nullable', 'integer', 'iexists:announcements,id'],
+            'association_id' => ['required', 'integer', 'iexists:associations,id']
+
+        ];
+
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
+        $id = $request->id;
+        $announcement = !empty($id) ? Announcement::find($request->id) : new Announcement;
+        $announcement->user_id = Auth::id();
+        $announcement = Helper::UpdateObjectIfKeyNotEmpty($announcement, [
+            'name',
+            'description',
+            'association_id'
+        ]);
+
+        $announcement->user_id = Auth::id();
+       
+        // if data not save show error
+    
+        PublicException::NotSave($announcement->save());
+        // add announcement members
+      
+        return Helper::SuccessReturn($announcement->load('association'), !empty($id) ? 'ANNOUNCEMENT_UPDATED' : 'ANNOUNCEMENT_ADDED');
+    }
+
+    public function deleteAnnouncement(Request $request)
+    {
+        $rules = [
+            'id' => ['required', 'integer', 'iexists:announcements,id']
+        ];
+
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
+        Announcement::find($request->id)->delete();
+        return Helper::SuccessReturn(null, 'ANNOUNCEMENT_DELETED');
     }
 }

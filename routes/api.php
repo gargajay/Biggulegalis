@@ -111,6 +111,31 @@ Route::group([], function () {
         Route::post('gallery', [GalleryController::class, 'gallery']); // add/update link
         Route::post('delete-gallery', [GalleryController::class, 'deleteGallery']);
 
+        /******************************-----Staff API-----************************************/
+
+
+        Route::post('add-staff', [UserController::class, 'staff']); // staff/
+        Route::post('delete-staff', [UserController::class, 'deleteStaff']);
+
+
+        /******************************-----announcement API-----************************************/
+
+
+        Route::post('announcement', [HomeController::class, 'announcement']); // staff/
+        Route::post('delete-announcement', [HomeController::class, 'deleteAnnouncement']);
+
+        /******************************-----Quote API-----************************************/
+
+
+        Route::post('quote', [HomeController::class, 'quote']); // staff/
+        Route::post('delete-quote', [HomeController::class, 'deleteQuote']);
+
+
+
+
+
+
+
         /******************************-----CHAT API-----************************************/
         Route::post('chat-group', [GroupController::class, 'chatGroup']);
         Route::post('add-members-to-group', [GroupController::class, 'addMembersToChatGroup']);

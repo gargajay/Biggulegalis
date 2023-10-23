@@ -92,6 +92,21 @@ return [
     'LINK_DETAILS' => 'Link details fetched successfully.',
     'LINK_ADDED' => 'Link added successfully.',
     'LINK_UPDATED' => 'Link updated successfully.',
+    'STAFF_DELETED' => 'Staff deleted successfully.',
+    'LINK_DELETED' => 'Link deleted successfully.',
+
+    'QUOTE_ADDED' => 'Quote added successfully.',
+    'QUOTE_UPDATED' => 'Quote updated successfully.',
+    'QUOTE_DELETED' => 'Quote deleted successfully.',
+
+
+    'ANNOUNCEMENT_ADDED' => 'Announcement added successfully.',
+    'ANNOUNCEMENT_UPDATED' => 'Announcement updated successfully.',
+    'ANNOUNCEMENT_DELETED' => 'Announcement deleted successfully.',
+
+
+    
+    
     'LINK_DELETED' => 'Link deleted successfully.',
     'MEMBERS_FETCH' => 'Members fetched successfully.',
     'LINK_REMINDER' => 'You have an upcoming event for :name today at :time .',

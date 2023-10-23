@@ -175,14 +175,21 @@ class User extends Authenticatable
                 'name' =>'Gallery',
                 'is_selected' =>false
             ],
+            [
+                'id' =>5,
+                'name' =>'Links',
+                'is_selected' =>false
+            ]
         ];
     }
 
     public function tabs(){
 
-        $members =   User::select('full_name','email','enrolment_number','phone','image','gender','biography')->with('userAssociation')->latest()->get();
+        $members =   User::select('full_name','email','enrolment_number','phone','image','gender','biography')->where('parent_id',Auth::id())->with('userAssociation')->latest()->get();
         $gallerys = Gallery::where('user_id', auth::id())->latest()->get();
         $links = Link::where('user_id',auth::id())->latest()->get();
+        $announcements = Announcement::where('user_id',auth::id())->latest()->get();
+        $quotes = Quote::where('user_id',auth::id())->latest()->get();
     
 
       return   $associationTabs = [
@@ -194,7 +201,7 @@ class User extends Authenticatable
             [
                 'id' =>2,
                 'type' => 'Announcments',
-                'information' => $links
+                'information' => $announcements
             ],
             [
                 'id' =>3,
@@ -206,6 +213,12 @@ class User extends Authenticatable
                 'type' => 'links',
                 'information' => $links
             ],
+            [
+                'id' =>5,
+                'type' => 'quotes',
+                'information' => $quotes
+            ],
+          
         ];
 
         

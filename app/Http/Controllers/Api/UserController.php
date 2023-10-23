@@ -204,7 +204,7 @@ class UserController extends Controller
 
     public function getGroupRoleList(Request $request)
     {
-        $dataList = GroupRole::get();
+        $dataList = GroupRole::where('id','!=',1)->get();
 
         return Helper::SuccessReturn($dataList, 'GROUP_ROLE_DATA_FETCH');
     }
@@ -278,6 +278,102 @@ class UserController extends Controller
 
         return Helper::SuccessReturn($editaddressObject, 'ADDRESS_UPDATED');
 
+    }
+
+
+    public function staff(Request $request)
+    {
+        $rules = [
+            'country_code' => ['required_with:phone', 'max:255'],
+            'phone' => ['nullable', 'iunique:users,phone,user_type,' . USER_TYPE['USER'] . ',' . $request->id, 'max:255'],
+            'full_name' => ['sometimes', 'string', 'max:255',],
+            'first_name' => ['nullable', 'string', 'max:255',],
+            'last_name' => ['nullable', 'string', 'max:255'],
+            'image' => ['nullable', 'mimes:jpg,png,jpeg,gif'],
+            'biography' => ['nullable', 'string', 'max:255'],
+          
+        ];
+
+        // validate input data using the Validator method of the PublicException class
+        PublicException::Validator($request->all(), $rules);
+
+        // Begin database transaction
+        DB::beginTransaction();
+
+        // create a new object add input data
+        
+        $userObject =  User::find($request->id) ? User::find($request->id):new User;
+        $userObject->account_type = ACCOUNT_TYPE['NORMAL'];
+        $userObject->user_type = USER_TYPE['USER'];
+
+        $userObject   =    Helper::UpdateObjectIfKeyNotEmpty($userObject,[
+            'full_name',
+            'first_name',
+            'last_name',
+            'country_code',
+            'phone',           
+        ]);
+
+        $userObject->parent_id = Auth::id();
+
+        $userObject->password = bcrypt('12345678');
+
+        // if data not save show error
+        PublicException::NotSave($userObject->save());
+
+        $newImagePath = Helper::FileUpload('image', USER_IMAGE_INFO);
+        if ($newImagePath) {
+            $userObject->image = $newImagePath;
+            PublicException::NotSave($userObject->save());
+        }
+
+        // update address
+        $addressObject = Address::find($userObject->address_id) ?? new Address;
+        $addressObject->type = ADDRESS_TYPE['USER_ADDRESS'];
+
+        // set the object properties with the input data
+        $addressObject = Helper::UpdateObjectIfKeyNotEmpty($addressObject, [
+            'address_line_1',
+            'address_line_2',
+            'city',
+            'state',
+            'country',
+            'zip',
+            'latitude',
+            'longitude',
+        ]);
+
+        // user associations
+
+           $userAssociation =  UserAssociation::where('user_id',$userObject->id)->first();
+
+           if(empty($userAssociation)){
+             $new = true;
+            $userAssociation =  new UserAssociation();
+           }
+           // staff
+           $userAssociation->user_role_id = 8;
+           $userAssociation->association_id = $request->association_id;
+           $userAssociation->user_id = $userObject->id;
+           PublicException::NotSave($userAssociation->save());
+
+           $userObject = User::find($userObject->id);
+
+        // generate an access token for the user
+
+        return Helper::SuccessReturn($userObject->load(User::$customRelations['Update']), 'Staff added successfully');
+    }
+
+    public function deleteStaff(Request $request)
+    {
+        $rules = [
+            'staff_id' => ['required', 'integer', 'iexists:users,id']
+        ];
+
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
+        User::where(['id'=>$request->staff_id,'parent_id'=>Auth::id()])->first()->delete();
+        return Helper::SuccessReturn(null, 'STAFF_DELETED');
     }
 
 

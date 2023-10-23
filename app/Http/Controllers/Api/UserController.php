@@ -343,6 +343,12 @@ class UserController extends Controller
             'longitude',
         ]);
 
+        PublicException::NotSave($addressObject->save());
+
+        $userObject->address_id = $addressObject->id;
+        // if data not save show error
+        PublicException::NotSave($userObject->save());
+
         // user associations
 
            $userAssociation =  UserAssociation::where('user_id',$userObject->id)->first();

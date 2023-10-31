@@ -198,11 +198,45 @@ class UserController extends Controller
         $userId = $request->user_id ?? Auth::id();
         $userObject = User::where('id', $userId)->with('userAssociation','addresses')->first();
         $userObject->makeVisible(['date_of_birth', 'biography', 'gender', 'is_profile_completed', 'push_notification', 'language']);
-        $userObject->all_permissions = User::getAllPermissions();
+        $userObject->all_permissions = User::getAllPermissions($userId);
         $userObject->tabs = $userObject->tabs(); 
 
         return Helper::SuccessReturn($userObject, 'PROFILE_FETCHED');
     }
+
+    public function savePermission(Request $request)
+    {
+        $rules = [
+            'user_id' => ['required'],
+        ];
+          
+
+        // validate input data using the Validator method of the PublicException class
+        PublicException::Validator($request->all(), $rules);
+        $userId = $request->user_id;
+
+        $userObject = User::where('id', $userId)->with('userAssociation','addresses')->first();
+        $userObject->makeVisible(['date_of_birth', 'biography', 'gender', 'is_profile_completed', 'push_notification', 'language']);
+      
+
+        $userAsso =   UserAssociation::where('user_id',$request->user_id)->first();
+
+      //  dd($userAsso);
+        if(!empty($userAsso))
+        {
+          
+            $userAsso->permissions = $request->permissions;
+            $userAsso->save();
+        }
+
+        $userObject->all_permissions = User::getAllPermissions($userId);
+        $userObject->tabs = $userObject->tabs(); 
+
+        return Helper::SuccessReturn($userObject, 'PROFILE_FETCHED');
+    }
+
+
+    
 
     public function getGroupRoleList(Request $request)
     {

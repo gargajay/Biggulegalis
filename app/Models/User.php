@@ -135,12 +135,12 @@ class User extends Authenticatable
     ];
 
     public static $customRelations = [
-        'Auth' => ['addresses','userAssociation'],
-        'Profile' => ['addresses','userAssociation'],
-        'Update' => ['addresses','userAssociation']
+        'Auth' => ['addresses', 'userAssociation'],
+        'Profile' => ['addresses', 'userAssociation'],
+        'Update' => ['addresses', 'userAssociation']
     ];
 
-   
+
 
     protected function getFullNameAttribute($value)
     {
@@ -152,76 +152,105 @@ class User extends Authenticatable
     //     $this->attributes['full_name'] = ucwords(strtolower($value ?? trim($this->attributes['first_name'] . ' ' . $this->attributes['last_name'])));
     // }
 
-    public static function getAllPermissions()
+    public static function getAllPermissions($user_id = 1)
     {
-        return [
+        $userAsso =   UserAssociation::where('user_id', $user_id)->first();
+
+        $userPermissions = [];
+        $userPermissions = $userAsso->permissions;
+
+
+
+
+        $permissions =  [
             [
-                'id' =>1,
-                'name' =>'Cleark Add',
-                'is_selected' =>false
+                'id' => 1,
+                'name' => 'Cleark Add',
+                'is_selected' => false
             ],
             [
-                'id' =>2,
-                'name' =>'Announcements',
-                'is_selected' =>false
+                'id' => 2,
+                'name' => 'Announcements',
+                'is_selected' => false
             ],
             [
-                'id' =>3,
-                'name' =>'Invitation',
-                'is_selected' =>false
+                'id' => 3,
+                'name' => 'Invitation',
+                'is_selected' => false
             ],
             [
-                'id' =>4,
-                'name' =>'Gallery',
-                'is_selected' =>false
+                'id' => 4,
+                'name' => 'Gallery',
+                'is_selected' => false
             ],
             [
-                'id' =>5,
-                'name' =>'Links',
-                'is_selected' =>false
+                'id' => 5,
+                'name' => 'Links',
+                'is_selected' => false
+            ],
+            [
+                'id' => 6,
+                'name' => 'Announcments',
+                'is_selected' => false
+            ],
+            [
+                'id' => 7,
+                'name' => 'Quotes',
+                'is_selected' => false
             ]
         ];
+
+
+        if (!empty($userPermissions)) {
+            $userPermissions = json_decode($userPermissions);
+            foreach ($permissions as &$per) {
+                if (in_array($per['id'], $userPermissions)) {
+                    $per['is_selected'] = true;
+                }
+            }
+        }
+
+        return $permissions;
     }
 
-    public function tabs(){
+    public function tabs()
+    {
 
-        $members =   User::select('full_name','email','enrolment_number','phone','image','gender','biography')->where('parent_id',Auth::id())->with('userAssociation')->latest()->get();
+        $members =   User::select('full_name', 'email', 'enrolment_number', 'phone', 'image', 'gender', 'biography')->where('parent_id', Auth::id())->with('userAssociation')->latest()->get();
         $gallerys = Gallery::where('user_id', auth::id())->latest()->get();
-        $links = Link::where('user_id',auth::id())->latest()->get();
-        $announcements = Announcement::where('user_id',auth::id())->latest()->get();
-        $quotes = Quote::where('user_id',auth::id())->latest()->get();
-    
+        $links = Link::where('user_id', auth::id())->latest()->get();
+        $announcements = Announcement::where('user_id', auth::id())->latest()->get();
+        $quotes = Quote::where('user_id', auth::id())->latest()->get();
 
-      return   $associationTabs = [
+
+        return   $associationTabs = [
             [
-                'id' =>1,
+                'id' => 1,
                 'type' => 'Clearks',
                 'information' => $members,
             ],
             [
-                'id' =>2,
+                'id' => 2,
                 'type' => 'Announcments',
                 'information' => $announcements
             ],
             [
-                'id' =>3,
+                'id' => 3,
                 'type' => 'gallery',
                 'information' => $gallerys
             ],
             [
-                'id' =>4,
+                'id' => 4,
                 'type' => 'links',
                 'information' => $links
             ],
             [
-                'id' =>5,
+                'id' => 5,
                 'type' => 'quotes',
                 'information' => $quotes
             ],
-          
-        ];
 
-        
+        ];
     }
 
     protected function setFirstNameAttribute($value)
@@ -330,6 +359,4 @@ class User extends Authenticatable
             'cancel_subscription' => $this->cancel_subscription
         ];
     }
-
-   
 }

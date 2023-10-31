@@ -17,6 +17,10 @@ class UserAssociation extends Model
         'updated_at',
     ];
 
+    protected $cast = [
+        'permissions' => 'json'
+    ];
+
     protected $appends = ['association_name'];
 
     public function userRole()

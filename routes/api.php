@@ -78,6 +78,7 @@ Route::group([], function () {
         Route::get('get-group-role-list', [UserController::class, 'getGroupRoleList']);
 
         Route::post('update-profile', [UserController::class, 'updateProfile']);
+        Route::post('save-permissions', [UserController::class, 'savePermission']);
         Route::post('edit-address', [UserController::class, 'editAddress']);
         Route::post('get-profile', [UserController::class, 'getProfile']);
         Route::get('s3-token', [UserController::class, 'generateS3SecurityToken']);

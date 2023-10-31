@@ -157,7 +157,6 @@ class User extends Authenticatable
         $userAsso =   UserAssociation::where('user_id', $user_id)->first();
 
         $userPermissions = [];
-        $userPermissions = $userAsso->permissions;
 
 
 
@@ -201,14 +200,20 @@ class User extends Authenticatable
         ];
 
 
-        if (!empty($userPermissions)) {
-            $userPermissions = json_decode($userPermissions);
-            foreach ($permissions as &$per) {
-                if (in_array($per['id'], $userPermissions)) {
-                    $per['is_selected'] = true;
+        if(!empty($userAsso)){
+            $userPermissions = $userAsso->permissions;
+
+            if (!empty($userPermissions)) {
+    
+                $userPermissions = json_decode($userPermissions);
+                foreach ($permissions as &$per) {
+                    if (in_array($per['id'], $userPermissions)) {
+                        $per['is_selected'] = true;
+                    }
                 }
             }
         }
+     
 
         return $permissions;
     }

@@ -120,6 +120,8 @@ class UserController extends Controller
             'longitude',
         ]);
 
+        $new = false;
+
         // user associations
 
         if(!empty($request->is_role_info))

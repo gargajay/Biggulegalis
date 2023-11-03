@@ -86,7 +86,7 @@ class GalleryController extends Controller
     public function deleteGallery(Request $request)
     {
         $rules = [
-            'id' => ['required', 'integer', 'iexists:gallerys,id']
+            'id' => ['required', 'integer', 'iexists:gallery,id']
         ];
 
         // Validate the user input data

@@ -427,7 +427,7 @@ class UserController extends Controller
     public function deleteStaff(Request $request)
     {
         $rules = [
-            'staff_id' => ['required', 'integer', 'iexists:users,id']
+            'staff_id' => ['required', 'iexists:users,id']
         ];
 
         // Validate the user input data

@@ -218,7 +218,7 @@ class User extends Authenticatable
     public function tabs()
     {
 
-        $members =   User::select('full_name', 'email', 'enrolment_number', 'phone', 'image', 'gender', 'biography')->where('parent_id', Auth::id())->with('userAssociation')->latest()->get();
+        $members =   User::select('full_name', 'email', 'enrolment_number', 'phone', 'image', 'gender', 'biography')->where('parent_id', Auth::id())->with('addresses','userAssociation')->latest()->get();
         $gallerys = Gallery::where('user_id', auth::id())->latest()->get();
         $links = Link::where('user_id', auth::id())->latest()->get();
         $announcements = Announcement::where('user_id', auth::id())->latest()->get();

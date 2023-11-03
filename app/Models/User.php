@@ -158,9 +158,6 @@ class User extends Authenticatable
 
         $userPermissions = [];
 
-
-
-
         $permissions =  [
             [
                 'id' => 1,

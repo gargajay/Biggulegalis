@@ -18,7 +18,8 @@ class UserAssociation extends Model
     ];
 
     protected $cast = [
-        'permissions' => 'json'
+        'permissions' => 'json',
+        'roles' => 'json'
     ];
 
     protected $appends = ['association_name'];
@@ -35,4 +36,24 @@ class UserAssociation extends Model
         return $name;
 
     }
+
+    public function getRolesAttribute($value){
+        if(!empty($value)){
+            $roles = json_decode($value);
+           return GroupRole::whereIn('id',$roles)->get();
+        }
+        return $value;
+    }
+
+    public static function checkPresentExitInAssocation($association_id,$roles){
+        //prisent id
+        $prisent_id = 4 ;
+        if(in_array($prisent_id,$roles)){
+            $checkIsPresentInAssociation = UserAssociation::where('association_id',$association_id)->whereJsonContains('roles', $prisent_id)->first();
+            return 'You cannot choose prisent role. it is allready their';
+        }
+        return false;
+    }
+
+    
 }

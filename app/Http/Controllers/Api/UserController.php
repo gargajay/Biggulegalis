@@ -8,6 +8,7 @@ use App\Helper\PushNotification;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Address;
+use App\Models\Association;
 use App\Models\BlockedUser;
 use App\Models\GroupRole;
 use App\Models\UserAssociation;
@@ -39,17 +40,16 @@ class UserController extends Controller
             // 'country_code' => ['required_with:phone', 'max:255'],
             'image' => ['nullable', 'mimes:jpg,png,jpeg,gif'],
             'social_image_url' => ['nullable', 'string', 'max:255', 'url'],
-            'date_of_birth' => ['nullable','string'],
+            'date_of_birth' => ['nullable', 'string'],
             'biography' => ['nullable', 'max:255'],
             'gender' => ['nullable', 'in:' . implode(',', GENDER)]
 
         ];
-          
-        if(!empty($request->is_role_info))
-        {
-                $rules['user_role'] = ['nullable', 'iexists:group_role,id', 'integer'];
-                $rules['association_id'] = ['nullable','integer'];
-                $rules['association_type'] = ['nullable','integer'];
+
+        if (!empty($request->is_role_info)) {
+            $rules['user_role'] = ['nullable'];
+            $rules['association_id'] = ['nullable', 'integer'];
+            $rules['association_type'] = ['nullable', 'integer'];
         }
 
         // validate input data using the Validator method of the PublicException class
@@ -62,7 +62,7 @@ class UserController extends Controller
         $userObject = User::find(Auth::id());
 
         // set the object properties with the input data
-        $userObject   =    Helper::UpdateObjectIfKeyNotEmpty($userObject,[
+        $userObject   =    Helper::UpdateObjectIfKeyNotEmpty($userObject, [
             'full_name',
             'first_name',
             'last_name',
@@ -124,37 +124,57 @@ class UserController extends Controller
 
         // user associations
 
-        if(!empty($request->is_role_info))
-        {
-            
-           $userAssociation =  UserAssociation::where('user_id',$userObject->id)->first();
+        if (!empty($request->is_role_info)) {
 
-           if(empty($userAssociation)){
-             $new = true;
-            $userAssociation =  new UserAssociation();
-           }
-           
-           $userAssociation = Helper::UpdateObjectIfKeyNotEmpty($userAssociation, [
-            'user_role_id',
-            'association_id',
-           ]);
+            $asso = Association::where('id',$request->association_id)->first();
 
-           $userAssociation->user_id = $userObject->id;
-           PublicException::NotSave($userAssociation->save());
+            // 3 close permissiom
+            if($asso->permission_type==3)
+            {
+                PublicException::Error('You cannot be directly join this assoication . connect to priesent of association for inviation');
+            }
+
+            $userAssociation =  UserAssociation::where('association_id',$request->association_id)->where('user_id', $userObject->id)->first();
+
+            if (empty($userAssociation)) 
+            {
+
+                $new = true;
+                $userAssociation =  new UserAssociation();
+            }
+
+            $userAssociation = Helper::UpdateObjectIfKeyNotEmpty($userAssociation, [
+                'user_role_id',
+                'association_id',
+            ]);
+
+            if (!empty($request->roles)) {
+                $userAssociation->roles = storeJsonArray($request->roles);
+            } else {
+                if ($new) {
+                    $userAssociation->roles = ['8'];
+                }
+            }
+
+            if(!empty($request->roles)){
+            $exit =  UserAssociation::checkPresentExitInAssocation($request->association_id,storeJsonArray($request->roles));
+              if($exit){
+                PublicException::Error($exit);
+              }
+            }
 
 
-           $userData = [
-            'id' => Auth::id(),
-            'full_name' => Auth::user()->full_name,
-            'image' => Auth::user()->image,
-           ];
 
-
-
+            $userAssociation->user_id = $userObject->id;
+            PublicException::NotSave($userAssociation->save());
+            $userData = [
+                'id' => Auth::id(),
+                'full_name' => Auth::user()->full_name,
+                'image' => Auth::user()->image,
+            ];
         }
 
         // $addressObject = Helper::MakeGeolocation($addressObject, $request->longitude, $request->latitude);
-
         // if data not save show error
         PublicException::NotSave($addressObject->save());
 
@@ -162,25 +182,25 @@ class UserController extends Controller
         // if data not save show error
         PublicException::NotSave($userObject->save());
 
-        if($new){
+        if ($new) {
 
-            $members =   UserAssociation::where('association_id',$request->association_id)->where('user_id','!=',$userObject->id)->pluck('user_id')->toArray();
+            $members =   UserAssociation::where('association_id', $request->association_id)->where('user_id', '!=', $userObject->id)->pluck('user_id')->toArray();
 
-           foreach ($members as $member) {
-            $checkUser = User::where('id', $member)->first();
-            if (!empty($checkUser)) {
+            foreach ($members as $member) {
+                $checkUser = User::where('id', $member)->first();
+                if (!empty($checkUser)) {
                     $notificationData = [[
-                    'receiver_id' => $members,
-                    'title' => ['New Member Joined Assoication'],
-                    'body' => ['JOINED_MEMBER'],
-                    'type' => 'NEW_MEMBER',
-                    'app_notification_data' => $userData,
-                    'model_id' => $userObject->id,
-                    'model_name' => get_class($checkUser),
-                ]];
-                PushNotification::Notification($notificationData, true, false, $userObject->id);
+                        'receiver_id' => $members,
+                        'title' => ['New Member Joined Assoication'],
+                        'body' => ['JOINED_MEMBER'],
+                        'type' => 'NEW_MEMBER',
+                        'app_notification_data' => $userData,
+                        'model_id' => $userObject->id,
+                        'model_name' => get_class($checkUser),
+                    ]];
+                    PushNotification::Notification($notificationData, true, false, $userObject->id);
+                }
             }
-        }
         }
 
         $newImagePath = Helper::FileUpload('image', USER_IMAGE_INFO);
@@ -196,10 +216,10 @@ class UserController extends Controller
     public function getProfile(Request $request)
     {
         $userId = $request->user_id ?? Auth::id();
-        $userObject = User::where('id', $userId)->with('userAssociation','addresses')->first();
+        $userObject = User::where('id', $userId)->with('userAssociation', 'addresses')->first();
         $userObject->makeVisible(['date_of_birth', 'biography', 'gender', 'is_profile_completed', 'push_notification', 'language']);
         $userObject->all_permissions = User::getAllPermissions($userId);
-        $userObject->tabs = $userObject->tabs(); 
+        $userObject->tabs = $userObject->tabs();
 
         return Helper::SuccessReturn($userObject, 'PROFILE_FETCHED');
     }
@@ -209,38 +229,37 @@ class UserController extends Controller
         $rules = [
             'user_id' => ['required'],
         ];
-          
+
 
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
         $userId = $request->user_id;
 
-        $userObject = User::where('id', $userId)->with('userAssociation','addresses')->first();
+        $userObject = User::where('id', $userId)->with('userAssociation', 'addresses')->first();
         $userObject->makeVisible(['date_of_birth', 'biography', 'gender', 'is_profile_completed', 'push_notification', 'language']);
-      
 
-        $userAsso =   UserAssociation::where('user_id',$request->user_id)->first();
 
-      //  dd($userAsso);
-        if(!empty($userAsso))
-        {
-          
+        $userAsso =   UserAssociation::where('user_id', $request->user_id)->first();
+
+        //  dd($userAsso);
+        if (!empty($userAsso)) {
+
             $userAsso->permissions = $request->permissions;
             $userAsso->save();
         }
 
         $userObject->all_permissions = User::getAllPermissions($userId);
-        $userObject->tabs = $userObject->tabs(); 
+        $userObject->tabs = $userObject->tabs();
 
         return Helper::SuccessReturn($userObject, 'PROFILE_FETCHED');
     }
 
 
-    
+
 
     public function getGroupRoleList(Request $request)
     {
-        $dataList = GroupRole::where('id','!=',1)->get();
+        $dataList = GroupRole::where('id', '!=', 1)->get();
 
         return Helper::SuccessReturn($dataList, 'GROUP_ROLE_DATA_FETCH');
     }
@@ -313,7 +332,6 @@ class UserController extends Controller
         PublicException::NotSave($editaddressObject->save());
 
         return Helper::SuccessReturn($editaddressObject, 'ADDRESS_UPDATED');
-
     }
 
 
@@ -327,7 +345,7 @@ class UserController extends Controller
             'last_name' => ['nullable', 'string', 'max:255'],
             'image' => ['nullable', 'mimes:jpg,png,jpeg,gif'],
             'biography' => ['nullable', 'string', 'max:255'],
-          
+
         ];
 
         // validate input data using the Validator method of the PublicException class
@@ -337,17 +355,17 @@ class UserController extends Controller
         DB::beginTransaction();
 
         // create a new object add input data
-        
-        $userObject =  User::find($request->id) ? User::find($request->id):new User;
+
+        $userObject =  User::find($request->id) ? User::find($request->id) : new User;
         $userObject->account_type = ACCOUNT_TYPE['NORMAL'];
         $userObject->user_type = USER_TYPE['USER'];
 
-        $userObject   =    Helper::UpdateObjectIfKeyNotEmpty($userObject,[
+        $userObject   =    Helper::UpdateObjectIfKeyNotEmpty($userObject, [
             'full_name',
             'first_name',
             'last_name',
             'country_code',
-            'phone',           
+            'phone',
         ]);
 
         $userObject->parent_id = Auth::id();
@@ -387,19 +405,19 @@ class UserController extends Controller
 
         // user associations
 
-           $userAssociation =  UserAssociation::where('user_id',$userObject->id)->first();
+        $userAssociation =  UserAssociation::where('user_id', $userObject->id)->first();
 
-           if(empty($userAssociation)){
-             $new = true;
+        if (empty($userAssociation)) {
+            $new = true;
             $userAssociation =  new UserAssociation();
-           }
-           // staff
-           $userAssociation->user_role_id = 8;
-           $userAssociation->association_id = $request->association_id;
-           $userAssociation->user_id = $userObject->id;
-           PublicException::NotSave($userAssociation->save());
+        }
+        // staff
+        $userAssociation->user_role_id = 8;
+        $userAssociation->association_id = $request->association_id;
+        $userAssociation->user_id = $userObject->id;
+        PublicException::NotSave($userAssociation->save());
 
-           $userObject = User::find($userObject->id);
+        $userObject = User::find($userObject->id);
 
         // generate an access token for the user
 
@@ -414,10 +432,7 @@ class UserController extends Controller
 
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
-        User::where(['id'=>$request->staff_id,'parent_id'=>Auth::id()])->first()->delete();
+        User::where(['id' => $request->staff_id, 'parent_id' => Auth::id()])->first()->delete();
         return Helper::SuccessReturn(null, 'STAFF_DELETED');
     }
-
-
-    
 }

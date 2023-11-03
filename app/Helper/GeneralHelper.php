@@ -464,3 +464,27 @@ if (!function_exists('customPaginate')) {
         ];
     }
 }
+
+if (!function_exists('storeJsonArray')) {
+
+    /**
+     * Paginates the given model object and returns the paginated results
+     */
+    function storeJsonArray($data)
+    {
+        $inputData = $data;
+
+        // Check if the input data is a JSON array
+        if (is_array($inputData)) {
+            // If it's already an array, process it as a JSON array
+            $dataArray = $inputData;
+        } else {
+            // If it's a string, attempt to decode it from JSON
+            $dataArray = json_decode($inputData, true);
+        }
+
+        return $dataArray;
+    }
+}
+
+

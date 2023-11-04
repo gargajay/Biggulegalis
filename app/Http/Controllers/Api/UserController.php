@@ -11,6 +11,7 @@ use App\Models\Address;
 use App\Models\Association;
 use App\Models\BlockedUser;
 use App\Models\GroupRole;
+use App\Models\Invitation;
 use App\Models\UserAssociation;
 use Aws\Credentials\Credentials;
 use Aws\Sts\StsClient;
@@ -167,6 +168,15 @@ class UserController extends Controller
 
             $userAssociation->user_id = $userObject->id;
             PublicException::NotSave($userAssociation->save());
+
+            // send invitation  
+
+            $invitation = new Invitation();
+            $invitation->user_id = Auth::id();
+            $invitation->msg = Auth::user()->full_name.' send you request to join  in your association';
+            $invitation->association_id = $request->association_id;
+            PublicException::NotSave($invitation->save());
+
             $userData = [
                 'id' => Auth::id(),
                 'full_name' => Auth::user()->full_name,

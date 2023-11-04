@@ -106,6 +106,9 @@ Route::group([], function () {
    
         Route::post('link', [LinkController::class, 'link']); // add/update link
         Route::post('delete-link', [LinkController::class, 'deleteLink']);
+        Route::post('get-invitation', [LinkController::class, 'getInviationList']);
+
+       
 
         /******************************-----Galley API-----************************************/
        

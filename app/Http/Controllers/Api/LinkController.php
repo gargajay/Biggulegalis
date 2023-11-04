@@ -7,6 +7,7 @@ use App\Helper\Helper;
 use App\Helper\PushNotification;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
+use App\Models\Invitation;
 use App\Models\Link;
 use App\Models\User;
 use Carbon\carbon;
@@ -87,5 +88,20 @@ class LinkController extends Controller
         PublicException::Validator($request->all(), $rules);
         Link::find($request->id)->delete();
         return Helper::SuccessReturn(null, 'LINK_DELETED');
+    }
+
+    public function getInviationList(Request $request)
+    {
+        
+
+        $rules = [
+            'association_id' => ['required', 'integer', 'iexists:associations,id']
+        ];
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
+        $links = Invitation::with('association','user')
+            ->where('association_id', $request->association_id);
+        $links = newPagination($links->latest());
+        return Helper::SuccessReturn($links,'LINK_FETCH');
     }
 }

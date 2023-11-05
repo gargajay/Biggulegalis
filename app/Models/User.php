@@ -228,44 +228,41 @@ class User extends Authenticatable
         return   $associationTabs = [
             [
                 'id' => 1,
+                'name' => 'Clearks',
                 'type' => 'Clearks',
                 'information' => $members,
             ],
             [
                 'id' => 2,
+                'name' => 'Announcments',
                 'type' => 'Announcments',
                 'information' => $announcements
             ],
             [
                 'id' => 3,
+                'name' => 'gallery',
                 'type' => 'gallery',
                 'information' => $gallerys
             ],
             [
                 'id' => 4,
+                'name' => 'links',
                 'type' => 'links',
                 'information' => $links
             ],
             [
                 'id' => 5,
+                'name' => 'quotes',
                 'type' => 'quotes',
                 'information' => $quotes
             ],
             [
                 'id' =>7,
-                'type' => 'offce_bear',
+                'name' => 'offcebear',
+                'type' => 'offcebear',
                 'information' => $members
             ],
-            [
-                'id' =>8,
-                'type' => 'commissioner',
-                'information' => $members
-            ],
-            [
-                'id' =>9,
-                'type' => 'notary',
-                'information' => $members
-            ],
+            
 
         ];
     }

@@ -177,6 +177,7 @@ class HomeController extends Controller
         $associationTabs = [
             [
                 'id' =>1,
+                'name' => 'overview',
                 'type' => 'overview',
                 'information' => [],
                 'president'=>$president,
@@ -184,44 +185,41 @@ class HomeController extends Controller
             ],
             [
                 'id' =>2,
+                'name' => 'members',
                 'type' => 'members',
                 'information' => $members
             ],
             [
                 'id' =>3,
+                'name' => 'gallery',
                 'type' => 'gallery',
                 'information' => $gallerys
             ],
             [
                 'id' =>4,
+                'name' => 'links',
                 'type' => 'links',
                 'information' => $links
             ],
             [
                 'id' =>5,
+                'name' => 'quotes',
                 'type' => 'quotes',
                 'information' => $quotes
             ],
             [
                 'id' =>6,
+                'name' => 'announcements',
                 'type' => 'announcements',
                 'information' => $announcements
             ],
             [
                 'id' =>7,
-                'type' => 'offce_bear',
+                'name' => 'offce bear',
+                'type' => 'offcebear',
                 'information' => $members
             ],
-            [
-                'id' =>8,
-                'type' => 'commissioner',
-                'information' => $members
-            ],
-            [
-                'id' =>9,
-                'type' => 'notary',
-                'information' => $members
-            ],
+         
         ];
 
         $association->tabs = $associationTabs;

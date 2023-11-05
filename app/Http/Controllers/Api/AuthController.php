@@ -37,7 +37,7 @@ class AuthController extends Controller
         $rules = [
             'country_code' => ['required_with:phone', 'max:255'],
             'phone' => ['required','iunique:users,phone,user_type,' . USER_TYPE['USER'], 'max:255'],
-            'email' => ['required', 'email:strict', 'iunique:users,email,user_type,' . USER_TYPE['USER'], 'max:255'],
+            // 'email' => ['required', 'email:strict', 'iunique:users,email,user_type,' . USER_TYPE['USER'], 'max:255'],
             'enrolment_number' => ['required', 'string', 'max:255',],
             'gender' => ['required', 'in:' . implode(',', GENDER)],
             'password' => ['required', 'strong_password'],

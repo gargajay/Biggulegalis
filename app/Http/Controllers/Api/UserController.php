@@ -145,7 +145,7 @@ class UserController extends Controller
             }
 
             $userAssociation = Helper::UpdateObjectIfKeyNotEmpty($userAssociation, [
-                'user_role_id',
+                // 'user_role_id',
                 'association_id',
             ]);
 
@@ -153,20 +153,26 @@ class UserController extends Controller
                 $userAssociation->roles = storeJsonArray($request->roles);
             } else {
                 if ($new) {
-                    $userAssociation->roles = ['8'];
+                    $userAssociation->roles = [8];
                 }
             }
 
+           // dd($userAssociation);
+
+            
             if(!empty($request->roles)){
             $exit =  UserAssociation::checkPresentExitInAssocation($request->association_id,storeJsonArray($request->roles));
               if($exit){
                 PublicException::Error($exit);
               }
+             // $userAssociation->roles = json_encode($userAssociation->roles);
+
             }
 
 
 
-            $userAssociation->user_id = $userObject->id;
+        $userAssociation->user_id = $userObject->id;
+            ////dd($userAssociation);
             PublicException::NotSave($userAssociation->save());
 
             // send invitation  

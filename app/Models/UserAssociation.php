@@ -39,7 +39,7 @@ class UserAssociation extends Model
 
     public function getRolesAttribute($value){
         if(!empty($value)){
-            $roles = json_decode($value);
+            $roles = storeJsonArray($value);
            return GroupRole::whereIn('id',$roles)->get();
         }
         return $value;
@@ -55,5 +55,5 @@ class UserAssociation extends Model
         return false;
     }
 
-    
+
 }

@@ -104,4 +104,33 @@ class LinkController extends Controller
         $links = newPagination($links->latest());
         return Helper::SuccessReturn($links,'LINK_FETCH');
     }
+
+    public function invitationAcceptReject(Request $request)
+    {
+        
+
+        $rules = [
+            'id' => ['required', 'integer', 'iexists:invitations,id'],
+            'status'=>['required']
+        ];
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
+        $invitation = Invitation::with('association','user')
+            ->where('association_id', $request->id)->first();
+        $invitation->status = $request->status;
+
+        if($request->status == 1){
+          $msg =  'Invitation_Accepted';
+        }else{
+            $msg =  'Invitation_Rejected';
+
+        }
+        PublicException::NotSave($invitation->save());
+         return Helper::SuccessReturn($invitation,$msg);
+    }
+
+
+
+
+    
 }

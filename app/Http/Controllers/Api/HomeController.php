@@ -160,7 +160,11 @@ class HomeController extends Controller
         $members =   User::with('userAssociation')->whereIn('id',$userIds)->latest()->get();
         $gallerys = Gallery::where('association_id', $request->association_id)->latest()->get();
 
-        $president_id =   UserAssociation::where('association_id',$association->id)->where('user_role_id',4)->pluck('user_id');
+      //  $president_id =   UserAssociation::where('association_id',$association->id)->where('user_role_id',4)->pluck('user_id');
+        $president_id = UserAssociation::where('association_id', $association->id)
+    ->whereJsonContains('roles', 4)
+    ->pluck('user_id');
+
 
         $president = User::with('userAssociation')->whereIn('id',$president_id)->latest()->first();
 
@@ -201,6 +205,21 @@ class HomeController extends Controller
                 'id' =>6,
                 'type' => 'announcements',
                 'information' => $announcements
+            ],
+            [
+                'id' =>7,
+                'type' => 'offce_bear',
+                'information' => $members
+            ],
+            [
+                'id' =>8,
+                'type' => 'commissioner',
+                'information' => $members
+            ],
+            [
+                'id' =>9,
+                'type' => 'notary',
+                'information' => $members
             ],
         ];
 

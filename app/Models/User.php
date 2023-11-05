@@ -251,6 +251,21 @@ class User extends Authenticatable
                 'type' => 'quotes',
                 'information' => $quotes
             ],
+            [
+                'id' =>7,
+                'type' => 'offce_bear',
+                'information' => $members
+            ],
+            [
+                'id' =>8,
+                'type' => 'commissioner',
+                'information' => $members
+            ],
+            [
+                'id' =>9,
+                'type' => 'notary',
+                'information' => $members
+            ],
 
         ];
     }

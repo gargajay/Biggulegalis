@@ -10,6 +10,7 @@ use App\Models\Country;
 use App\Models\DistrictBarAssociation;
 use App\Models\Gallery;
 use App\Models\Announcement;
+use App\Models\Invitation;
 use App\Models\Link;
 use App\Models\Post;
 use App\Models\Quote;
@@ -318,4 +319,27 @@ class HomeController extends Controller
         Announcement::find($request->id)->delete();
         return Helper::SuccessReturn(null, 'ANNOUNCEMENT_DELETED');
     }
+
+    public function sendInvitation(Request $request){
+        $rules = [
+            'user_id' => ['required', 'integer', 'iexists:users,id'],
+            'association_id' => ['required', 'integer', 'iexists:associations,id']
+
+        ];
+
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
+
+        $invitation = new Invitation();
+        $invitation->user_id = $request->user_id;
+        $invitation->msg = Auth::user()->full_name.' sent you request to join in his association';
+        $invitation->association_id = $request->association_id;
+        PublicException::NotSave($invitation->save());
+
+        return Helper::SuccessReturn(null, 'Invitation_sent');
+    }
+
+
 }
+
+

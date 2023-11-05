@@ -108,6 +108,9 @@ Route::group([], function () {
         Route::post('delete-link', [LinkController::class, 'deleteLink']);
         Route::post('get-invitation', [LinkController::class, 'getInviationList']);
         Route::post('invitation-accept-reject', [LinkController::class, 'invitationAcceptReject']);
+        Route::post('send-invitation', [HomeController::class, 'sendInvitation']);
+
+       
 
        
 

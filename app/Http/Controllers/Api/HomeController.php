@@ -140,7 +140,7 @@ class HomeController extends Controller
             $userIds =  $userIds->where('association_id',$request->association_id);
         }
          $userIds = $userIds->pluck('user_id');
-        $users =  User::whereIn('id',$userIds);
+        $users =  User::whereIn('id',$userIds)->with('userAssociation', 'addresses');
         $data = newPagination($users->latest());
 
         return Helper::SuccessReturn($data, 'MEMBER_FETCH');

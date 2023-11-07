@@ -144,10 +144,13 @@ class UserController extends Controller
                 $userAssociation =  new UserAssociation();
             }
 
-            $userAssociation = Helper::UpdateObjectIfKeyNotEmpty($userAssociation, [
-                // 'user_role_id',
-                'association_id',
-            ]);
+            $userAssociation->association_id = $request->association_id;
+
+            $userAssociation->user_id = $userObject->id;
+            ////dd($userAssociation);
+            PublicException::NotSave($userAssociation->save());
+
+            $userAssociation = UserAssociation::find($userAssociation->id);
 
             if (!empty($request->roles)) {
                 $userAssociation->roles = storeJsonArray($request->roles);
@@ -165,10 +168,12 @@ class UserController extends Controller
               if($exit){
                 PublicException::Error($exit);
               }
-             // $userAssociation->roles = json_encode($userAssociation->roles);
+              //$userAssociation->roles = json_encode($userAssociation->roles);
 
             }
 
+        
+         //  dd($userAssociation);
 
 
         $userAssociation->user_id = $userObject->id;

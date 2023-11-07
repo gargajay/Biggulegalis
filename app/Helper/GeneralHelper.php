@@ -480,7 +480,7 @@ if (!function_exists('storeJsonArray')) {
             $dataArray = $inputData;
         } else {
             // If it's a string, attempt to decode it from JSON
-            $dataArray = json_decode($inputData);
+            $dataArray = json_decode($inputData,true);
 
             //dd($dataArray);
         }

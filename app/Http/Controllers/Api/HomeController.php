@@ -136,6 +136,8 @@ class HomeController extends Controller
         PublicException::Validator($request->all(), $rules);
         $userIds =   UserAssociation::latest();
 
+        $search =  $request->search;
+
         if(!empty($request->association_id)){
             $userIds =  $userIds->where('association_id',$request->association_id);
         }
@@ -216,6 +218,12 @@ class HomeController extends Controller
             [
                 'id' =>7,
                 'name' => 'offce bear',
+                'type' => 'offcebear',
+                'information' => $members
+            ],
+            [
+                'id' =>8,
+                'name' => 'Notry pubic',
                 'type' => 'offcebear',
                 'information' => $members
             ],

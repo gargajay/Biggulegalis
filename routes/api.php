@@ -155,6 +155,12 @@ Route::group([], function () {
         Route::post('delete-quote', [HomeController::class, 'deleteQuote']);
 
 
+    /******************************-----compliant API-----************************************/
+
+
+         Route::post('compliant', [HomeController::class, 'compliant']); // staff/
+         Route::post('delete-compliant', [HomeController::class, 'deletecompliant']);
+
 
 
 

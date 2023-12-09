@@ -10,6 +10,7 @@ use App\Models\Country;
 use App\Models\DistrictBarAssociation;
 use App\Models\Gallery;
 use App\Models\Announcement;
+use App\Models\Compliant;
 use App\Models\Invitation;
 use App\Models\Link;
 use App\Models\Post;
@@ -326,6 +327,54 @@ class HomeController extends Controller
         Announcement::find($request->id)->delete();
         return Helper::SuccessReturn(null, 'ANNOUNCEMENT_DELETED');
     }
+
+
+    public function compliant(Request $request)
+    {
+        $rules = [
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable'],
+            'id' => ['nullable', 'integer', 'iexists:compliants,id'],
+            'association_id' => ['required', 'integer', 'iexists:associations,id']
+
+        ];
+
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
+        $id = $request->id;
+        $announcement = !empty($id) ? Compliant::find($request->id) : new Compliant;
+        $announcement->user_id = Auth::id();
+        $announcement = Helper::UpdateObjectIfKeyNotEmpty($announcement, [
+            'name',
+            'description',
+            'association_id'
+        ]);
+
+        $announcement->user_id = Auth::id();
+       
+        // if data not save show error
+    
+        PublicException::NotSave($announcement->save());
+        // add announcement members
+      
+        return Helper::SuccessReturn($announcement->load('association'), !empty($id) ? 'compliant_UPDATED' : 'compliant_ADDED');
+    }
+
+
+    public function deleteCompliant(Request $request)
+    {
+        $rules = [
+            'id' => ['required', 'integer', 'iexists:announcements,id']
+        ];
+
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
+        Compliant::find($request->id)->delete();
+        return Helper::SuccessReturn(null, 'compliant_DELETED');
+    }
+
+
+    
 
     public function sendInvitation(Request $request){
         $rules = [

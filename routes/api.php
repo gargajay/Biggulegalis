@@ -39,6 +39,9 @@ Route::group([], function () {
     Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
     Route::get('app-settings', [AuthController::class, 'appSettings']);
     Route::get('get-goal', [AuthController::class, 'getGoal']);
+    Route::get('get-all-document', [HomeController::class, 'getAllDocument']);
+
+    
     Route::get('checkCron', [CronController::class, 'sendLinkReminder']);
     Route::get('get-countries', [HomeController::class, 'getCountries']);
     Route::post('get-state', [HomeController::class, 'getState']);
@@ -51,6 +54,7 @@ Route::group([], function () {
     Route::post('get-gallery', [GalleryController::class, 'getGallery']);
     Route::post('get-gallery-details', [GalleryController::class, 'getGalleryDetails']);
     Route::post('member-list', [HomeController::class, 'getAllMembers']);
+    Route::post('document-list', [HomeController::class, 'getAllDocument']);
 
 
 
@@ -124,6 +128,18 @@ Route::group([], function () {
 
         Route::post('add-staff', [UserController::class, 'staff']); // staff/
         Route::post('delete-staff', [UserController::class, 'deleteStaff']);
+
+        Route::post('add-old-member', [UserController::class, 'oldMember']); // staff/
+        Route::post('delete-old-member', [UserController::class, 'deleteOldMember']);
+
+
+        Route::post('remove-from-association', [UserController::class, 'removeFromAssociation']);
+
+
+        
+
+
+    
 
 
         /******************************-----announcement API-----************************************/

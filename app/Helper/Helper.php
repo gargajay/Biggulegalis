@@ -267,8 +267,14 @@ class Helper
                 $data = request()->$key;
                  if(is_array($data)) {
                     // It's an array
-                    $jsonData = json_encode($data);
-                } elseif (is_string($data) && strpos($data, ',') !== false) {
+                     $jsonData = json_encode($data);
+                } elseif (is_string($data) && substr($data, 0, 1) === '[' && substr($data, -1) === ']') {
+                    // Attempt to decode the string as JSON array
+                    $jsonData = json_decode($data, true);
+    
+                    // Check if decoding was successful
+                }
+                elseif (is_string($data) && strpos($data, ',') !== false) {
                     // It's a string array
                     $dataArray = explode(',', $data);
                     $jsonData = json_encode($dataArray);

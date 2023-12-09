@@ -17,6 +17,7 @@ use App\Models\Quote;
 use App\Models\StateBarCouncil;
 use App\Models\Tehsil;
 use App\Models\User;
+use App\Models\Document;
 use App\Models\UserAssociation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -217,13 +218,13 @@ class HomeController extends Controller
             ],
             [
                 'id' =>7,
-                'name' => 'offce bear',
+                'name' => 'Notary public',
                 'type' => 'offcebear',
                 'information' => $members
             ],
             [
                 'id' =>8,
-                'name' => 'Notry pubic',
+                'name' => 'Auth commissioner',
                 'type' => 'offcebear',
                 'information' => $members
             ],
@@ -345,7 +346,14 @@ class HomeController extends Controller
         return Helper::SuccessReturn(null, 'Invitation_sent');
     }
 
+    public function getAllDocument()
+    {
+        $Data = Document::latest()->get();
+        return Helper::SuccessReturn($Data, 'Document list');
+    }
+
 
 }
+
 
 

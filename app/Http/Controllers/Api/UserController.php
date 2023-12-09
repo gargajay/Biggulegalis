@@ -12,6 +12,7 @@ use App\Models\Association;
 use App\Models\BlockedUser;
 use App\Models\GroupRole;
 use App\Models\Invitation;
+use App\Models\OldMember;
 use App\Models\UserAssociation;
 use Aws\Credentials\Credentials;
 use Aws\Sts\StsClient;
@@ -433,17 +434,18 @@ class UserController extends Controller
             $userAssociation =  new UserAssociation();
         }
         // staff
-        $userAssociation->user_role_id = 8;
+        $userAssociation->roles = [8];
         $userAssociation->association_id = $request->association_id;
         $userAssociation->user_id = $userObject->id;
         PublicException::NotSave($userAssociation->save());
-
         $userObject = User::find($userObject->id);
 
         // generate an access token for the user
 
         return Helper::SuccessReturn($userObject->load(User::$customRelations['Update']), 'Staff added successfully');
     }
+
+
 
     public function deleteStaff(Request $request)
     {
@@ -456,4 +458,67 @@ class UserController extends Controller
         User::where(['id' => $request->staff_id, 'parent_id' => Auth::id()])->first()->delete();
         return Helper::SuccessReturn(null, 'STAFF_DELETED');
     }
+
+    public function removeFromAssociation(Request $request)
+    {
+        $rules = [
+            'member_id' => ['required', 'iexists:users,id'],
+            'association_id' => ['required', 'iexists:associations,id']
+        ];
+
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
+        $userAssociation =  UserAssociation::where('association_id',$request->association_id)->where('user_id',$request->member_id)->first();
+        if(!empty($userAssociation))
+        {
+            $userAssociation->delete();
+            $msg = 'STAFF_DELETED';
+        }else{
+            $msg = 'NOT_FOUND';
+        }
+        return Helper::SuccessReturn(null,$msg);
+    }
+
+
+    
+
+
+    public function oldMember(Request $request)
+    {
+        $rules = [
+            'association_id' => ['required'],
+            'phone_no' => ['nullable'],
+            'full_name' => ['nullable', 'string', 'max:255'],
+            'image' => ['nullable', 'mimes:jpg,png,jpeg,gif'],
+            'year' =>['nullable', 'string', 'max:255'],
+            'roles' =>['nullable'],
+        ];
+
+        // validate input data using the Validator method of the PublicException class
+        PublicException::Validator($request->all(), $rules);
+
+        // Begin database transaction
+        DB::beginTransaction();
+
+        $oldMember = $request->id ? OldMember::find($request->id): new OldMember();
+        // if (!empty($request->roles)) {
+        //     $oldMember->roles = storeJsonArray($request->roles);
+        // }
+
+        $oldMember = Helper::UpdateObjectIfKeyNotEmpty($oldMember, [
+            'phone_no',
+            'full_name',
+            'year',
+            'association_id',
+            'roles'
+        ]);
+
+      
+
+        PublicException::NotSave($oldMember->save());
+        return Helper::SuccessReturn($oldMember, 'Old member added successfully');
+
+    }
+
+    
 }

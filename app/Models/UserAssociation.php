@@ -50,7 +50,11 @@ class UserAssociation extends Model
         $prisent_id = 4 ;
         if(in_array($prisent_id,$roles)){
             $checkIsPresentInAssociation = UserAssociation::where('association_id',$association_id)->whereJsonContains('roles', $prisent_id)->first();
-            return 'You cannot choose prisent role. it is allready their';
+            if($checkIsPresentInAssociation){
+                return 'You cannot choose prisent role. it is allready their';
+
+            }
+            return false;
         }
         return false;
     }

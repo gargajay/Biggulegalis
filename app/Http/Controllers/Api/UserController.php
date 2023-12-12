@@ -37,7 +37,7 @@ class UserController extends Controller
             'full_name' => ['nullable', 'string', 'max:255'],
             'first_name' => ['string', 'max:255', 'nullable'],
             'last_name' => ['nullable', 'string', 'max:255'],
-            'email' => ['email:strict', 'iunique:users,email,user_type,' . USER_TYPE['USER'] . ',' . Auth::id(), 'max:255'],
+            // 'email' => ['email:strict', 'iunique:users,email,user_type,' . USER_TYPE['USER'] . ',' . Auth::id(), 'max:255'],
             // 'phone' => ['nullable', 'iunique:users,phone,user_type,' . USER_TYPE['USER'] . ',' . Auth::id(), 'max:255'],
             // 'country_code' => ['required_with:phone', 'max:255'],
             'image' => ['nullable', 'mimes:jpg,png,jpeg,gif'],

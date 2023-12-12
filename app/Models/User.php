@@ -217,8 +217,14 @@ class User extends Authenticatable
 
     public function tabs()
     {
+        $Userassociation =   UserAssociation::where('user_id',Auth::id())->first();
+        $association = Association::where('id',$Userassociation->association_id)->first();
+        $userIds =   UserAssociation::where('association_id',$association->id)->pluck('user_id');
+
+        $office =   User::with('userAssociation','addresses')->whereIn('id',$userIds)->latest()->get();
 
         $members =   User::where('parent_id', Auth::id())->with('addresses','userAssociation')->latest()->get();
+
         $gallerys = Gallery::where('user_id', auth::id())->latest()->get();
         $links = Link::where('user_id', auth::id())->latest()->get();
         $announcements = Announcement::where('user_id', auth::id())->latest()->get();
@@ -260,7 +266,7 @@ class User extends Authenticatable
                 'id' =>7,
                 'name' => 'offcebear',
                 'type' => 'offcebear',
-                'information' => $members
+                'information' => $office
             ]
             
 

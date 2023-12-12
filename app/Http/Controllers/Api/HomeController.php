@@ -171,6 +171,20 @@ class HomeController extends Controller
     ->pluck('user_id');
 
 
+    $auth_comm_id = UserAssociation::where('association_id', $association->id)
+    ->whereJsonContains('roles', 3)
+    ->pluck('user_id');
+
+    $members_auth =   User::with('userAssociation')->whereIn('id',$auth_comm_id)->latest()->get();
+
+    $note_public_id = UserAssociation::where('association_id', $association->id)
+    ->whereJsonContains('roles', 2)
+    ->pluck('user_id');
+
+    $members_notry =   User::with('userAssociation')->whereIn('id',$note_public_id)->latest()->get();
+
+
+
         $president = User::with('userAssociation')->whereIn('id',$president_id)->latest()->first();
 
         $links = Link::where('association_id', $request->association_id)->latest()->get();
@@ -221,13 +235,13 @@ class HomeController extends Controller
                 'id' =>7,
                 'name' => 'Notary public',
                 'type' => 'offcebear',
-                'information' => $members
+                'information' =>  $members_notry
             ],
             [
                 'id' =>8,
                 'name' => 'Auth commissioner',
                 'type' => 'offcebear',
-                'information' => $members
+                'information' => $members_auth
             ],
          
         ];
@@ -357,7 +371,7 @@ class HomeController extends Controller
         PublicException::NotSave($announcement->save());
         // add announcement members
       
-        return Helper::SuccessReturn($announcement->load('association'), !empty($id) ? 'compliant_UPDATED' : 'compliant_ADDED');
+        return Helper::SuccessReturn($announcement->load('association'), !empty($id) ? 'compliant_UPDATED' : 'ANNOUNCEMENT_ADDED');
     }
 
 

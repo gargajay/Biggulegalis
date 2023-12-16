@@ -228,6 +228,10 @@ class User extends Authenticatable
         $gallerys = Gallery::where('user_id', auth::id())->latest()->get();
         $links = Link::where('user_id', auth::id())->latest()->get();
         $announcements = Announcement::where('user_id', auth::id())->latest()->get();
+        
+
+        $compliants = Compliant::where('user_id', auth::id())->latest()->get();
+        
         $quotes = Quote::where('user_id', auth::id())->latest()->get();
 
 
@@ -267,7 +271,13 @@ class User extends Authenticatable
                 'name' => 'offcebear',
                 'type' => 'offcebear',
                 'information' => $office
-            ]
+            ],
+            [
+                'id' => 8,
+                'name' => 'Compliant',
+                'type' => 'compliant',
+                'information' => $compliants
+            ],
             
 
         ];

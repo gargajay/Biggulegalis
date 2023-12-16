@@ -116,7 +116,7 @@ class LinkController extends Controller
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
         $invitation = Invitation::with('association','user')
-            ->where('association_id', $request->id)->first();
+            ->where('id',$request->id)->first();
         $invitation->status = $request->type;
 
         if($request->type == 1){

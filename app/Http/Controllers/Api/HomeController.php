@@ -140,9 +140,9 @@ class HomeController extends Controller
 
         $search =  $request->search;
 
-        if(!empty($request->association_id)){
-            $userIds =  $userIds->where('association_id',$request->association_id);
-        }
+        // if(!empty($request->association_id)){
+        //     $userIds =  $userIds->where('association_id',$request->association_id);
+        // }
          $userIds = $userIds->pluck('user_id');
         $users =  User::whereIn('id',$userIds)->with('userAssociation', 'addresses');
         $data = newPagination($users->latest());

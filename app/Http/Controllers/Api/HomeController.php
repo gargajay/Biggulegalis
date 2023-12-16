@@ -136,15 +136,15 @@ class HomeController extends Controller
         ];
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
-        $userIds =   UserAssociation::latest();
+        // $userIds =   UserAssociation::latest();
 
-        $search =  $request->search;
+        // $search =  $request->search;
 
-        // if(!empty($request->association_id)){
-        //     $userIds =  $userIds->where('association_id',$request->association_id);
-        // }
-         $userIds = $userIds->pluck('user_id');
-        $users =  User::whereIn('id',$userIds)->with('userAssociation', 'addresses');
+        // // if(!empty($request->association_id)){
+        // //     $userIds =  $userIds->where('association_id',$request->association_id);
+        // // }
+        //  $userIds = $userIds->pluck('user_id');
+        $users =  User::with('userAssociation', 'addresses');
         $data = newPagination($users->latest());
 
         return Helper::SuccessReturn($data, 'MEMBER_FETCH');

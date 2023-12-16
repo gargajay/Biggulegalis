@@ -424,7 +424,7 @@ if (!function_exists('newPagination')) {
     /**
      * Paginates the given model object and returns the paginated results
      */
-    function newPagination(object $modelObject, $page = 10): array
+    function newPagination(object $modelObject, $page = 100): array
     {
         // Paginate the model object using the limit and page number
         $count = $modelObject->count();

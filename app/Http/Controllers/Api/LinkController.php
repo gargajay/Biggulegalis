@@ -111,15 +111,15 @@ class LinkController extends Controller
 
         $rules = [
             'id' => ['required', 'integer', 'iexists:invitations,id'],
-            'status'=>['required']
+            'type'=>['required']
         ];
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
         $invitation = Invitation::with('association','user')
             ->where('association_id', $request->id)->first();
-        $invitation->status = $request->status;
+        $invitation->status = $request->type;
 
-        if($request->status == 1){
+        if($request->type == 1){
           $msg =  'Invitation_Accepted';
         }else{
             $msg =  'Invitation_Rejected';

@@ -51,7 +51,7 @@ class GalleryController extends Controller
             'description' => ['nullable'],
             'image' => ['nullable', 'mimes:jpeg,png,jpg,gif'],
             'date' => ['required', 'date_format:Y-m-d'],
-            'id' => ['nullable', 'integer', 'iexists:gallery,id'],
+            'id' => ['nullable', 'iexists:gallery,id'],
             'association_id' => ['required', 'integer', 'iexists:associations,id']
 
         ];

@@ -348,8 +348,8 @@ class HomeController extends Controller
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable'],
-            'id' => ['nullable', 'integer', 'iexists:compliants,id'],
-            'association_id' => ['required', 'integer', 'iexists:associations,id']
+            'id' => ['nullable','iexists:compliants,id'],
+            'association_id' => ['required','iexists:associations,id']
 
         ];
 

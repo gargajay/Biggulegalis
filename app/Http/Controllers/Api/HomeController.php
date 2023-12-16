@@ -190,6 +190,7 @@ class HomeController extends Controller
         $links = Link::where('association_id', $request->association_id)->latest()->get();
         $announcements = Announcement::where('association_id', $request->association_id)->latest()->get();
         $quotes = Quote::where('association_id', $request->association_id)->latest()->get();
+        $compliants = Compliant::where('association_id', $request->association_id)->latest()->get();
     
 
         $associationTabs = [
@@ -242,6 +243,12 @@ class HomeController extends Controller
                 'name' => 'Auth commissioner',
                 'type' => 'offcebear',
                 'information' => $members_auth
+            ],
+            [
+                'id' => 9,
+                'name' => 'Compliant',
+                'type' => 'compliant',
+                'information' => $compliants
             ],
          
         ];

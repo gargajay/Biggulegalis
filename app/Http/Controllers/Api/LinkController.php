@@ -14,6 +14,7 @@ use Carbon\carbon;
 use Carbon\Carbon as CarbonCarbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LinkController extends Controller
 {
@@ -117,6 +118,8 @@ class LinkController extends Controller
         PublicException::Validator($request->all(), $rules);
         $invitation = Invitation::with('association','user')
             ->where('id',$request->id)->first();
+
+        Log::info("invitation". json_encode($invitation));
         $invitation->status = $request->type;
 
         if($request->type == 1){

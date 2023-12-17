@@ -9,9 +9,9 @@ class OldMember extends Model
 {
     protected $table = 'old_members';
 
-    // protected $cast = [
-    //     'roles' => 'json'
-    // ];
+    protected $cast = [
+        'roles' => 'json'
+    ];
 
    
 

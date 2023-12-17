@@ -95,16 +95,7 @@ Route::group([], function () {
         Route::post('read-notification', [NotificationController::class, 'readNotification']);
 
 
-        /******************************----- ADDING POSTS API-----************************************/
-        Route::get('get-post', [PostController::class, 'getPost']);
-        Route::post('add-update-post', [PostController::class, 'addUpdatePost']);
-        Route::post('delete-post', [PostController::class, 'deletePost']);
-        Route::post('delete-post-image', [PostController::class, 'deletePostImage']);
-        Route::post('like-dislike-post', [PostController::class, 'likeDislikePost']);
-        Route::post('post-comment', [PostController::class, 'postComment']);
-        Route::post('delete-post-comment', [PostController::class, 'deletePostComment']);
-        Route::post('get-post-detail', [PostController::class, 'getpostDetail']);
-        Route::post('get-comment', [PostController::class, 'getComment']);
+       
 
         /******************************-----Link API-----************************************/
    
@@ -169,18 +160,7 @@ Route::group([], function () {
 
 
 
-        /******************************-----CHAT API-----************************************/
-        Route::post('chat-group', [GroupController::class, 'chatGroup']);
-        Route::post('add-members-to-group', [GroupController::class, 'addMembersToChatGroup']);
-        Route::post('remove-member-from-group', [GroupController::class, 'removeMemberFromChatGroup']);
-        Route::post('make-member-group-admin', [GroupController::class, 'makeMemberGroupAdmin']);
-        Route::post('dismiss-member-as-admin', [GroupController::class, 'dismissMemberasAdmin']);
-        Route::post('delete-group', [GroupController::class, 'deleteGroup']);
-        Route::get('chat-list', [ChatController::class, 'chatList']);
-        Route::post('chat-details', [ChatController::class, 'chatDetail']);
-        Route::post('block-unblock-user', [ChatController::class, 'blockUnblockUser']);
-        Route::get('get-blocked-user', [ChatController::class, 'getBlockedUser']);
-        Route::post('send-message', [ChatController::class, 'saveMessage']);
+       
     });
 });
 

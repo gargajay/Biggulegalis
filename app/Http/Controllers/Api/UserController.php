@@ -434,7 +434,7 @@ class UserController extends Controller
             $userAssociation =  new UserAssociation();
         }
         // staff
-        $userAssociation->roles = [8];
+        $userAssociation->roles = ['8'];
         $userAssociation->association_id = $request->association_id;
         $userAssociation->user_id = $userObject->id;
         PublicException::NotSave($userAssociation->save());
@@ -485,6 +485,7 @@ class UserController extends Controller
 
     public function oldMember(Request $request)
     {
+
         $rules = [
             'association_id' => ['required'],
             'phone_no' => ['nullable'],
@@ -513,9 +514,13 @@ class UserController extends Controller
             'roles'
         ]);
 
+
       
 
         PublicException::NotSave($oldMember->save());
+
+        dd($oldMember);
+
         return Helper::SuccessReturn($oldMember, 'Old member added successfully');
 
     }

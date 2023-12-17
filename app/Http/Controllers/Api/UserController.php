@@ -124,6 +124,8 @@ class UserController extends Controller
 
         $new = false;
 
+        $roles = [];
+
         // user associations
 
         if (!empty($request->is_role_info)) {
@@ -154,6 +156,7 @@ class UserController extends Controller
             $userAssociation = UserAssociation::find($userAssociation->id);
 
             if (!empty($request->roles)) {
+                $roles = storeJsonArray($request->roles);
                 $userAssociation->roles = storeJsonArray($request->roles);
             } else {
                 if ($new) {
@@ -179,6 +182,15 @@ class UserController extends Controller
 
         $userAssociation->user_id = $userObject->id;
             //dd($userAssociation);
+
+          
+
+            if(in_array(4,$roles)){
+                
+              $permissonIDs =   User::getAllPermissions(1,true);
+              $userAssociation->permissions =  $permissonIDs;
+               
+            }
             PublicException::NotSave($userAssociation->save());
 
             // send invitation  

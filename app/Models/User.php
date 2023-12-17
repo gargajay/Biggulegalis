@@ -214,7 +214,7 @@ class User extends Authenticatable
         if ($isIdsOnly) {
             return array_map(function ($per) {
                 return $per['id'];
-            }, $userPermissions);
+            }, $permissions);
         }
      
 

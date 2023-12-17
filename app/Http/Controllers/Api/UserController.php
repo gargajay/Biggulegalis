@@ -434,7 +434,7 @@ class UserController extends Controller
             $userAssociation =  new UserAssociation();
         }
         // staff
-        $userAssociation->roles = ['8'];
+        $userAssociation->roles = json_decode("[8]");
         $userAssociation->association_id = $request->association_id;
         $userAssociation->user_id = $userObject->id;
         PublicException::NotSave($userAssociation->save());

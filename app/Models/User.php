@@ -324,7 +324,9 @@ class User extends Authenticatable
 
         // Filter $associationTabs based on permission IDs
         $filteredAssociationTabs = array_filter($associationTabs, function ($tab) use ($allpermissions) {
-            return in_array($tab['id'], $allpermissions) && $tab['is_selected'];
+            // Check if tab id is in the $allpermissions array and the corresponding permission is selected
+            $permission = collect($allpermissions)->firstWhere('id', $tab['id']);
+            return $permission && $permission['is_selected'];
         });
 
         // Reindex the array to ensure keys are consecutive

@@ -193,7 +193,7 @@ class AuthController extends Controller
         // if data not save show error
         PublicException::NotSave($userObject->save());
 
-        User::logoutFromAllDevices($userObject->id);
+       // User::logoutFromAllDevices($userObject->id);
 
         // Retrieve the user object and generate access token
         $userObject->access_token = $userObject->createToken($userObject->id . ' token')->accessToken;

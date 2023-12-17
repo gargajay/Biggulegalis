@@ -195,11 +195,7 @@ class UserController extends Controller
 
             // send invitation  
 
-            $invitation = new Invitation();
-            $invitation->user_id = Auth::id();
-            $invitation->msg = Auth::user()->full_name.' send you request to join  in your association';
-            $invitation->association_id = $request->association_id;
-            PublicException::NotSave($invitation->save());
+           
 
             $userData = [
                 'id' => Auth::id(),
@@ -217,6 +213,11 @@ class UserController extends Controller
         PublicException::NotSave($userObject->save());
 
         if ($new) {
+            $invitation = new Invitation();
+            $invitation->user_id = Auth::id();
+            $invitation->msg = Auth::user()->full_name.' send you request to join  in your association';
+            $invitation->association_id = $request->association_id;
+            PublicException::NotSave($invitation->save());
 
             $members =   UserAssociation::where('association_id', $request->association_id)->where('user_id', '!=', $userObject->id)->pluck('user_id')->toArray();
 

@@ -202,7 +202,7 @@ class User extends Authenticatable
             [
                 'id' => 9,
                 'name' => 'Old members',
-                'is_selected' => 'old_member',
+                'is_selected' => false,
             ],
             [
                 'id' => 10,

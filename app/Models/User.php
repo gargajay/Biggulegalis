@@ -234,6 +234,9 @@ class User extends Authenticatable
         
         $quotes = Quote::where('user_id', auth::id())->latest()->get();
 
+        $oldMembers = OldMember::where('association_id',  $association->association_id)->latest()->get();
+
+
 
         return   $associationTabs = [
             [
@@ -277,6 +280,12 @@ class User extends Authenticatable
                 'name' => 'Compliant',
                 'type' => 'compliant',
                 'information' => $compliants
+            ],
+            [
+                'id' => 9,
+                'name' => 'Old members',
+                'type' => 'old_member',
+                'information' => $oldMembers
             ],
             
 

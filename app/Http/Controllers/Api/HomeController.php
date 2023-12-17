@@ -22,6 +22,8 @@ use App\Models\Document;
 use App\Models\UserAssociation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\OldMember;
+
 
 class HomeController extends Controller
 {
@@ -191,6 +193,8 @@ class HomeController extends Controller
         $announcements = Announcement::where('association_id', $request->association_id)->latest()->get();
         $quotes = Quote::where('association_id', $request->association_id)->latest()->get();
         $compliants = Compliant::where('association_id', $request->association_id)->latest()->get();
+
+        $oldMembers = OldMember::where('association_id', $request->association_id)->latest()->get();
     
 
         $associationTabs = [
@@ -250,6 +254,13 @@ class HomeController extends Controller
                 'type' => 'compliant',
                 'information' => $compliants
             ],
+            [
+                'id' => 10,
+                'name' => 'Old members',
+                'type' => 'old_member',
+                'information' => $oldMembers
+            ],
+            
          
         ];
 

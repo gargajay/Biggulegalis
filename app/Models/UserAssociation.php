@@ -3,11 +3,29 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use NunoMaduro\Collision\Adapters\Phpunit\State;
 
 class UserAssociation extends Model
 {
     protected $table = 'user_associations';
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($userAssociation) {
+         $association = Association::find($userAssociation->association_id);
+         if($association->permission_type ==2){
+            $invitation = new Invitation();
+            $invitation->user_id = Auth::id();
+            $invitation->msg = Auth::user()->full_name.' send you request to join  in your association';
+            $invitation->association_id = $userAssociation->association_id;
+            $invitation->save();
+         }
+        });
+    }
+
 
    
 
@@ -21,6 +39,8 @@ class UserAssociation extends Model
         'permissions' => 'json',
         'roles' => 'json'
     ];
+
+
 
     protected $appends = ['association_name'];
 

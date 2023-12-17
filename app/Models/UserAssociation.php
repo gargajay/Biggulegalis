@@ -17,6 +17,8 @@ class UserAssociation extends Model
         static::created(function ($userAssociation) {
          $association = Association::find($userAssociation->association_id);
          if($association->permission_type ==2){
+            $userAssociation->status = 2;
+            $userAssociation->save();
             $invitation = new Invitation();
             $invitation->user_id = Auth::id();
             $invitation->msg = Auth::user()->full_name.' send you request to join  in your association';

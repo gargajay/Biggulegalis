@@ -152,7 +152,7 @@ class User extends Authenticatable
     //     $this->attributes['full_name'] = ucwords(strtolower($value ?? trim($this->attributes['first_name'] . ' ' . $this->attributes['last_name'])));
     // }
 
-    public static function getAllPermissions($user_id = 1,$isIdsOnly=false)
+    public static function getAllPermissions($user_id = 1, $isIdsOnly = false)
     {
         $userAsso =   UserAssociation::where('user_id', $user_id)->first();
 
@@ -161,7 +161,7 @@ class User extends Authenticatable
         $permissions =  [
             [
                 'id' => 1,
-                'name' => 'Cleark Add',
+                'name' => 'Staff Add',
                 'is_selected' => false
             ],
             [
@@ -171,17 +171,17 @@ class User extends Authenticatable
             ],
             [
                 'id' => 3,
-                'name' => 'Invitation',
-                'is_selected' => false
-            ],
-            [
-                'id' => 4,
                 'name' => 'Gallery',
                 'is_selected' => false
             ],
             [
-                'id' => 5,
+                'id' => 4,
                 'name' => 'Links',
+                'is_selected' => false
+            ],
+            [
+                'id' => 5,
+                'name' => 'Quotes',
                 'is_selected' => false
             ],
             [
@@ -191,17 +191,33 @@ class User extends Authenticatable
             ],
             [
                 'id' => 7,
-                'name' => 'Quotes',
+                'name' => 'Manage office beer',
                 'is_selected' => false
-            ]
+            ],
+            [
+                'id' => 8,
+                'name' => 'Compliant',
+                'is_selected' => false
+            ],
+            [
+                'id' => 9,
+                'name' => 'Old members',
+                'is_selected' => 'old_member',
+            ],
+            [
+                'id' => 10,
+                'name' => 'Invitation',
+                'is_selected' => false
+            ],
+
         ];
 
 
-        if(!empty($userAsso)){
+        if (!empty($userAsso)) {
             $userPermissions = $userAsso->permissions;
 
             if (!empty($userPermissions)) {
-    
+
                 $userPermissions = json_decode($userPermissions);
                 foreach ($permissions as &$per) {
                     if (in_array($per['id'], $userPermissions)) {
@@ -216,39 +232,41 @@ class User extends Authenticatable
                 return $per['id'];
             }, $permissions);
         }
-     
+
 
         return $permissions;
     }
 
     public function tabs()
     {
-        $Userassociation =   UserAssociation::where('user_id',Auth::id())->first();
-        $association = Association::where('id',$Userassociation->association_id)->first();
-        $userIds =   UserAssociation::where('association_id',$association->id)->pluck('user_id');
+        $Userassociation =   UserAssociation::where('user_id', Auth::id())->first();
+        $association = Association::where('id', $Userassociation->association_id)->first();
+        $userIds =   UserAssociation::where('association_id', $association->id)->pluck('user_id');
 
         $president_id = UserAssociation::where('association_id', $association->id)
-    ->whereJsonContains('roles', 4)
-    ->pluck('user_id')->toArray();
+            ->whereJsonContains('roles', 4)
+            ->pluck('user_id')->toArray();
 
-        $office =   User::with('userAssociation','addresses')->whereNotIn('id',$president_id)->whereIn('id',$userIds)->latest()->get();
+        $office =   User::with('userAssociation', 'addresses')->whereNotIn('id', $president_id)->whereIn('id', $userIds)->latest()->get();
 
-        $members =   User::where('parent_id', Auth::id())->with('addresses','userAssociation')->latest()->get();
+        $members =   User::where('parent_id', Auth::id())->with('addresses', 'userAssociation')->latest()->get();
 
         $gallerys = Gallery::where('user_id', auth::id())->latest()->get();
         $links = Link::where('user_id', auth::id())->latest()->get();
         $announcements = Announcement::where('user_id', auth::id())->latest()->get();
-        
+
 
         $compliants = Compliant::where('user_id', auth::id())->latest()->get();
-        
+
         $quotes = Quote::where('user_id', auth::id())->latest()->get();
 
         $oldMembers = OldMember::where('association_id',  $association->association_id)->latest()->get();
 
 
 
-        return   $associationTabs = [
+        $allpermissions =  User::getAllPermissions(1, true);
+
+           $associationTabs = [
             [
                 'id' => 1,
                 'name' => 'Staff',
@@ -280,7 +298,7 @@ class User extends Authenticatable
                 'information' => $quotes
             ],
             [
-                'id' =>7,
+                'id' => 7,
                 'name' => 'offcebear',
                 'type' => 'offcebear',
                 'information' => $office
@@ -297,9 +315,22 @@ class User extends Authenticatable
                 'type' => 'old_member',
                 'information' => $oldMembers
             ],
-            
+
 
         ];
+
+
+        
+
+        // Filter $associationTabs based on permission IDs
+        $filteredAssociationTabs = array_filter($associationTabs, function ($tab) use ($allpermissions) {
+            return in_array($tab['id'], $allpermissions);
+        });
+
+        // Reindex the array to ensure keys are consecutive
+        $filteredAssociationTabs = array_values($filteredAssociationTabs);
+
+        return $filteredAssociationTabs;
     }
 
     protected function setFirstNameAttribute($value)

@@ -178,7 +178,7 @@ class UserController extends Controller
 
 
         $userAssociation->user_id = $userObject->id;
-            ////dd($userAssociation);
+            //dd($userAssociation);
             PublicException::NotSave($userAssociation->save());
 
             // send invitation  
@@ -433,11 +433,20 @@ class UserController extends Controller
             $new = true;
             $userAssociation =  new UserAssociation();
         }
+
         // staff
-        $userAssociation->roles = json_decode("[8]");
+
         $userAssociation->association_id = $request->association_id;
         $userAssociation->user_id = $userObject->id;
         PublicException::NotSave($userAssociation->save());
+
+        $userAssociation->roles = json_decode("[8]");
+
+        PublicException::NotSave($userAssociation->save());
+
+
+         //   dd($userAssociation);
+
         $userObject = User::find($userObject->id);
 
         // generate an access token for the user

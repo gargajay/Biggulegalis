@@ -146,7 +146,7 @@ class HomeController extends Controller
         // //     $userIds =  $userIds->where('association_id',$request->association_id);
         // // }
         //  $userIds = $userIds->pluck('user_id');
-        $users =  User::with('userAssociation', 'addresses');
+        $users =  User::where('user_type','!=','admin')->with('userAssociation', 'addresses');
         $data = newPagination($users->latest());
 
         return Helper::SuccessReturn($data, 'MEMBER_FETCH');

@@ -251,7 +251,7 @@ class User extends Authenticatable
         return   $associationTabs = [
             [
                 'id' => 1,
-                'name' => 'Clearks',
+                'name' => 'Staff',
                 'type' => 'Clearks',
                 'information' => $members,
             ],

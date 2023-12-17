@@ -266,7 +266,7 @@ class User extends Authenticatable
 
         $allpermissions =  User::getAllPermissions(auth::id());
 
-           $associationTabs = [
+         return  $associationTabs = [
             [
                 'id' => 1,
                 'name' => 'Staff',
@@ -323,16 +323,16 @@ class User extends Authenticatable
         
 
         // Filter $associationTabs based on permission IDs
-        $filteredAssociationTabs = array_filter($associationTabs, function ($tab) use ($allpermissions) {
-            // Check if tab id is in the $allpermissions array and the corresponding permission is selected
-            $permission = collect($allpermissions)->firstWhere('id', $tab['id']);
-            return $permission && $permission['is_selected'];
-        });
+        // $filteredAssociationTabs = array_filter($associationTabs, function ($tab) use ($allpermissions) {
+        //     // Check if tab id is in the $allpermissions array and the corresponding permission is selected
+        //     $permission = collect($allpermissions)->firstWhere('id', $tab['id']);
+        //     return $permission && $permission['is_selected'];
+        // });
 
-        // Reindex the array to ensure keys are consecutive
-        $filteredAssociationTabs = array_values($filteredAssociationTabs);
+        // // Reindex the array to ensure keys are consecutive
+        // $filteredAssociationTabs = array_values($filteredAssociationTabs);
 
-        return $filteredAssociationTabs;
+        // return $filteredAssociationTabs;
     }
 
     protected function setFirstNameAttribute($value)

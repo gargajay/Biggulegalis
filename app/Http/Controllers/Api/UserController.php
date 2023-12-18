@@ -132,6 +132,15 @@ class UserController extends Controller
 
             $asso = Association::where('id',$request->association_id)->first();
 
+            if($asso->id==2){
+                return Helper::SuccessReturn($userObject->load(User::$customRelations['Update'], 'goal'), 'PROFILE_UPDATED');
+
+            }
+
+
+
+
+
             // 3 close permissiom
             if($asso->permission_type==3)
             {

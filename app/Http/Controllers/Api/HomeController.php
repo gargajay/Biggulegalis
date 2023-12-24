@@ -375,6 +375,8 @@ class HomeController extends Controller
         'contect_no'
     ]);
 
+    $otherPerson->user_id= auth::id();
+
     // Save the updated other person
     PublicException::NotSave($otherPerson->save());
 

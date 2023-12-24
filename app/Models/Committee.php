@@ -31,13 +31,7 @@ class Committee extends Model
         return $value;
     }
 
-     public function getMemberListAttribute(){
-        if(!empty($this->members)){
-            $office =   User::with('userAssociation', 'addresses')->whereIn('id', $this->members)->latest()->get();
-            return $office;
-        }
-        return [];
-    }
+     
 
     
 

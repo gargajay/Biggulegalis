@@ -10,6 +10,7 @@ use App\Models\Country;
 use App\Models\DistrictBarAssociation;
 use App\Models\Gallery;
 use App\Models\Announcement;
+use App\Models\Committee;
 use App\Models\Compliant;
 use App\Models\Invitation;
 use App\Models\Link;
@@ -23,7 +24,7 @@ use App\Models\UserAssociation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OldMember;
-
+use App\Models\OtherPerson;
 
 class HomeController extends Controller
 {
@@ -205,7 +206,13 @@ class HomeController extends Controller
         $officeBear =   User::with('userAssociation')->whereIn('id',$office)->latest()->get();
 
 
-
+        $committee = Committee::where('association_id',  $request->association_id)->latest()->first();
+        $cmembers = [];
+        if(!empty($committee)){
+            $committee->members;
+        
+            $cmembers =   User::whereIn('id', $committee->members)->with('addresses', 'userAssociation')->latest()->get();
+        }
         $oldMembers = OldMember::where('association_id', $request->association_id)->latest()->get();
     
 
@@ -273,6 +280,13 @@ class HomeController extends Controller
                 'information' => $officeBear,
                 'old_member' => $oldMembers
             ],
+            [
+                'id' => 11,
+                'name' => 'disciplinary committee',
+                'type' => 'committee',
+                'information' => $cmembers
+            ]
+
             
          
         ];
@@ -327,6 +341,50 @@ class HomeController extends Controller
         Quote::find($request->id)->delete();
         return Helper::SuccessReturn(null, 'QUOTE_DELETED');
     }
+
+    public function otherPerson(Request $request)
+{
+    $rules = [
+        'id' => ['nullable'],
+        'name' => ['required', 'string', 'max:255'],
+        'description' => ['nullable'],
+        'association_id' => ['required','iexists:associations,id'],
+        'work' => ['nullable'],
+        'contact_no' => ['nullable']
+    ];
+
+    // Validate the user input data
+    PublicException::Validator($request->all(), $rules);
+
+    $otherPerson = OtherPerson::find($request->id) ? OtherPerson::find($request->id):new OtherPerson();
+
+    // Update other person fields
+    $otherPerson = Helper::UpdateObjectIfKeyNotEmpty($otherPerson, [
+        'name',
+        'description',
+        'association_id',
+        'work',
+        'contect_no'
+    ]);
+
+    // Save the updated other person
+    PublicException::NotSave($otherPerson->save());
+
+    return Helper::SuccessReturn($otherPerson->load('association'), 'OTHER_PERSON_UPDATED');
+}
+
+public function deleteOtherPerson(Request $request)
+{
+    $rules = [
+        'id' => ['required','iexists:other_persons,id']
+    ];
+
+    // Validate the user input data
+    PublicException::Validator($request->all(), $rules);
+
+    OtherPerson::find($request->id)->delete();
+    return Helper::SuccessReturn(null, 'OTHER_PERSON_DELETED');
+}
 
     // annocements
 

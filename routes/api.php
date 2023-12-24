@@ -152,6 +152,9 @@ Route::group([], function () {
         /******************************-----Quote API-----************************************/
 
 
+        Route::post('other-person', [HomeController::class, 'otherPerson']); // staff/
+        Route::post('delete-other-person', [HomeController::class, 'deleteOtherPerson']);
+
         Route::post('quote', [HomeController::class, 'quote']); // staff/
         Route::post('delete-quote', [HomeController::class, 'deleteQuote']);
 

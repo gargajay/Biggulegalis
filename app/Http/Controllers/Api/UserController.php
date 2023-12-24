@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Address;
 use App\Models\Association;
 use App\Models\BlockedUser;
+use App\Models\Committee;
 use App\Models\GroupRole;
 use App\Models\Invitation;
 use App\Models\OldMember;
@@ -130,11 +131,10 @@ class UserController extends Controller
 
         if (!empty($request->is_role_info)) {
 
-            $asso = Association::where('id',$request->association_id)->first();
+            $asso = Association::where('id', $request->association_id)->first();
 
-            if($asso->id==2){
+            if ($asso->id == 2) {
                 return Helper::SuccessReturn($userObject->load(User::$customRelations['Update'], 'goal'), 'PROFILE_UPDATED');
-
             }
 
 
@@ -142,15 +142,13 @@ class UserController extends Controller
 
 
             // 3 close permissiom
-            if($asso->permission_type==3)
-            {
+            if ($asso->permission_type == 3) {
                 PublicException::Error('You cannot be directly join this assoication . connect to priesent of association for inviation');
             }
 
-            $userAssociation =  UserAssociation::where('association_id',$request->association_id)->where('user_id',$userObject->id)->first();
+            $userAssociation =  UserAssociation::where('association_id', $request->association_id)->where('user_id', $userObject->id)->first();
 
-            if (empty($userAssociation)) 
-            {
+            if (empty($userAssociation)) {
 
                 $new = true;
                 $userAssociation =  new UserAssociation();
@@ -173,38 +171,37 @@ class UserController extends Controller
                 }
             }
 
-           // dd($userAssociation);
+            // dd($userAssociation);
 
-            
-            if(!empty($request->roles)){
-            $exit =  UserAssociation::checkPresentExitInAssocation($request->association_id,storeJsonArray($request->roles));
-              if($exit){
-                PublicException::Error($exit);
-              }
-              //$userAssociation->roles = json_encode($userAssociation->roles);
+
+            if (!empty($request->roles)) {
+                $exit =  UserAssociation::checkPresentExitInAssocation($request->association_id, storeJsonArray($request->roles));
+                if ($exit) {
+                    PublicException::Error($exit);
+                }
+                //$userAssociation->roles = json_encode($userAssociation->roles);
 
             }
 
-        
-         //  dd($userAssociation);
+
+            //  dd($userAssociation);
 
 
-        $userAssociation->user_id = $userObject->id;
+            $userAssociation->user_id = $userObject->id;
             //dd($userAssociation);
 
-          
 
-            if(in_array(4,$roles)){
-                
-              $permissonIDs =   User::getAllPermissions(1,true);
-              $userAssociation->permissions =  $permissonIDs;
-               
+
+            if (in_array(4, $roles)) {
+
+                $permissonIDs =   User::getAllPermissions(1, true);
+                $userAssociation->permissions =  $permissonIDs;
             }
             PublicException::NotSave($userAssociation->save());
 
             // send invitation  
 
-           
+
 
             $userData = [
                 'id' => Auth::id(),
@@ -222,7 +219,7 @@ class UserController extends Controller
         PublicException::NotSave($userObject->save());
 
         if ($new) {
-           
+
 
             $members =   UserAssociation::where('association_id', $request->association_id)->where('user_id', '!=', $userObject->id)->pluck('user_id')->toArray();
 
@@ -303,6 +300,24 @@ class UserController extends Controller
 
         return Helper::SuccessReturn($dataList, 'GROUP_ROLE_DATA_FETCH');
     }
+
+
+    public function getCommiteMembers(Request $request)
+    {
+        $userIds =  UserAssociation::where(function ($query) {
+            $query->orWhereJsonContains('roles', 4)
+                ->orWhereJsonContains('roles', 5)
+                ->orWhereJsonContains('roles', 6)
+                ->orWhereJsonContains('roles', 7);
+        })
+            ->pluck('user_id')->toArray();
+
+        $office =   User::with('userAssociation', 'addresses')->whereIn('id', $userIds)->latest()->get();
+
+        return Helper::SuccessReturn($office, 'GROUP_ROLE_DATA_FETCH');
+    }
+
+
 
 
 
@@ -463,7 +478,7 @@ class UserController extends Controller
         PublicException::NotSave($userAssociation->save());
 
 
-         //   dd($userAssociation);
+        //   dd($userAssociation);
 
         $userObject = User::find($userObject->id);
 
@@ -474,10 +489,88 @@ class UserController extends Controller
 
 
 
+
+
+
+    public function addCommiteMembers(Request $request)
+    {
+        // Validation rules
+        $rules = [
+            'members' => ['required'],
+            'association_id' => ['required', 'exists:associations,id']
+        ];
+
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
+
+        // Find or create the committee based on association_id
+        $committee = Committee::where('association_id', $request->association_id)->first();
+
+        // If committee doesn't exist, create a new one
+        $committee = $committee ?? new Committee();
+
+        // Update committee object with non-empty request data
+        $committee = Helper::UpdateObjectIfKeyNotEmpty($committee, ['association_id']);
+
+        // Get existing members and new members from the request
+        $existingMembers = $committee->members ?? [];
+        $newMembers = $request->members ? explode(',', $request->members) : [];
+
+        // Merge and remove duplicates from the combined array
+        $uniqueMembers = array_unique(array_merge($existingMembers, $newMembers));
+
+        // Update the committee members
+
+
+        // Update the committee members
+        $committee->members =  array_merge($uniqueMembers,[]);
+
+
+        // Save the committee
+        PublicException::NotSave($committee->save());
+
+        return Helper::SuccessReturn($committee, 'Committee updated');
+    }
+
+    public function deleteCommiteMember(Request $request)
+    {
+        // Validation rules
+        $rules = [
+            'member_id' => ['required'],
+            'association_id' => ['required', 'exists:associations,id']
+        ];
+    
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
+    
+        // Find the committee based on association_id
+        $committee = Committee::where('association_id', $request->association_id)->first();
+    
+        // Check if the committee exists
+    
+        // Get existing members
+        $existingMembers = $committee->members ?? [];
+    
+        // Remove the specified member from the array
+        $updatedMembers = array_values(array_diff($existingMembers, [$request->member_id]));
+    
+        // Update the committee members
+        $committee->members = $updatedMembers;
+    
+        // Save the committee
+        PublicException::NotSave($committee->save());
+    
+        return Helper::SuccessReturn($committee, 'Member deleted from committee');
+    }
+    
+
+
+
     public function deleteStaff(Request $request)
     {
         $rules = [
-            'staff_id' => ['required', 'iexists:users,id']
+            'member_id' => ['required', 'iexists:users,id'],
+            'association_id' => ['required', 'iexists:associations,id']
         ];
 
         // Validate the user input data
@@ -495,19 +588,18 @@ class UserController extends Controller
 
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
-        $userAssociation =  UserAssociation::where('association_id',$request->association_id)->where('user_id',$request->member_id)->first();
-        if(!empty($userAssociation))
-        {
+        $userAssociation =  UserAssociation::where('association_id', $request->association_id)->where('user_id', $request->member_id)->first();
+        if (!empty($userAssociation)) {
             $userAssociation->delete();
             $msg = 'STAFF_DELETED';
-        }else{
+        } else {
             $msg = 'NOT_FOUND';
         }
-        return Helper::SuccessReturn(null,$msg);
+        return Helper::SuccessReturn(null, $msg);
     }
 
 
-    
+
 
 
     public function oldMember(Request $request)
@@ -518,8 +610,8 @@ class UserController extends Controller
             'phone_no' => ['nullable'],
             'full_name' => ['nullable', 'string', 'max:255'],
             'image' => ['nullable', 'mimes:jpg,png,jpeg,gif'],
-            'year' =>['nullable', 'string', 'max:255'],
-            'roles' =>['nullable'],
+            'year' => ['nullable', 'string', 'max:255'],
+            'roles' => ['nullable'],
         ];
 
         // validate input data using the Validator method of the PublicException class
@@ -528,7 +620,7 @@ class UserController extends Controller
         // Begin database transaction
         DB::beginTransaction();
 
-        $oldMember = $request->id ? OldMember::find($request->id): new OldMember();
+        $oldMember = $request->id ? OldMember::find($request->id) : new OldMember();
         // if (!empty($request->roles)) {
         //     $oldMember->roles = storeJsonArray($request->roles);
         // }
@@ -538,19 +630,20 @@ class UserController extends Controller
             'full_name',
             'year',
             'association_id',
-            'roles'
         ]);
-
-
-      
 
         PublicException::NotSave($oldMember->save());
 
-        dd($oldMember);
+        $oldMember = Helper::UpdateObjectIfKeyNotEmpty($oldMember, [
+            'roles',
+        ]);
+
+
+
+
+        PublicException::NotSave($oldMember->save());
+
 
         return Helper::SuccessReturn($oldMember, 'Old member added successfully');
-
     }
-
-    
 }

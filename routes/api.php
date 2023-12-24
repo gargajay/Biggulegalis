@@ -80,6 +80,13 @@ Route::group([], function () {
         /******************************-----USER API-----************************************/
         
         Route::get('get-group-role-list', [UserController::class, 'getGroupRoleList']);
+        Route::get('get-commite-members', [UserController::class, 'getCommiteMembers']);
+        Route::post('add-commite-members', [UserController::class, 'addCommiteMembers']);
+        Route::post('delete-commite-members', [UserController::class, 'deleteCommiteMember']);
+        
+
+
+        
 
         Route::post('update-profile', [UserController::class, 'updateProfile']);
         Route::post('save-permissions', [UserController::class, 'savePermission']);

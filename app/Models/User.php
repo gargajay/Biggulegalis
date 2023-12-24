@@ -260,7 +260,15 @@ class User extends Authenticatable
 
         $quotes = Quote::where('user_id', auth::id())->latest()->get();
 
-        $oldMembers = OldMember::where('association_id',  $association->association_id)->latest()->get();
+        $oldMembers = OldMember::where('association_id',  $association->id)->latest()->get();
+        $committee = Committee::where('association_id',  $association->id)->latest()->first();
+        $cmembers = [];
+        if(!empty($committee)){
+            $committee->members;
+        
+            $cmembers =   User::whereIn('id', $committee->members)->with('addresses', 'userAssociation')->latest()->get();
+        }
+
 
 
 
@@ -314,6 +322,12 @@ class User extends Authenticatable
                 'name' => 'Old members',
                 'type' => 'old_member',
                 'information' => $oldMembers
+            ],
+            [
+                'id' => 10,
+                'name' => 'disciplinary committee',
+                'type' => 'committee',
+                'information' => $cmembers
             ],
 
 

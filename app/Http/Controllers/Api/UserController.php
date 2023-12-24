@@ -631,6 +631,7 @@ class UserController extends Controller
         $oldMember = Helper::UpdateObjectIfKeyNotEmpty($oldMember, [
             'phone_no',
             'full_name',
+            'image',
             'year',
             'association_id',
         ]);
@@ -641,8 +642,11 @@ class UserController extends Controller
             'roles',
         ]);
 
-
-
+        $newImagePath = Helper::FileUpload('image', USER_IMAGE_INFO);
+        if ($newImagePath) {
+            $oldMember->image = $newImagePath;
+            PublicException::NotSave($oldMember->save());
+        }
 
         PublicException::NotSave($oldMember->save());
 

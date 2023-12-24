@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helper\Helper;
 use Illuminate\Database\Eloquent\Model;
 use NunoMaduro\Collision\Adapters\Phpunit\State;
 
@@ -38,6 +39,11 @@ class OldMember extends Model
         $name =  Association::where('id',$this->association_id)->pluck('name')->first();
         return $name;
 
+    }
+
+    protected function getImageAttribute($value)
+    {
+        return Helper::FilePublicLink($value, USER_IMAGE_INFO);
     }
 
 

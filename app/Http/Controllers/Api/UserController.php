@@ -510,9 +510,11 @@ class UserController extends Controller
         $committee = $committee ?? new Committee();
 
         // Update committee object with non-empty request data
-        $committee = Helper::UpdateObjectIfKeyNotEmpty($committee, ['association_id']);
 
         // Get existing members and new members from the request
+        $committee->association_id = $request->association_id;
+        PublicException::NotSave($committee->save());
+
         $existingMembers = $committee->members ?? [];
         $newMembers = $request->members ? explode(',', $request->members) : [];
 
@@ -524,6 +526,7 @@ class UserController extends Controller
 
         // Update the committee members
         $committee->members =  array_merge($uniqueMembers,[]);
+
 
 
         // Save the committee

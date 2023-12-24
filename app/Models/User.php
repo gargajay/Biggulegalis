@@ -259,6 +259,7 @@ class User extends Authenticatable
         $compliants = Compliant::where('user_id', auth::id())->latest()->get();
 
         $quotes = Quote::where('user_id', auth::id())->latest()->get();
+        $others = OtherPerson::where('user_id', auth::id())->latest()->get();
 
         $oldMembers = OldMember::where('association_id',  $association->id)->latest()->get();
         $committee = Committee::where('association_id',  $association->id)->latest()->first();
@@ -322,6 +323,12 @@ class User extends Authenticatable
                 'name' => 'Old members',
                 'type' => 'old_member',
                 'information' => $oldMembers
+            ],
+            [
+                'id' => 11,
+                'name' => 'Others',
+                'type' => 'others',
+                'information' => $others,
             ],
             [
                 'id' => 10,

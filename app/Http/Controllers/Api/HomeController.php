@@ -193,6 +193,8 @@ class HomeController extends Controller
         $links = Link::where('association_id', $request->association_id)->latest()->get();
         $announcements = Announcement::where('association_id', $request->association_id)->latest()->get();
         $quotes = Quote::where('association_id', $request->association_id)->latest()->get();
+        $others = OtherPerson::where('association_id', $request->association_id)->latest()->get();
+
         $compliants = Compliant::where('association_id', $request->association_id)->latest()->get();
 
         $office =   UserAssociation::where(function ($query) {
@@ -279,6 +281,12 @@ class HomeController extends Controller
                 'type' => 'officebear',
                 'information' => $officeBear,
                 'old_member' => $oldMembers
+            ],
+            [
+                'id' => 11,
+                'name' => 'Others',
+                'type' => 'others',
+                'information' => $others,
             ],
             [
                 'id' => 11,

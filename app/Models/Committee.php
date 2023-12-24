@@ -10,7 +10,6 @@ class Committee extends Model
     protected $table = 'committees';
 
     
-    protected $appends =['member_list'];
 
     protected $fillable = [
         'name',

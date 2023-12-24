@@ -283,7 +283,7 @@ class HomeController extends Controller
             [
                 'id' => 11,
                 'name' => 'disciplinary committee',
-                'type' => 'committee',
+                'type' => 'members',
                 'information' => $cmembers
             ]
 

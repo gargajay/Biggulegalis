@@ -324,17 +324,18 @@ class User extends Authenticatable
                 'type' => 'old_member',
                 'information' => $oldMembers
             ],
-            [
-                'id' => 11,
-                'name' => 'Others',
-                'type' => 'others',
-                'information' => $others,
-            ],
+           
             [
                 'id' => 10,
                 'name' => 'disciplinary committee',
                 'type' => 'committee',
                 'information' => $cmembers
+            ],
+            [
+                'id' => 11,
+                'name' => 'Others',
+                'type' => 'others',
+                'information' => $others,
             ],
 
 

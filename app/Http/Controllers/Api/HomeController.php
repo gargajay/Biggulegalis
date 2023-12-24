@@ -194,6 +194,18 @@ class HomeController extends Controller
         $quotes = Quote::where('association_id', $request->association_id)->latest()->get();
         $compliants = Compliant::where('association_id', $request->association_id)->latest()->get();
 
+        $office =   UserAssociation::where(function ($query) {
+            $query->orWhereJsonContains('roles', 5)
+                  ->orWhereJsonContains('roles', 6)
+                  ->orWhereJsonContains('roles', 4)
+                  ->orWhereJsonContains('roles', 7);
+        })
+        ->pluck('user_id')->toArray();
+
+        $officeBear =   User::with('userAssociation')->whereIn('id',$office)->latest()->get();
+
+
+
         $oldMembers = OldMember::where('association_id', $request->association_id)->latest()->get();
     
 
@@ -256,9 +268,10 @@ class HomeController extends Controller
             ],
             [
                 'id' => 10,
-                'name' => 'Old members',
-                'type' => 'old_member',
-                'information' => $oldMembers
+                'name' => 'Office Bear',
+                'type' => 'officebear',
+                'information' => $officeBear,
+                'old_member' => $oldMembers
             ],
             
          

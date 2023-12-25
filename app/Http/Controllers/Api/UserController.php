@@ -629,12 +629,13 @@ class UserController extends Controller
         // }
 
         $oldMember = Helper::UpdateObjectIfKeyNotEmpty($oldMember, [
-            'phone_no',
             'full_name',
             'image',
             'year',
             'association_id',
         ]);
+
+        $oldMember->phone_no = $request->phone;
 
         PublicException::NotSave($oldMember->save());
 

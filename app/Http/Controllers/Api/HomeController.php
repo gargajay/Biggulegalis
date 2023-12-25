@@ -164,23 +164,23 @@ class HomeController extends Controller
 
         $association = Association::where('id', $request->association_id)->first();
 
-        $userIds =   UserAssociation::where('association_id',$association->id)->pluck('user_id');
+        $userIds =   UserAssociation::where('association_id',$association->id)->where('status',1)->pluck('user_id');
         $members =   User::with('userAssociation')->whereIn('id',$userIds)->latest()->get();
         $gallerys = Gallery::where('association_id', $request->association_id)->latest()->get();
 
       //  $president_id =   UserAssociation::where('association_id',$association->id)->where('user_role_id',4)->pluck('user_id');
-        $president_id = UserAssociation::where('association_id', $association->id)
+        $president_id = UserAssociation::where('association_id', $association->id)->where('status',1)
     ->whereJsonContains('roles', 4)
     ->pluck('user_id');
 
 
-    $auth_comm_id = UserAssociation::where('association_id', $association->id)
+    $auth_comm_id = UserAssociation::where('association_id', $association->id)->where('status',1)
     ->whereJsonContains('roles', 3)
     ->pluck('user_id');
 
     $members_auth =   User::with('userAssociation')->whereIn('id',$auth_comm_id)->latest()->get();
 
-    $note_public_id = UserAssociation::where('association_id', $association->id)
+    $note_public_id = UserAssociation::where('association_id', $association->id)->where('status',1)
     ->whereJsonContains('roles', 2)
     ->pluck('user_id');
 
@@ -202,7 +202,7 @@ class HomeController extends Controller
                   ->orWhereJsonContains('roles', 6)
                   ->orWhereJsonContains('roles', 4)
                   ->orWhereJsonContains('roles', 7);
-        })
+        })->where('status',1)
         ->pluck('user_id')->toArray();
 
         $officeBear =   User::with('userAssociation')->whereIn('id',$office)->latest()->get();

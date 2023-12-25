@@ -146,7 +146,7 @@ class UserController extends Controller
                 PublicException::Error('You cannot be directly join this assoication . connect to priesent of association for inviation');
             }
 
-            $userAssociation =  UserAssociation::where('association_id', $request->association_id)->where('user_id', $userObject->id)->first();
+            $userAssociation =  UserAssociation::where('association_id', $request->association_id)->where('user_id', $userObject->id)->where('status',1)->first();
 
             if (empty($userAssociation)) {
 
@@ -160,7 +160,7 @@ class UserController extends Controller
             ////dd($userAssociation);
             PublicException::NotSave($userAssociation->save());
 
-            $userAssociation = UserAssociation::find($userAssociation->id);
+            $userAssociation = UserAssociation::where('status',1)->find($userAssociation->id);
 
             if (!empty($request->roles)) {
                 $roles = storeJsonArray($request->roles);
@@ -221,7 +221,7 @@ class UserController extends Controller
         if ($new) {
 
 
-            $members =   UserAssociation::where('association_id', $request->association_id)->where('user_id', '!=', $userObject->id)->pluck('user_id')->toArray();
+            $members =   UserAssociation::where('association_id', $request->association_id)->where('user_id', '!=', $userObject->id)->where('status',1)->pluck('user_id')->toArray();
 
             foreach ($members as $member) {
                 $checkUser = User::where('id', $member)->first();
@@ -276,7 +276,7 @@ class UserController extends Controller
         $userObject->makeVisible(['date_of_birth', 'biography', 'gender', 'is_profile_completed', 'push_notification', 'language']);
 
 
-        $userAsso =   UserAssociation::where('user_id', $request->user_id)->first();
+        $userAsso =   UserAssociation::where('user_id', $request->user_id)->where('status',1)->first();
 
         //  dd($userAsso);
         if (!empty($userAsso)) {
@@ -309,7 +309,7 @@ class UserController extends Controller
                 ->orWhereJsonContains('roles', 5)
                 ->orWhereJsonContains('roles', 6)
                 ->orWhereJsonContains('roles', 7);
-        })
+        })->where('status',1)
             ->pluck('user_id')->toArray();
 
         $office =   User::with('userAssociation', 'addresses')->whereIn('id', $userIds)->latest()->get();
@@ -460,7 +460,7 @@ class UserController extends Controller
 
         // user associations
 
-        $userAssociation =  UserAssociation::where('user_id', $userObject->id)->first();
+        $userAssociation =  UserAssociation::where('user_id', $userObject->id)->where('status',1)->first();
 
         if (empty($userAssociation)) {
             $new = true;
@@ -591,7 +591,7 @@ class UserController extends Controller
 
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
-        $userAssociation =  UserAssociation::where('association_id', $request->association_id)->where('user_id', $request->member_id)->first();
+        $userAssociation =  UserAssociation::where('association_id', $request->association_id)->where('user_id', $request->member_id)->where('status',1)->first();
         if (!empty($userAssociation)) {
             $userAssociation->delete();
             $msg = 'STAFF_DELETED';

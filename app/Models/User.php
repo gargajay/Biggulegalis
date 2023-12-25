@@ -314,7 +314,7 @@ class User extends Authenticatable
         ];
 
         // checking is user roles in prisent or vice prisent 
-        $userRoles = $Userassociation->roles;
+        $userRoles = $Userassociation->roles->pluck('id')->toArray();
         $rolesToCheck = [4,5,6,7];
         // Check if there are common elements between $userRoles and $rolesToCheck
         $commonRoles = array_intersect($userRoles,$rolesToCheck);

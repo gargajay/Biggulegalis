@@ -154,7 +154,7 @@ class User extends Authenticatable
 
     public static function getAllPermissions($user_id = 1, $isIdsOnly = false)
     {
-        $userAsso =   UserAssociation::where('user_id', $user_id)->where('status',1)->first();
+        $userAsso =   UserAssociation::where('user_id', $user_id)->where('status', 1)->first();
 
         $userPermissions = [];
 
@@ -189,7 +189,7 @@ class User extends Authenticatable
                 'name' => 'Announcments',
                 'is_selected' => false
             ],
-         
+
             [
                 'id' => 8,
                 'name' => 'Compliant',
@@ -235,20 +235,20 @@ class User extends Authenticatable
 
     public function tabs()
     {
-        $Userassociation =   UserAssociation::where('user_id', Auth::id())->where('status',1)->first();
+        $Userassociation =   UserAssociation::where('user_id', Auth::id())->where('status', 1)->first();
         $association = Association::where('id', $Userassociation->association_id)->first();
-        $userIds =   UserAssociation::where('association_id', $association->id)->where('status',1)->pluck('user_id');
+        $userIds =   UserAssociation::where('association_id', $association->id)->where('status', 1)->pluck('user_id');
 
         $president_id = UserAssociation::where('association_id', $association->id)
             ->whereJsonContains('roles', 4)
             ->where('user_id', Auth::id())
-            ->pluck('user_id')->where('status',1)->toArray();
+            ->pluck('user_id')->where('status', 1)->toArray();
 
         $officeId =   UserAssociation::where(function ($query) {
             $query->orWhereJsonContains('roles', 5)
                 ->orWhereJsonContains('roles', 6)
                 ->orWhereJsonContains('roles', 7);
-        })->where('status',1)
+        })->where('status', 1)
             ->pluck('user_id')->toArray();
 
         $officeId =  array_merge($officeId, $president_id);
@@ -278,9 +278,6 @@ class User extends Authenticatable
             $cmembers =   User::whereIn('id', $committee->members)->with('addresses', 'userAssociation')->latest()->get();
         }
 
-
-
-
         $allpermissions =  User::getAllPermissions(auth::id());
 
         return  $associationTabs = [
@@ -290,12 +287,7 @@ class User extends Authenticatable
                 'type' => 'Clearks',
                 'information' => $members,
             ],
-            [
-                'id' => 2,
-                'name' => 'Announcments',
-                'type' => 'Announcments',
-                'information' => $announcements
-            ],
+
             [
                 'id' => 3,
                 'name' => 'gallery',
@@ -308,12 +300,7 @@ class User extends Authenticatable
                 'type' => 'links',
                 'information' => $links
             ],
-            [
-                'id' => 5,
-                'name' => 'quotes',
-                'type' => 'quotes',
-                'information' => $quotes
-            ],
+
 
             [
                 'id' => 8,
@@ -321,32 +308,14 @@ class User extends Authenticatable
                 'type' => 'compliant',
                 'information' => $compliants
             ],
-            [
-                'id' => 9,
-                'name' => 'Old members',
-                'type' => 'old_member',
-                'information' => $oldMembers
-            ],
 
-            [
-                'id' => 10,
-                'name' => 'disciplinary committee',
-                'type' => 'committee',
-                'information' => $cmembers
-            ],
-            [
-                'id' => 11,
-                'name' => 'Others',
-                'type' => 'others',
-                'information' => $others,
-            ],
 
 
         ];
 
         // checking is user roles in prisent or vice prisent 
         $userRoles = $Userassociation->roles;
-        $rolesToCheck = [1, 2];
+        $rolesToCheck = [4, 5, 6, 7];
         // Check if there are common elements between $userRoles and $rolesToCheck
         $commonRoles = array_intersect($userRoles, $rolesToCheck);
 
@@ -356,6 +325,40 @@ class User extends Authenticatable
                 'name' => 'office bearers',
                 'type' => 'offcebear',
                 'information' => $office
+            ];
+            $associationTabs[] =   [
+                'id' => 9,
+                'name' => 'Old members',
+                'type' => 'old_member',
+                'information' => $oldMembers
+            ];
+
+            $associationTabs[] =  [
+                'id' => 10,
+                'name' => 'disciplinary committee',
+                'type' => 'committee',
+                'information' => $cmembers
+            ];
+
+            $associationTabs[] =     [
+                'id' => 11,
+                'name' => 'Others',
+                'type' => 'others',
+                'information' => $others,
+            ];
+
+            $associationTabs[] =   [
+                'id' => 5,
+                'name' => 'quotes',
+                'type' => 'quotes',
+                'information' => $quotes
+            ];
+
+            $associationTabs[] =   [
+                'id' => 2,
+                'name' => 'Announcments',
+                'type' => 'Announcments',
+                'information' => $announcements
             ];
         }
 

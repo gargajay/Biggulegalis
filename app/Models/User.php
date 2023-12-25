@@ -255,7 +255,7 @@ class User extends Authenticatable
             })
             ->pluck('user_id')->toArray();
 
-          $officeId =  array_marge($officeId,$president_id);
+          $officeId =  array_merge($officeId,$president_id);
     
 
         $office =   User::with('userAssociation', 'addresses')->whereIn('id',$officeId)->latest()->get();

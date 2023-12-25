@@ -10,6 +10,8 @@ class OldMember extends Model
 {
     protected $table = 'old_members';
 
+    protected $appends = ['gender'];
+
     protected $cast = [
         'roles' => 'json'
     ];
@@ -44,6 +46,12 @@ class OldMember extends Model
     protected function getImageAttribute($value)
     {
         return Helper::FilePublicLink($value, USER_IMAGE_INFO);
+    }
+
+    public function getGenderAttribute()
+    {
+        return $this->enrolment_number;
+
     }
 
 

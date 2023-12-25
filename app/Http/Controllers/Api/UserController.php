@@ -635,7 +635,10 @@ class UserController extends Controller
             'association_id',
         ]);
 
+
+
         $oldMember->phone_no = $request->phone;
+        $oldMember->enrolment_number = $request->gender;
 
         PublicException::NotSave($oldMember->save());
 

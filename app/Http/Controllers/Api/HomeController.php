@@ -265,7 +265,7 @@ class HomeController extends Controller
             ],
             [
                 'id' =>8,
-                'name' => 'Auth commissioner',
+                'name' => 'Oath commissioner',
                 'type' => 'members',
                 'information' => $members_auth
             ],
@@ -277,7 +277,7 @@ class HomeController extends Controller
             ],
             [
                 'id' => 10,
-                'name' => 'Office Bear',
+                'name' => 'Office bearers',
                 'type' => 'officebear',
                 'information' => $officeBear,
                 'old_member' => $oldMembers

@@ -357,7 +357,7 @@ class User extends Authenticatable
         if ($commonRoles) {
             $associationTabs[] = [
                 'id' => 7,
-                'name' => 'offcebear',
+                'name' => 'office bearers',
                 'type' => 'offcebear',
                 'information' => $office
             ];

@@ -235,7 +235,7 @@ class User extends Authenticatable
 
     public function tabs()
     {
-        $Userassociation =   UserAssociation::where('user_id', Auth::id())->where('status', 1)->first();
+        $Userassociation =   UserAssociation::where('user_id', Auth::id())->where('status',1)->first();
         $association = Association::where('id', $Userassociation->association_id)->first();
         $userIds =   UserAssociation::where('association_id', $association->id)->where('status', 1)->pluck('user_id');
 
@@ -280,7 +280,7 @@ class User extends Authenticatable
 
         $allpermissions =  User::getAllPermissions(auth::id());
 
-        return  $associationTabs = [
+          $associationTabs = [
             [
                 'id' => 1,
                 'name' => 'Staff',
@@ -315,9 +315,9 @@ class User extends Authenticatable
 
         // checking is user roles in prisent or vice prisent 
         $userRoles = $Userassociation->roles;
-        $rolesToCheck = [4, 5, 6, 7];
+        $rolesToCheck = [4,5,6,7];
         // Check if there are common elements between $userRoles and $rolesToCheck
-        $commonRoles = array_intersect($userRoles, $rolesToCheck);
+        $commonRoles = array_intersect($userRoles,$rolesToCheck);
 
         if ($commonRoles) {
             $associationTabs[] = [
@@ -363,6 +363,7 @@ class User extends Authenticatable
         }
 
 
+        return $associationTabs;
 
 
 

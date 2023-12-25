@@ -205,6 +205,11 @@ class User extends Authenticatable
                 'name' => 'Invitation',
                 'is_selected' => false
             ],
+            [
+                'id' => 11,
+                'name' => 'office bearers mangement',
+                'is_selected' => false
+            ],
 
         ];
 
@@ -316,6 +321,8 @@ class User extends Authenticatable
         // checking is user roles in prisent or vice prisent 
         $userRoles = $Userassociation->roles->pluck('id')->toArray();
         $rolesToCheck = [4,5,6,7];
+
+        $checkPresent = array_intersect($userRoles,[4]);
         // Check if there are common elements between $userRoles and $rolesToCheck
         $commonRoles = array_intersect($userRoles,$rolesToCheck);
 
@@ -363,21 +370,25 @@ class User extends Authenticatable
         }
 
 
-        return $associationTabs;
+       
 
 
+        if(!$checkPresent){
+             // Filter $associationTabs based on permission IDs
+        $filteredAssociationTabs = array_filter($associationTabs, function ($tab) use ($allpermissions) {
+            // Check if tab id is in the $allpermissions array and the corresponding permission is selected
+            $permission = collect($allpermissions)->firstWhere('id', $tab['id']);
+            return $permission && $permission['is_selected'];
+        });
 
-        // Filter $associationTabs based on permission IDs
-        // $filteredAssociationTabs = array_filter($associationTabs, function ($tab) use ($allpermissions) {
-        //     // Check if tab id is in the $allpermissions array and the corresponding permission is selected
-        //     $permission = collect($allpermissions)->firstWhere('id', $tab['id']);
-        //     return $permission && $permission['is_selected'];
-        // });
+        // Reindex the array to ensure keys are consecutive
+        $filteredAssociationTabs = array_values($filteredAssociationTabs);
 
-        // // Reindex the array to ensure keys are consecutive
-        // $filteredAssociationTabs = array_values($filteredAssociationTabs);
+        return $filteredAssociationTabs;
+        }
 
-        // return $filteredAssociationTabs;
+         return $associationTabs;
+       
     }
 
     protected function setFirstNameAttribute($value)

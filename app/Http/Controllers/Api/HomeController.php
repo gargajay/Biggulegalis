@@ -260,13 +260,13 @@ class HomeController extends Controller
             [
                 'id' =>7,
                 'name' => 'Notary public',
-                'type' => 'offcebear',
+                'type' => 'members',
                 'information' =>  $members_notry
             ],
             [
                 'id' =>8,
                 'name' => 'Auth commissioner',
-                'type' => 'offcebear',
+                'type' => 'members',
                 'information' => $members_auth
             ],
             [

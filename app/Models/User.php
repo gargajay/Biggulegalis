@@ -245,20 +245,20 @@ class User extends Authenticatable
 
         $president_id = UserAssociation::where('association_id', $association->id)
             ->whereJsonContains('roles', 4)
-            ->where('user_id',Auth::id())
+            ->where('user_id', Auth::id())
             ->pluck('user_id')->toArray();
 
-            $officeId =   UserAssociation::where(function ($query) {
-                $query->orWhereJsonContains('roles', 5)
-                      ->orWhereJsonContains('roles', 6)
-                      ->orWhereJsonContains('roles', 7);
-            })
+        $officeId =   UserAssociation::where(function ($query) {
+            $query->orWhereJsonContains('roles', 5)
+                ->orWhereJsonContains('roles', 6)
+                ->orWhereJsonContains('roles', 7);
+        })
             ->pluck('user_id')->toArray();
 
-          $officeId =  array_merge($officeId,$president_id);
-    
+        $officeId =  array_merge($officeId, $president_id);
 
-        $office =   User::with('userAssociation', 'addresses')->whereIn('id',$officeId)->latest()->get();
+
+        $office =   User::with('userAssociation', 'addresses')->whereIn('id', $officeId)->latest()->get();
 
 
         $members =   User::where('parent_id', Auth::id())->with('addresses', 'userAssociation')->latest()->get();
@@ -271,14 +271,14 @@ class User extends Authenticatable
         $compliants = Compliant::where('user_id', auth::id())->latest()->get();
 
         $quotes = Quote::where('user_id', auth::id())->latest()->get();
-        $others = OtherPerson::where('user_id',auth::id())->latest()->get();
+        $others = OtherPerson::where('user_id', auth::id())->latest()->get();
 
         $oldMembers = OldMember::where('association_id',  $association->id)->latest()->get();
         $committee = Committee::where('association_id',  $association->id)->latest()->first();
         $cmembers = [];
-        if(!empty($committee)){
+        if (!empty($committee)) {
             $committee->members;
-        
+
             $cmembers =   User::whereIn('id', $committee->members)->with('addresses', 'userAssociation')->latest()->get();
         }
 
@@ -287,7 +287,7 @@ class User extends Authenticatable
 
         $allpermissions =  User::getAllPermissions(auth::id());
 
-         return  $associationTabs = [
+        return  $associationTabs = [
             [
                 'id' => 1,
                 'name' => 'Staff',
@@ -318,12 +318,7 @@ class User extends Authenticatable
                 'type' => 'quotes',
                 'information' => $quotes
             ],
-            [
-                'id' => 7,
-                'name' => 'offcebear',
-                'type' => 'offcebear',
-                'information' => $office
-            ],
+
             [
                 'id' => 8,
                 'name' => 'Compliant',
@@ -336,7 +331,7 @@ class User extends Authenticatable
                 'type' => 'old_member',
                 'information' => $oldMembers
             ],
-           
+
             [
                 'id' => 10,
                 'name' => 'disciplinary committee',
@@ -353,8 +348,24 @@ class User extends Authenticatable
 
         ];
 
+        // checking is user roles in prisent or vice prisent 
+        $userRoles = $Userassociation->roles;
+        $rolesToCheck = [1, 2];
+        // Check if there are common elements between $userRoles and $rolesToCheck
+        $commonRoles = array_intersect($userRoles, $rolesToCheck);
 
-        
+        if ($commonRoles) {
+            $associationTabs[] = [
+                'id' => 7,
+                'name' => 'offcebear',
+                'type' => 'offcebear',
+                'information' => $office
+            ];
+        }
+
+
+
+
 
         // Filter $associationTabs based on permission IDs
         // $filteredAssociationTabs = array_filter($associationTabs, function ($tab) use ($allpermissions) {

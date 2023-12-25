@@ -245,9 +245,21 @@ class User extends Authenticatable
 
         $president_id = UserAssociation::where('association_id', $association->id)
             ->whereJsonContains('roles', 4)
+            ->where('user_id',Auth::id())
             ->pluck('user_id')->toArray();
 
-        $office =   User::with('userAssociation', 'addresses')->whereNotIn('id', $president_id)->whereIn('id', $userIds)->latest()->get();
+            $office =   UserAssociation::where(function ($query) {
+                $query->orWhereJsonContains('roles', 5)
+                      ->orWhereJsonContains('roles', 6)
+                      ->orWhereJsonContains('roles', 7);
+            })
+            ->pluck('user_id')->toArray();
+
+          $office =  array_marge($office,$president_id);
+    
+
+        $office =   User::with('userAssociation', 'addresses')->whereIn('id',$office)->latest()->get();
+
 
         $members =   User::where('parent_id', Auth::id())->with('addresses', 'userAssociation')->latest()->get();
 

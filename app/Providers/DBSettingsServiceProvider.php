@@ -31,9 +31,11 @@ class DBSettingsServiceProvider extends ServiceProvider
             DB::connection()->getPdo();
 
             if (Schema::hasTable('settings')) {
+
                 //(key <> 'APP') is used to get APP key row in last because in APP icon use s3_bucket url so it create issue
-                $settingsObject = Setting::orderBy(DB::raw("(key <> 'APP')"), 'desc')->orderBy('id')->get();
+                $settingsObject = Setting::orderBy('id')->get();
                 foreach ($settingsObject as $setting) {
+
                     $key = strtoupper($setting->key);
                     $value = $setting->value;
                     switch ($key) {

@@ -10,6 +10,7 @@ use App\Models\Address;
 use App\Models\Invitation;
 use App\Models\Link;
 use App\Models\User;
+use App\Models\UserAssociation;
 use Carbon\carbon;
 use Carbon\Carbon as CarbonCarbon;
 use Illuminate\Http\Request;
@@ -96,12 +97,18 @@ class LinkController extends Controller
         
 
         $rules = [
-            'association_id' => ['required', 'integer', 'iexists:associations,id']
+            'association_id' => ['nullable']
         ];
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
-        $links = Invitation::with('association','user')
-            ->where('association_id', $request->association_id);
+        $links = Invitation::with('association','user');
+
+        if(!empty($request->assocation_id)){
+            $links->where('association_id',$request->assocation_id);
+        }else{
+            $links->where('user_id',Auth::id())->where('type','from_user');
+        }
+        
         $links = newPagination($links->latest());
         return Helper::SuccessReturn($links,'LINK_FETCH');
     }
@@ -123,6 +130,27 @@ class LinkController extends Controller
         $invitation->status = $request->type;
 
         if($request->type == 1){
+            $userAssociation =  UserAssociation::where('association_id', $invitation->association_id)->where('user_id', $invitation->user_id)->first();
+
+            if (empty($userAssociation)) {
+
+                $new = true;
+                $userAssociation =  new UserAssociation();
+            }
+
+            $userAssociation->association_id = $request->association_id;
+
+            $userAssociation->user_id = $invitation->user_id;
+            ////dd($userAssociation);
+            PublicException::NotSave($userAssociation->save());
+
+            $userAssociation = UserAssociation::find($userAssociation->id);
+
+            
+                if ($new) {
+                    $userAssociation->roles = [8];
+                }
+            
           $msg =  'Invitation_Accepted';
         }else{
             $msg =  'Invitation_Rejected';

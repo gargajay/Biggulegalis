@@ -235,7 +235,7 @@ class UserController extends Controller
                         'model_id' => $userObject->id,
                         'model_name' => get_class($checkUser),
                     ]];
-                    PushNotification::Notification($notificationData, true, false, $userObject->id);
+                    PushNotification::Notification($notificationData, true, true, $userObject->id);
                 }
             }
         }

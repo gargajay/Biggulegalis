@@ -25,6 +25,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OldMember;
 use App\Models\OtherPerson;
+use App\Helper\PushNotification;
+
 
 class HomeController extends Controller
 {
@@ -504,6 +506,23 @@ public function deleteOtherPerson(Request $request)
         $invitation->msg = Auth::user()->full_name.' sent you request to join in his association';
         $invitation->association_id = $request->association_id;
         PublicException::NotSave($invitation->save());
+
+        $userData = [
+            'id' => Auth::id(),
+            'full_name' => Auth::user()->full_name,
+            'image' => Auth::user()->image,
+        ];
+
+        $notificationData = [[
+            'receiver_id' =>$request->user_id,
+            'title' => ['Invitation for join assocation'],
+            'body' => ['Invitation'],
+            'type' => 'Invitation',
+            'app_notification_data' => $userData,
+            'model_id' => $request->user_id,
+            'model_name' => get_class($invitation),
+        ]];
+        PushNotification::Notification($notificationData, true, true, Auth::id());
 
         return Helper::SuccessReturn(null, 'Invitation_sent');
     }

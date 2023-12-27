@@ -153,7 +153,7 @@ class EventController extends Controller
                         'model_id' => $event->id,
                         'model_name' => get_class($event),
                     ]];
-                    PushNotification::Notification($notificationData, true, false, $event->user_id);
+                    PushNotification::Notification($notificationData, true, true, $event->user_id);
                 }
             }
         }

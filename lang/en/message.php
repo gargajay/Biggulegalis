@@ -67,6 +67,7 @@ return [
     'RECORD_ACTIVE' => 'Record has been successfully activated.',
     'RECORD_INACTIVE' => 'Record has been successfully deactivated.',
     'RECORD_DELETE' => 'Record has been deleted successfully.',
+    'Inviation_not_accept' => 'Your request to join has not been accepted yet. Please contact the office for further information or inquiries regarding your application.',
 
     //error page message
     'RESET_LINK_EXPIRED' => [

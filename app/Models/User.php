@@ -371,8 +371,6 @@ class User extends Authenticatable
         }
 
 
-       
-
 
         if(!$checkPresent){
              // Filter $associationTabs based on permission IDs

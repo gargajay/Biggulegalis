@@ -63,6 +63,7 @@ Route::group([], function () {
     // Route::post('liap/google-notifications', [SubscriptionController::class, 'googleNotifications']);
     // Route::post('liap/apple-notifications', [SubscriptionController::class, 'appleNotifications']);
 
+    
 
     Route::middleware(['auth:api', 'UserLocalization'])->group(function () {
 
@@ -84,14 +85,42 @@ Route::group([], function () {
         Route::post('add-commite-members', [UserController::class, 'addCommiteMembers']);
         Route::post('delete-commite-members', [UserController::class, 'deleteCommiteMember']);
         
+        Route::middleware(['CheckAssociation'])->group(function () {
+            Route::post('save-permissions', [UserController::class, 'savePermission']);
+            Route::post('get-profile', [UserController::class, 'getProfile']);
+            Route::post('invitation_accept_reject', [LinkController::class, 'invitationAcceptReject']);
+            Route::post('invitation-accept-reject', [LinkController::class, 'invitationAcceptReject']);
+            Route::post('send-invitation', [HomeController::class, 'sendInvitation']);
+             /******************************-----announcement API-----************************************/
+
+
+        Route::post('announcement', [HomeController::class, 'announcement']); // staff/
+        Route::post('delete-announcement', [HomeController::class, 'deleteAnnouncement']);
+
+        /******************************-----Quote API-----************************************/
+
+
+        Route::post('other-person', [HomeController::class, 'otherPerson']); // staff/
+        Route::post('delete-other-person', [HomeController::class, 'deleteOtherPerson']);
+
+        Route::post('quote', [HomeController::class, 'quote']); // staff/
+        Route::post('delete-quote', [HomeController::class, 'deleteQuote']);
+
+
+    /******************************-----compliant API-----************************************/
+
+
+         Route::post('compliant', [HomeController::class, 'compliant']); // staff/
+         Route::post('delete-compliant', [HomeController::class, 'deletecompliant']);
+
+        });
 
 
         
 
         Route::post('update-profile', [UserController::class, 'updateProfile']);
-        Route::post('save-permissions', [UserController::class, 'savePermission']);
+
         Route::post('edit-address', [UserController::class, 'editAddress']);
-        Route::post('get-profile', [UserController::class, 'getProfile']);
         Route::get('s3-token', [UserController::class, 'generateS3SecurityToken']);
         // update subscription
         // Route::post('update-susbcription', [SubscriptionController::class, 'updateSubscription']);
@@ -109,11 +138,8 @@ Route::group([], function () {
         Route::post('link', [LinkController::class, 'link']); // add/update link
         Route::post('delete-link', [LinkController::class, 'deleteLink']);
         Route::post('get-invitation', [LinkController::class, 'getInviationList']);
-        Route::post('invitation-accept-reject', [LinkController::class, 'invitationAcceptReject']);
-        Route::post('invitation_accept_reject', [LinkController::class, 'invitationAcceptReject']);
 
         
-        Route::post('send-invitation', [HomeController::class, 'sendInvitation']);
 
        
 
@@ -143,27 +169,7 @@ Route::group([], function () {
     
 
 
-        /******************************-----announcement API-----************************************/
-
-
-        Route::post('announcement', [HomeController::class, 'announcement']); // staff/
-        Route::post('delete-announcement', [HomeController::class, 'deleteAnnouncement']);
-
-        /******************************-----Quote API-----************************************/
-
-
-        Route::post('other-person', [HomeController::class, 'otherPerson']); // staff/
-        Route::post('delete-other-person', [HomeController::class, 'deleteOtherPerson']);
-
-        Route::post('quote', [HomeController::class, 'quote']); // staff/
-        Route::post('delete-quote', [HomeController::class, 'deleteQuote']);
-
-
-    /******************************-----compliant API-----************************************/
-
-
-         Route::post('compliant', [HomeController::class, 'compliant']); // staff/
-         Route::post('delete-compliant', [HomeController::class, 'deletecompliant']);
+       
 
 
 

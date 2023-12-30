@@ -23,6 +23,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\Localization::class,
+        \App\Http\Middleware\CheckAssociation::class,
         \App\Http\Middleware\LogAfterRequest::class,
     ];
 

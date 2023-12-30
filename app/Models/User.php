@@ -240,7 +240,7 @@ class User extends Authenticatable
 
     public function tabs()
     {
-        $Userassociation =   UserAssociation::where('user_id', Auth::id())->where('status',1)->first();
+        $Userassociation =   UserAssociation::where('user_id', Auth::id())->first();
         $association = Association::where('id', $Userassociation->association_id)->first();
         $userIds =   UserAssociation::where('association_id', $association->id)->where('status', 1)->pluck('user_id');
 

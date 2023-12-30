@@ -19,7 +19,10 @@ use Aws\Credentials\Credentials;
 use Aws\Sts\StsClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Facades\DB;
+
 
 class UserController extends Controller
 {
@@ -252,9 +255,12 @@ class UserController extends Controller
 
     public function getProfile(Request $request)
     {
-        if($request->id!='null' && !empty($request->id)){
+        if($request->id !='null' && !empty($request->id)){
+            Log::info('dd');
             $userId = $request->user_id;
         }else{
+            Log::info('pp');
+
             $userId = Auth::id();
 
         }

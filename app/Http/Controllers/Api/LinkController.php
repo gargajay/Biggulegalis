@@ -21,7 +21,7 @@ class LinkController extends Controller
 {
     public function getLink(Request $request)
     {
-        
+
 
         $rules = [
             'association_id' => ['required', 'integer', 'iexists:associations,id']
@@ -31,7 +31,7 @@ class LinkController extends Controller
         $links = Link::with('association')
             ->where('association_id', $request->association_id);
         $links = newPagination($links->latest());
-        return Helper::SuccessReturn($links,'LINK_FETCH');
+        return Helper::SuccessReturn($links, 'LINK_FETCH');
     }
 
     public function getLinkDetails(Request $request)
@@ -45,7 +45,7 @@ class LinkController extends Controller
         return Helper::SuccessReturn($links, 'LINK_DETAILS');
     }
 
-   
+
 
     public function link(Request $request)
     {
@@ -71,12 +71,12 @@ class LinkController extends Controller
         ]);
 
         $link->user_id = Auth::id();
-       
+
         // if data not save show error
-    
+
         PublicException::NotSave($link->save());
         // add link members
-      
+
         return Helper::SuccessReturn($link->load('association'), !empty($id) ? 'LINK_UPDATED' : 'LINK_ADDED');
     }
 
@@ -94,42 +94,42 @@ class LinkController extends Controller
 
     public function getInviationList(Request $request)
     {
-        
+
 
         $rules = [
             'association_id' => ['nullable']
         ];
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
-        $links = Invitation::with('association','user');
+        $links = Invitation::with('association', 'user');
 
-        if(!empty($request->assocation_id)){
-            $links->where('association_id',$request->assocation_id);
-        }else{
-            $links->where('user_id',Auth::id())->where('type','from_user');
+        if (!empty($request->assocation_id)) {
+            $links->where('association_id', $request->assocation_id);
+        } else {
+            $links->where('user_id', Auth::id())->where('type', 'from_user');
         }
-        
+
         $links = newPagination($links->latest());
-        return Helper::SuccessReturn($links,'LINK_FETCH');
+        return Helper::SuccessReturn($links, 'LINK_FETCH');
     }
 
     public function invitationAcceptReject(Request $request)
     {
-        
+
 
         $rules = [
             'id' => ['required', 'integer', 'iexists:invitations,id'],
-            'type'=>['required']
+            'type' => ['required']
         ];
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
-        $invitation = Invitation::with('association','user')
-            ->where('id',$request->id)->first();
+        $invitation = Invitation::with('association', 'user')
+            ->where('id', $request->id)->first();
 
-        Log::info("invitation". json_encode($invitation));
+        Log::info("invitation" . json_encode($invitation));
         $invitation->status = $request->type;
 
-        if($request->type == 1){
+        if ($request->type == 1) {
             $userAssociation =  UserAssociation::where('association_id', $invitation->association_id)->where('user_id', $invitation->user_id)->first();
 
             if (empty($userAssociation)) {
@@ -145,22 +145,16 @@ class LinkController extends Controller
             PublicException::NotSave($userAssociation->save());
 
             $userAssociation = UserAssociation::find($userAssociation->id);
+            $userAssociation->roles = [8];
+            PublicException::NotSave($userAssociation->save());
 
-            
-                    $userAssociation->roles = [8];
-                
-            
-          $msg =  'Invitation_Accepted';
-        }else{
+
+
+            $msg =  'Invitation_Accepted';
+        } else {
             $msg =  'Invitation_Rejected';
-
         }
         PublicException::NotSave($invitation->save());
-         return Helper::SuccessReturn($invitation,$msg);
+        return Helper::SuccessReturn($invitation, $msg);
     }
-
-
-
-
-    
 }

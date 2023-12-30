@@ -146,6 +146,8 @@ class LinkController extends Controller
 
             $userAssociation = UserAssociation::find($userAssociation->id);
             $userAssociation->roles = [8];
+            $userAssociation->permissions = [8];
+
             PublicException::NotSave($userAssociation->save());
 
 

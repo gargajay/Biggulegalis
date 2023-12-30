@@ -171,6 +171,7 @@ class UserController extends Controller
             } else {
                 if ($new) {
                     $userAssociation->roles = [8];
+                    $userAssociation->permissions = [8];
                 }
             }
 

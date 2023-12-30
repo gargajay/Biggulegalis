@@ -151,7 +151,7 @@ class UserController extends Controller
             $userAssociation->user_id = $userObject->id;
             PublicException::NotSave($userAssociation->save());
 
-            $userAssociation = UserAssociation::where('status',1)->find($userAssociation->id);
+            $userAssociation = UserAssociation::find($userAssociation->id);
 
             if (!empty($request->roles)) {
                 $roles = storeJsonArray($request->roles);

@@ -254,6 +254,7 @@ class User extends Authenticatable
                 ->orWhereJsonContains('roles', 6)
                 ->orWhereJsonContains('roles', 7);
         })->where('status', 1)
+        ->where('association_id', $association->id)
             ->pluck('user_id')->toArray();
 
         $officeId =  array_merge($officeId, $president_id);

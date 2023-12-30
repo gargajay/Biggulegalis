@@ -138,7 +138,7 @@ class LinkController extends Controller
                 $userAssociation =  new UserAssociation();
             }
 
-            $userAssociation->association_id = $request->association_id;
+            $userAssociation->association_id = $invitation->association_id;
 
             $userAssociation->user_id = $invitation->user_id;
             ////dd($userAssociation);

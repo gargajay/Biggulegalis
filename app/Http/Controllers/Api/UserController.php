@@ -252,7 +252,12 @@ class UserController extends Controller
 
     public function getProfile(Request $request)
     {
-        $userId = $request->id ?? Auth::id();
+        if($request->id!='null' && !empty($request->id)){
+            $userId = $request->user_id;
+        }else{
+            $userId = Auth::id();
+
+        }
         $userObject = User::where('id', $userId)->with('userAssociation', 'addresses')->first();
         $userObject->makeVisible(['date_of_birth', 'biography', 'gender', 'is_profile_completed', 'push_notification', 'language']);
         $userObject->all_permissions = User::getAllPermissions($userId);

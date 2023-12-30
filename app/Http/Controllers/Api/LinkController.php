@@ -154,7 +154,13 @@ class LinkController extends Controller
         } else {
             $msg =  'Invitation_Rejected';
         }
-        PublicException::NotSave($invitation->save());
+        $invitation->delete();
+        if($msg=='Invitation_Accepted'){
+            Auth::user()->tokens->each(function ($token, $key) {
+                // Delete the access token
+                $token->delete();
+            });
+        }
         return Helper::SuccessReturn($invitation, $msg);
     }
 }

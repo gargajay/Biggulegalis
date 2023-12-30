@@ -147,9 +147,8 @@ class LinkController extends Controller
             $userAssociation = UserAssociation::find($userAssociation->id);
 
             
-                if ($new) {
                     $userAssociation->roles = [8];
-                }
+                
             
           $msg =  'Invitation_Accepted';
         }else{

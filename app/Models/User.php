@@ -154,7 +154,7 @@ class User extends Authenticatable
 
     public static function getAllPermissions($user_id = 1, $isIdsOnly = false)
     {
-        $userAsso =   UserAssociation::where('user_id', $user_id)->where('status', 1)->first();
+        $userAsso =   UserAssociation::where('user_id', $user_id)->first();
 
         $userPermissions = [];
 

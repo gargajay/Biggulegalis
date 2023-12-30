@@ -106,10 +106,7 @@ class UserController extends Controller
             'blood_type',
         ]);
 
-        // $userObject->is_profile_completed = PROFILE_COMPLETE['YES'];
-
-
-
+    
         // update address
         $addressObject = Address::find($userObject->address_id) ?? new Address;
         $addressObject->type = ADDRESS_TYPE['USER_ADDRESS'];
@@ -139,28 +136,19 @@ class UserController extends Controller
             if ($asso->id == 2) {
                 return Helper::SuccessReturn($userObject->load(User::$customRelations['Update'], 'goal'), 'PROFILE_UPDATED');
             }
-
-
-
-
-
             // 3 close permissiom
             if ($asso->permission_type == 3) {
                 PublicException::Error('You cannot be directly join this assoication . connect to priesent of association for inviation');
             }
-
-            $userAssociation =  UserAssociation::where('association_id', $request->association_id)->where('user_id', $userObject->id)->where('status',1)->first();
+            $userAssociation =  UserAssociation::where('association_id', $request->association_id)->where('user_id', $userObject->id)->first();
 
             if (empty($userAssociation)) {
-
                 $new = true;
                 $userAssociation =  new UserAssociation();
             }
 
             $userAssociation->association_id = $request->association_id;
-
             $userAssociation->user_id = $userObject->id;
-            ////dd($userAssociation);
             PublicException::NotSave($userAssociation->save());
 
             $userAssociation = UserAssociation::where('status',1)->find($userAssociation->id);
@@ -171,42 +159,19 @@ class UserController extends Controller
             } else {
                 if ($new) {
                     $userAssociation->roles = [8];
-                    $userAssociation->permissions = [8];
+                    $userAssociation->permissions = [3,4,8];
                 }
             }
-
-            // dd($userAssociation);
-
-
             if (!empty($request->roles)) {
                 $exit =  UserAssociation::checkPresentExitInAssocation($request->association_id, storeJsonArray($request->roles));
                 if ($exit) {
                     PublicException::Error($exit);
                 }
-                //$userAssociation->roles = json_encode($userAssociation->roles);
-
             }
-
-
-            //  dd($userAssociation);
-
-
             $userAssociation->user_id = $userObject->id;
-            //dd($userAssociation);
-
-
-
-            if (in_array(4, $roles)) {
-
-                $permissonIDs =   User::getAllPermissions(1, true);
-                $userAssociation->permissions =  $permissonIDs;
-            }
+            
             PublicException::NotSave($userAssociation->save());
-
             // send invitation  
-
-
-
             $userData = [
                 'id' => Auth::id(),
                 'full_name' => Auth::user()->full_name,

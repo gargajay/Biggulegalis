@@ -26,14 +26,35 @@ class UserAssociation extends Model
             $invitation->save();
          }
 
-         if($userAssociation->roles = "[8]")
-         {
-            $userAssociation->permissions = ['8'];
-            $userAssociation->save();
-         }
+         self::handleRoles($userAssociation);
 
 
         });
+
+        static::updated(function ($userAssociation) {
+            // Handle logic for updating records, if needed
+            self::handleRoles($userAssociation);
+        });
+    }
+
+    protected static function handleRoles($userAssociation)
+    {
+        // Check if roles is present and is an array
+        if (isset($userAssociation->roles) && is_array($userAssociation->roles)) {
+            // Check if roles contain values between 4 and 7
+            if (collect($userAssociation->roles)->contains(fn ($role) => in_array($role, [4,5,6,7]))) {
+                $userAssociation->permissions = [1,2,3,4,5,6,7,8,9,10,11];
+            }
+            // Check if roles contain values 2, 3, or 8
+            elseif (collect($userAssociation->roles)->contains(fn ($role) => in_array($role, [2, 3]))) {
+                $userAssociation->permissions = [1,3,4,8];
+            }else{
+                $userAssociation->permissions = [3,4,8]; 
+            }
+
+            // Save the changes
+            $userAssociation->save();
+        }
     }
 
 

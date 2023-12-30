@@ -139,11 +139,9 @@ class LinkController extends Controller
             }
 
             $userAssociation->association_id = $invitation->association_id;
-
             $userAssociation->user_id = $invitation->user_id;
             ////dd($userAssociation);
             PublicException::NotSave($userAssociation->save());
-
             $userAssociation = UserAssociation::find($userAssociation->id);
             $userAssociation->roles = [8];
             $userAssociation =   UserAssociation::handleRoles($userAssociation);

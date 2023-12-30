@@ -23,7 +23,6 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\Localization::class,
-        \App\Http\Middleware\CheckAssociation::class,
         \App\Http\Middleware\LogAfterRequest::class,
     ];
 
@@ -71,5 +70,7 @@ class Kernel extends HttpKernel
         'UserLocalization'  => \App\Http\Middleware\UserLocalization::class,
         'UserSubscription'  => \App\Http\Middleware\UserSubscription::class,
         'SkipLogAfterRequest'  => \App\Http\Middleware\SkipLogAfterRequest::class,
+        'CheckAssociation'  => \App\Http\Middleware\CheckAssociation::class,
+
     ];
 }

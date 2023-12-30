@@ -25,6 +25,14 @@ class UserAssociation extends Model
             $invitation->association_id = $userAssociation->association_id;
             $invitation->save();
          }
+
+         if($userAssociation->roles = "[8]")
+         {
+            $userAssociation->permissions = ['8'];
+            $userAssociation->save();
+         }
+
+
         });
     }
 

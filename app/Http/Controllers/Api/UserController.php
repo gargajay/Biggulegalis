@@ -159,7 +159,6 @@ class UserController extends Controller
             } else {
                 if ($new) {
                     $userAssociation->roles = [8];
-                    $userAssociation->permissions = [3,4,8];
                 }
             }
             if (!empty($request->roles)) {

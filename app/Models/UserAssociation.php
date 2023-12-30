@@ -39,14 +39,15 @@ class UserAssociation extends Model
 
     protected static function handleRoles($userAssociation)
     {
+       $roles =  $userAssociation->roles->pluck('id')->toArray() ?? [];
         // Check if roles is present and is an array
-        if (isset($userAssociation->roles) && is_array($userAssociation->roles)) {
+        if (isset($roles) && is_array($roles)) {
             // Check if roles contain values between 4 and 7
-            if (collect($userAssociation->roles)->contains(fn ($role) => in_array($role, [4,5,6,7]))) {
+            if (collect($roles)->contains(fn ($role) => in_array($role, [4,5,6,7]))) {
                 $userAssociation->permissions = [1,2,3,4,5,6,7,8,9,10,11];
             }
             // Check if roles contain values 2, 3, or 8
-            elseif (collect($userAssociation->roles)->contains(fn ($role) => in_array($role, [2, 3]))) {
+            elseif (collect($roles)->contains(fn ($role) => in_array($role, [2, 3]))) {
                 $userAssociation->permissions = [1,3,4,8];
             }else{
                 $userAssociation->permissions = [3,4,8]; 

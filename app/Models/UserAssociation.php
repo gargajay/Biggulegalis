@@ -26,20 +26,21 @@ class UserAssociation extends Model
             $invitation->save();
          }
 
-         self::handleRoles($userAssociation);
+       //  self::handleRoles($userAssociation);
 
 
         });
 
-        static::updated(function ($userAssociation) {
-            // Handle logic for updating records, if needed
-            self::handleRoles($userAssociation);
-        });
+        // static::updated(function ($userAssociation) {
+        //     // Handle logic for updating records, if needed
+        //     self::handleRoles($userAssociation);
+        // });
     }
 
     protected static function handleRoles($userAssociation)
     {
        $roles =  $userAssociation->roles->pluck('id')->toArray() ?? [];
+    //    dd($roles);
         // Check if roles is present and is an array
         if (isset($roles) && is_array($roles)) {
             // Check if roles contain values between 4 and 7
@@ -53,8 +54,7 @@ class UserAssociation extends Model
                 $userAssociation->permissions = [3,4,8]; 
             }
 
-            // Save the changes
-            $userAssociation->save();
+            return $userAssociation;
         }
     }
 

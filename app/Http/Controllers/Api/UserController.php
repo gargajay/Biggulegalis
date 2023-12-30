@@ -167,6 +167,8 @@ class UserController extends Controller
                     PublicException::Error($exit);
                 }
             }
+
+            $userAssociation =   UserAssociation::handleRoles($userAssociation);
             $userAssociation->user_id = $userObject->id;
             
             PublicException::NotSave($userAssociation->save());

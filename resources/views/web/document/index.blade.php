@@ -10,7 +10,7 @@
             <h1><i class="fa {{$page_icon}}"></i> {{$page_title}}</h1>
         </div>
         <div class="btn-group btn-group-sm">
-            <button type="button" class="btn btn-primary modal-link" data-url="{{route('goal.form')}}">ADD</button>
+            <button type="button" class="btn btn-primary modal-link" data-url="{{route('document.form')}}">ADD</button>
         </div>
     </div>
     <div class="row">

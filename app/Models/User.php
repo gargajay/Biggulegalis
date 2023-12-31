@@ -152,7 +152,7 @@ class User extends Authenticatable
     //     $this->attributes['full_name'] = ucwords(strtolower($value ?? trim($this->attributes['first_name'] . ' ' . $this->attributes['last_name'])));
     // }
 
-    public static function getAllPermissions($user_id = 1, $isIdsOnly = false)
+    public static function getAllPermissions($user_id = 1, $isIdsOnly = false,$isIdsUserPermissionOnly=false)
     {
         $userAsso =   UserAssociation::where('user_id', $user_id)->first();
 
@@ -219,7 +219,7 @@ class User extends Authenticatable
 
             if (!empty($userPermissions)) {
 
-                $userPermissions = json_decode($userPermissions);
+                $userPermissions = $userPermissions;
                 foreach ($permissions as &$per) {
                     if (in_array($per['id'], $userPermissions)) {
                         $per['is_selected'] = true;
@@ -233,6 +233,8 @@ class User extends Authenticatable
                 return $per['id'];
             }, $permissions);
         }
+
+       
 
 
         return $permissions;

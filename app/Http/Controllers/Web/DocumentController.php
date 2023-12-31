@@ -74,8 +74,8 @@ class DocumentController extends Controller
         $documentObject = $id ? Document::withTrashed()->findOrFail($id) : new Document;
         $documentObject->title = $request->title;
 
-        if ($request->has('image')) {
-            $documentObject->file = Helper::FileUpload('image', DOCUMENT_IMAGE_INFO);
+        if ($request->has('file')) {
+            $documentObject->file = Helper::FileUpload('file', DOCUMENT_IMAGE_INFO);
         }
 
         // if data not save show error

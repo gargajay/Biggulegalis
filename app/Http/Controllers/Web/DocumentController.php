@@ -24,9 +24,9 @@ class DocumentController extends Controller
     {
         // Define the data table structure
         $datatable = [
-            'column' => ['option' => 'Option', 'srno' => 'S No.', 'name' => 'Name', 'status' => 'Status'],
-            'search_column' => ['name'],
-            'order_column' => ['name'],
+            'column' => ['option' => 'Option', 'srno' => 'S No.', 'title' => 'Name','file' => 'File', 'status' => 'Status'],
+            'search_column' => ['title'],
+            'order_column' => ['title'],
         ];
 
         // Process the data table filters and options

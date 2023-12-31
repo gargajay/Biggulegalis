@@ -102,9 +102,21 @@ class LinkController extends Controller
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
         $links = Invitation::with('association', 'user');
+        $officeBearesIds =   UserAssociation::where(function ($query) {
+            $query->orWhereJsonContains('roles', 5)
+                  ->orWhereJsonContains('roles', 6)
+                  ->orWhereJsonContains('roles', 4)
+                  ->orWhereJsonContains('roles', 7);
+        })->where('status',1)
+        ->pluck('user_id')->toArray();
 
-        if (!empty($request->assocation_id)) {
+
+
+        if (!empty($request->assocation_id) && in_array((Auth::id()),$officeBearesIds)) {
+            
+
             $links->where('association_id', $request->assocation_id);
+
         } else {
             $links->where('user_id', Auth::id())->where('type', 'from_user');
         }

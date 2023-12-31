@@ -12,6 +12,9 @@ return [
     //Route Message
     'PAGE_NOT_FOUND' => 'Page Not Found.',
     'TOO_MANY_ATTEMPTS' => 'Too many attempts. Please try again later.',
+    'no_permission' => 'You do not have right permissions',
+
+    
 
 
     //Auth Message

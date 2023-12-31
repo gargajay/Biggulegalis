@@ -102,23 +102,26 @@ class LinkController extends Controller
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
         $links = Invitation::with('association', 'user');
-     
+
 
         $officeBearesIds =   UserAssociation::where(function ($query) {
             $query->orWhereJsonContains('roles', 5)
-                  ->orWhereJsonContains('roles', 6)
-                  ->orWhereJsonContains('roles', 4)
-                  ->orWhereJsonContains('roles', 7);
-        })->where('status',1)
-        ->where('association_id',$request->association_id)
-        ->pluck('user_id')->toArray();
-
-    Log::info('roles'.json_encode($officeBearesIds));
+                ->orWhereJsonContains('roles', 6)
+                ->orWhereJsonContains('roles', 4)
+                ->orWhereJsonContains('roles', 7);
+        })->where('status', 1)
+            ->where('association_id', $request->association_id)
+            ->pluck('user_id')->toArray();
 
 
-        if (!empty($request->association_id) && in_array(Auth::id(),$officeBearesIds)) {
+
+
+
+
+
+
+        if (!empty($request->association_id) && in_array(Auth::id(), $officeBearesIds)) {
             $links->where('association_id', $request->association_id)->where('type', 'from_association');
-
         } else {
             $links->where('user_id', Auth::id())->where('type', 'from_user');
         }
@@ -140,6 +143,14 @@ class LinkController extends Controller
         $invitation = Invitation::with('association', 'user')
             ->where('id', $request->id)->first();
 
+        if($invitation->type =='from_user')
+        {
+          $userPermissionArray =  User::getAllPermissions(Auth::id(),true);
+          if(!in_array(10,$userPermissionArray)){
+            return response()->json(['success' => FALSE, 'status' =>400, 'message' => __("message.no_permission")], 200);
+          }
+        }
+
         Log::info("invitation" . json_encode($invitation));
         $invitation->status = $request->type;
 
@@ -152,7 +163,7 @@ class LinkController extends Controller
                 $userAssociation =  new UserAssociation();
             }
 
-            if($invitation->type=='from_user'){
+            if ($invitation->type == 'from_user') {
                 $userAssociation->association_id = $invitation->association_id;
                 $userAssociation->user_id = $invitation->user_id;
                 ////dd($userAssociation);
@@ -160,12 +171,10 @@ class LinkController extends Controller
                 $userAssociation = UserAssociation::find($userAssociation->id);
                 $userAssociation->roles = [8];
                 $userAssociation =   UserAssociation::handleRoles($userAssociation);
-            }else{
+            } else {
                 $userAssociation->status = 1;
-
             }
-           
-    
+
             PublicException::NotSave($userAssociation->save());
 
 
@@ -174,16 +183,16 @@ class LinkController extends Controller
         } else {
             $msg =  'Invitation_Rejected';
         }
-        if($invitation->type=='from_user'){
-            if($msg=='Invitation_Accepted'){
+        if ($invitation->type == 'from_user') {
+            if ($msg == 'Invitation_Accepted') {
                 Auth::user()->tokens->each(function ($token, $key) {
                     // Delete the access token
                     $token->delete();
                 });
             }
         }
-        
-        
+
+
         $invitation->delete();
 
         return Helper::SuccessReturn($invitation, $msg);

@@ -505,6 +505,14 @@ class UserController extends Controller
         // Update the committee members
         $committee->members =  array_merge($uniqueMembers,[]);
 
+        if(!empty($request->member_id)){
+           $user = User::find($request->member_id);
+           if(!empty($user)){
+            $user->last_name =$request->members;
+            $user->save();
+           }
+        }
+
 
 
         // Save the committee

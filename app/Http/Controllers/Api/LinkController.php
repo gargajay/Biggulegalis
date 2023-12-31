@@ -143,7 +143,7 @@ class LinkController extends Controller
         $invitation = Invitation::with('association', 'user')
             ->where('id', $request->id)->first();
 
-        if($invitation->type =='from_user')
+        if($invitation->type !='from_user')
         {
           $userPermissionArray =  User::getAllPermissions(Auth::id(),true);
           if(!in_array(10,$userPermissionArray)){

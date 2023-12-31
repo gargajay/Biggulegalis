@@ -21,6 +21,7 @@ class UserAssociation extends Model
             $userAssociation->save();
             $invitation = new Invitation();
             $invitation->user_id = Auth::id();
+            $invitation->type = 'from_association';
             $invitation->msg = Auth::user()->full_name.' send you request to join  in your association';
             $invitation->association_id = $userAssociation->association_id;
             $invitation->save();

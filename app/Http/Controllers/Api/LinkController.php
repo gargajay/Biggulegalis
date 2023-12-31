@@ -113,9 +113,7 @@ class LinkController extends Controller
 
 
         if (!empty($request->assocation_id) && in_array((Auth::id()),$officeBearesIds)) {
-            
-
-            $links->where('association_id', $request->assocation_id);
+            $links->where('association_id', $request->assocation_id)->where('type', 'from_association');
 
         } else {
             $links->where('user_id', Auth::id())->where('type', 'from_user');

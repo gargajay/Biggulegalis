@@ -219,7 +219,7 @@ class User extends Authenticatable
 
             if (!empty($userPermissions)) {
 
-                $userPermissions = $userPermissions;
+                $userPermissions = json_decode($userPermissions);
                 foreach ($permissions as &$per) {
                     if (in_array($per['id'], $userPermissions)) {
                         $per['is_selected'] = true;

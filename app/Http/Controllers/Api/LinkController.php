@@ -140,7 +140,6 @@ class LinkController extends Controller
         {
           $userPermissionArray =  User::getAllPermissions(Auth::id(),true,true);
         Log::info("arraypermisison" . json_encode($userPermissionArray));
- dd(1);
           if(!in_array(10,$userPermissionArray)){
             return response()->json(['success' => FALSE, 'status' =>400, 'message' => __("message.no_permission")], 200);
           }

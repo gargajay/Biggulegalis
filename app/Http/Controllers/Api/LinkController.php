@@ -138,7 +138,7 @@ class LinkController extends Controller
 
         if($invitation->type !='from_user')
         {
-          $userPermissionArray =  User::getAllPermissions(Auth::id());
+          $userPermissionArray =  User::getAllPermissions(Auth::id(),true,true);
         Log::info("arraypermisison" . json_encode($userPermissionArray));
  dd(1);
           if(!in_array(10,$userPermissionArray)){

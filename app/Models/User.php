@@ -152,7 +152,7 @@ class User extends Authenticatable
     //     $this->attributes['full_name'] = ucwords(strtolower($value ?? trim($this->attributes['first_name'] . ' ' . $this->attributes['last_name'])));
     // }
 
-    public static function getAllPermissions($user_id = 1, $isIdsOnly = false,$isIdsUserPermissionOnly=false)
+    public static function getAllPermissions($user_id = 1, $isIdsOnly = false, $onlytrue = false)
     {
         $userAsso =   UserAssociation::where('user_id', $user_id)->first();
 
@@ -225,16 +225,26 @@ class User extends Authenticatable
                         $per['is_selected'] = true;
                     }
                 }
+
+
+                if ($isIdsOnly && $onlytrue) {
+                    return array_map(function ($per) {
+                        if (($per['is_selected'])) {
+                            return $per['id'];
+                        }
+                    }, $permissions);
+                }
             }
         }
 
         if ($isIdsOnly) {
             return array_map(function ($per) {
+
                 return $per['id'];
             }, $permissions);
         }
 
-       
+
 
 
         return $permissions;
@@ -256,7 +266,7 @@ class User extends Authenticatable
                 ->orWhereJsonContains('roles', 6)
                 ->orWhereJsonContains('roles', 7);
         })->where('status', 1)
-        ->where('association_id', $association->id)
+            ->where('association_id', $association->id)
             ->pluck('user_id')->toArray();
 
         $officeId =  array_merge($officeId, $president_id);
@@ -288,7 +298,7 @@ class User extends Authenticatable
 
         $allpermissions =  User::getAllPermissions(auth::id());
 
-          $associationTabs = [
+        $associationTabs = [
             [
                 'id' => 1,
                 'name' => 'Staff',
@@ -323,11 +333,11 @@ class User extends Authenticatable
 
         // checking is user roles in prisent or vice prisent 
         $userRoles = $Userassociation->roles->pluck('id')->toArray();
-        $rolesToCheck = [4,5,6,7];
+        $rolesToCheck = [4, 5, 6, 7];
 
-        $checkPresent = array_intersect($userRoles,[4]);
+        $checkPresent = array_intersect($userRoles, [4]);
         // Check if there are common elements between $userRoles and $rolesToCheck
-        $commonRoles = array_intersect($userRoles,$rolesToCheck);
+        $commonRoles = array_intersect($userRoles, $rolesToCheck);
 
         if ($commonRoles) {
             $associationTabs[] = [
@@ -374,22 +384,21 @@ class User extends Authenticatable
 
 
 
-        if(!$checkPresent){
-             // Filter $associationTabs based on permission IDs
-        $filteredAssociationTabs = array_filter($associationTabs, function ($tab) use ($allpermissions) {
-            // Check if tab id is in the $allpermissions array and the corresponding permission is selected
-            $permission = collect($allpermissions)->firstWhere('id', $tab['id']);
-            return $permission && $permission['is_selected'];
-        });
+        if (!$checkPresent) {
+            // Filter $associationTabs based on permission IDs
+            $filteredAssociationTabs = array_filter($associationTabs, function ($tab) use ($allpermissions) {
+                // Check if tab id is in the $allpermissions array and the corresponding permission is selected
+                $permission = collect($allpermissions)->firstWhere('id', $tab['id']);
+                return $permission && $permission['is_selected'];
+            });
 
-        // Reindex the array to ensure keys are consecutive
-        $filteredAssociationTabs = array_values($filteredAssociationTabs);
+            // Reindex the array to ensure keys are consecutive
+            $filteredAssociationTabs = array_values($filteredAssociationTabs);
 
-        return $filteredAssociationTabs;
+            return $filteredAssociationTabs;
         }
 
-         return $associationTabs;
-       
+        return $associationTabs;
     }
 
     protected function setFirstNameAttribute($value)

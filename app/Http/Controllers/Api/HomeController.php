@@ -205,6 +205,7 @@ class HomeController extends Controller
                   ->orWhereJsonContains('roles', 4)
                   ->orWhereJsonContains('roles', 7);
         })->where('status',1)
+        ->where('association_id', $request->association_id)
         ->pluck('user_id')->toArray();
 
         $officeBear =   User::with('userAssociation')->whereIn('id',$office)->latest()->get();

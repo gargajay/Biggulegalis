@@ -36,6 +36,15 @@ class Document extends Model
         return Helper::FilePublicLink($value,DOCUMENT_IMAGE_INFO);
     }
 
+    
+     public function getStatusAttribute()
+    {
+        if ($this->deleted_at === null) {
+            return 'Active';
+        } else {
+            return 'Inactive';
+        }
+    }
 
 
    

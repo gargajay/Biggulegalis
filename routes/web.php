@@ -4,7 +4,7 @@ use App\Http\Controllers\Web\RoofController;
 use App\Http\Controllers\Web\RoofPropertiesController;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\DashboardController;
-use App\Http\Controllers\Web\GoalController;
+use App\Http\Controllers\Web\DocumentController;
 use App\Http\Controllers\Web\MeasurementController;
 use App\Http\Controllers\Web\SettingsController;
 use App\Http\Controllers\Web\SubscriptionPlanController;
@@ -64,13 +64,13 @@ Route::group([], function () {
         Route::get('association-delete/{id}', [AssociationController::class, 'deleteRow'])->where('id', '[0-9]+')->name('association.delete');
 
 
-         /******************************-----Goal ROUTE-----************************************/
-         Route::get('goal', [GoalController::class, 'index'])->name('goal');
-         Route::post('goal-data', [GoalController::class, 'getData'])->name('goal.data');
-         Route::get('goal-form/{id?}', [GoalController::class, 'form'])->where('id', '[0-9]+')->name('goal.form');
-         Route::post('goal-form-save/{id?}', [GoalController::class, 'formSave'])->where('id', '[0-9]+')->name('goal.form.save');
-         Route::get('goal-status/{id}', [GoalController::class, 'changeStatus'])->where('id', '[0-9]+')->name('goal.status');
-         Route::get('goal-delete/{id}', [GoalController::class, 'deleteRow'])->where('id', '[0-9]+')->name('goal.delete');
+         /******************************-----Document ROUTE-----************************************/
+         Route::get('document', [DocumentController::class, 'index'])->name('document');
+         Route::post('document-data', [DocumentController::class, 'getData'])->name('document.data');
+         Route::get('document-form/{id?}', [DocumentController::class, 'form'])->where('id', '[0-9]+')->name('document.form');
+         Route::post('document-form-save/{id?}', [DocumentController::class, 'formSave'])->where('id', '[0-9]+')->name('document.form.save');
+         Route::get('document-status/{id}', [DocumentController::class, 'changeStatus'])->where('id', '[0-9]+')->name('document.status');
+         Route::get('document-delete/{id}', [DocumentController::class, 'deleteRow'])->where('id', '[0-9]+')->name('document.delete');
 
 
          /******************************-----WOKOUT HOURS ROUTE-----************************************/

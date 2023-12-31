@@ -1,8 +1,8 @@
 <div class="modal-dialog">
     <div class="modal-content">
-        <form method="POST" action="{{ route('goal.form.save', ['id' => $goalObject->id]) }}" data-form-reset="true"  data-form-model-hide="{{ $goalObject->id ? 'true' : ''}}">
+        <form method="POST" action="{{ route('goal.form.save', ['id' => $documentObject->id]) }}" data-form-reset="true"  data-form-model-hide="{{ $goalObject->id ? 'true' : ''}}">
             <div class="modal-header">
-                <h5 class="modal-title">{{ $goalObject->id ? 'Edit' : 'Add' }} Goal</h5>
+            <h5 class="modal-title">{{ $documentObject->id ? 'Edit' : 'Add' }} Document</h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">

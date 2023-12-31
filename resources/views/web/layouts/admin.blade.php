@@ -81,7 +81,7 @@
         <ul class="app-menu">
             <li><a class="app-menu__item {{request()->route()->getName()=='dashboard' ? 'active' : ''}}" href="{{route('dashboard')}}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
             <li><a class="app-menu__item {{request()->route()->getName()=='user' ? 'active' : ''}}" href="{{route('user')}}"><i class="app-menu__icon fa  fa-user"></i><span class="app-menu__label">User</span></a></li>
-            <li><a class="app-menu__item {{request()->route()->getName()=='goal' ? 'active' : ''}}" href="{{route('goal')}}"><i class="app-menu__icon fa  fa-user"></i><span class="app-menu__label">Goals</span></a></li>
+            <li><a class="app-menu__item {{request()->route()->getName()=='document' ? 'active' : ''}}" href="{{route('document')}}"><i class="app-menu__icon fa  fa-user"></i><span class="app-menu__label">Documents</span></a></li>
             <li><a class="app-menu__item {{request()->route()->getName()=='workout-hours' ? 'active' : ''}}" href="{{route('workout-hours')}}"><i class="app-menu__icon fa  fa-user"></i><span class="app-menu__label">Workout Hours</span></a></li>
             <li><a class="app-menu__item {{request()->route()->getName()=='association' ? 'active' : ''}}" href="{{route('association')}}"><i class="app-menu__icon fa  fa-user"></i><span class="app-menu__label">Associations</span></a></li>
             {{--<li><a class="app-menu__item {{request()->route()->getName()=='translate' ? 'active' : ''}}" href="{{route('translate')}}"><i class="app-menu__icon fa  fa-language"></i><span class="app-menu__label">Translate</span></a></li>--}}

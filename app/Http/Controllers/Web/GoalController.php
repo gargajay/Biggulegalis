@@ -3,19 +3,19 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Models\Goal;
+use App\Models\Document;
 use App\Helper\Helper;
 use App\Exceptions\PublicException;
 
 use Illuminate\Http\Request;
 
-class GoalController extends Controller
+class DocumentController extends Controller
 {
     public function index(Request $request)
     {
-        $data = ['page_title' => 'Goals', 'page_icon' => 'fa-user', 'table_url' => route('goal.data')];
+        $data = ['page_title' => 'Documents', 'page_icon' => 'fa-user', 'table_url' => route('document.data')];
 
-        return view('web.goal.index', $data);
+        return view('web.document.index', $data);
     }
     /**
      * Get data for DataTables.
@@ -30,20 +30,20 @@ class GoalController extends Controller
         ];
 
         // Process the data table filters and options
-        $goalObject = Goal::withTrashed();
+        $documentObject = Document::withTrashed();
         // Process the data table filters and options
-        $datatableData = Helper::Datatable($datatable, $goalObject);
+        $datatableData = Helper::Datatable($datatable, $documentObject);
         // Get the paginated and ordered data
-        $goalData = $datatableData['modelObject']->get()->append('status')->makeVisible('created_at')->toArray();
+        $documentData = $datatableData['modelObject']->get()->append('status')->makeVisible('created_at')->toArray();
         $srno = $datatableData['start'];
 
         // Add options for each record in the DataTable
-        foreach ($goalData as &$row) {
+        foreach ($documentData as &$row) {
             $row['srno'] = ++$srno;
             // Add edit, status, and delete buttons for the record
-            $row['option'] = optionButton('edit', route('goal.form', ['id' => $row['id']]));
-            $row['option'] .= optionButton('status', route('goal.status', ['id' => $row['id']]), $row);
-            $row['option'] .= optionButton('delete', route('goal.delete', ['id' => $row['id']]));
+            $row['option'] = optionButton('edit', route('document.form', ['id' => $row['id']]));
+            $row['option'] .= optionButton('status', route('document.status', ['id' => $row['id']]), $row);
+            $row['option'] .= optionButton('delete', route('document.delete', ['id' => $row['id']]));
 
             $row['created_at'] = formatDateWithTimezone($row['created_at']);
         }
@@ -53,51 +53,51 @@ class GoalController extends Controller
             'draw' => $request->input('draw'),
             'recordsTotal' => $datatableData['totalRecords'],
             'recordsFiltered' => $datatableData['filteredRecords'],
-            'data' => $goalData,
+            'data' => $documentData,
         ]);
     }
 
     public function form(Request $request, int $id = null)
     {
-        $data['goalObject'] = $id ? Goal::withTrashed()->findOrFail($id) : new Goal;
-        return view('web.goal.form', $data);
+        $data['documentObject'] = $id ? Document::withTrashed()->findOrFail($id) : new Document;
+        return view('web.document.form', $data);
     }
     public function formSave(Request $request, int $id = null)
     {
         $rules = [
-            'name' => 'required|string|max:255|iunique:goals,name,' . $id,
+            'name' => 'required|string|max:255|iunique:documents,name,' . $id,
         ];
 
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
 
-        $goalObject = $id ? Goal::withTrashed()->findOrFail($id) : new Goal;
-        $goalObject->name = $request->name;
+        $documentObject = $id ? Document::withTrashed()->findOrFail($id) : new Document;
+        $documentObject->name = $request->name;
 
         // if data not save show error
-        PublicException::NotSave($goalObject->save());
+        PublicException::NotSave($documentObject->save());
 
-        // return a success response with the goal data
+        // return a success response with the document data
         return Helper::SuccessReturn([], 'RECORD_SAVED');
     }
     public function changeStatus(Request $request, int $id)
     {
-        $goalObject = Goal::withTrashed()->findOrFail($id);
-        if ($goalObject->deleted_at === null) {
-            $goalObject->delete();
-            // return a success response with the goal data
+        $documentObject = Document::withTrashed()->findOrFail($id);
+        if ($documentObject->deleted_at === null) {
+            $documentObject->delete();
+            // return a success response with the document data
             return Helper::SuccessReturn([], 'RECORD_INACTIVE');
         } else {
-            $goalObject->restore();
-            // return a success response with the goal data
+            $documentObject->restore();
+            // return a success response with the document data
             return Helper::SuccessReturn([], 'RECORD_ACTIVE');
         }
     }
 
     public function deleteRow(Request $request, int $id)
     {
-        $goalObject = Goal::withTrashed()->findOrFail($id);
-        $goalObject->forceDelete();
+        $documentObject = Document::withTrashed()->findOrFail($id);
+        $documentObject->forceDelete();
         return Helper::SuccessReturn([], 'RECORD_DELETE');
     }
 }

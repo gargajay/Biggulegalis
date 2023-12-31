@@ -12,7 +12,7 @@
                             <div class="row">
                                 <div class="col-sm-12 form-group">
                                     <label class="control-label">Name</label>
-                                    <input class="form-control" type="text" placeholder="Name" name="name" value="{{$documentObject->title}}">
+                                    <input class="form-control" type="text" placeholder="Name" name="title" value="{{$documentObject->title}}">
                                 </div>
                             </div>
                         </div>

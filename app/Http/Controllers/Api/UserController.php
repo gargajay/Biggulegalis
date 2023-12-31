@@ -224,7 +224,7 @@ class UserController extends Controller
     {
         if($request->id !='null' && !empty($request->id)){
             Log::info('dd');
-            $userId = $request->user_id;
+            $userId = $request->id;
         }else{
             Log::info('pp');
 

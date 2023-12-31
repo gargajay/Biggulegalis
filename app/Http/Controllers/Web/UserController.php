@@ -32,7 +32,7 @@ class UserController extends Controller
     {
         // Define the data table structure
         $datatable = [
-            'column' => ['option' => 'Option', 'srno' => 'Sr. No.', 'full_name' => 'Full Name', 'email' => 'Email', 'created_at' => 'Create Date', 'status' => 'Status'],
+            'column' => ['option' => 'Option', 'srno' => 'Sr. No.', 'full_name' => 'Full Name', 'phone' => 'Phone', 'created_at' => 'Create Date', 'status' => 'Status'],
             'search_column' => ['full_name', 'email', 'created_at'],
             'order_column' => ['full_name', 'email', 'created_at'],
         ];

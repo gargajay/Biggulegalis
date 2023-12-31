@@ -113,13 +113,6 @@ class LinkController extends Controller
             ->where('association_id', $request->association_id)
             ->pluck('user_id')->toArray();
 
-
-
-
-
-
-
-
         if (!empty($request->association_id) && in_array(Auth::id(), $officeBearesIds)) {
             $links->where('association_id', $request->association_id)->where('type', 'from_association');
         } else {
@@ -146,6 +139,8 @@ class LinkController extends Controller
         if($invitation->type !='from_user')
         {
           $userPermissionArray =  User::getAllPermissions(Auth::id(),true);
+        Log::info("arraypermisison" . json_encode($userPermissionArray));
+ dd(1);
           if(!in_array(10,$userPermissionArray)){
             return response()->json(['success' => FALSE, 'status' =>400, 'message' => __("message.no_permission")], 200);
           }

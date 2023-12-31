@@ -167,13 +167,18 @@ class LinkController extends Controller
         } else {
             $msg =  'Invitation_Rejected';
         }
-        $invitation->delete();
-        if($msg=='Invitation_Accepted'){
-            Auth::user()->tokens->each(function ($token, $key) {
-                // Delete the access token
-                $token->delete();
-            });
+        if($invitation->type=='from_user'){
+            if($msg=='Invitation_Accepted'){
+                Auth::user()->tokens->each(function ($token, $key) {
+                    // Delete the access token
+                    $token->delete();
+                });
+            }
         }
+        
+        
+        $invitation->delete();
+
         return Helper::SuccessReturn($invitation, $msg);
     }
 }

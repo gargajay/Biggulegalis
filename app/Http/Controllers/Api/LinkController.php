@@ -113,7 +113,7 @@ class LinkController extends Controller
         ->where('association_id',$request->assocation_id)
         ->pluck('user_id')->toArray();
 
-    Log::info('roles',json_encode($officeBearesIds));
+    Log::info('roles'.json_encode($officeBearesIds));
 
 
         if (!empty($request->assocation_id) && in_array(Auth::id(),$officeBearesIds)) {

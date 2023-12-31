@@ -65,14 +65,18 @@ class DocumentController extends Controller
     public function formSave(Request $request, int $id = null)
     {
         $rules = [
-            'name' => 'required|string|max:255|iunique:documents,name,' . $id,
+            'title' => 'required|string|max:255|iunique:documents,title,' . $id,
         ];
 
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
 
         $documentObject = $id ? Document::withTrashed()->findOrFail($id) : new Document;
-        $documentObject->name = $request->name;
+        $documentObject->title = $request->title;
+
+        if ($request->has('image')) {
+            $documentObject->file = Helper::FileUpload('image', DOCUMENT_IMAGE_INFO);
+        }
 
         // if data not save show error
         PublicException::NotSave($documentObject->save());

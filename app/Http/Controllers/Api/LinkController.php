@@ -110,14 +110,14 @@ class LinkController extends Controller
                   ->orWhereJsonContains('roles', 4)
                   ->orWhereJsonContains('roles', 7);
         })->where('status',1)
-        ->where('association_id',$request->assocation_id)
+        ->where('association_id',$request->association_id)
         ->pluck('user_id')->toArray();
 
     Log::info('roles'.json_encode($officeBearesIds));
 
 
-        if (!empty($request->assocation_id) && in_array(Auth::id(),$officeBearesIds)) {
-            $links->where('association_id', $request->assocation_id)->where('type', 'from_association');
+        if (!empty($request->association_id) && in_array(Auth::id(),$officeBearesIds)) {
+            $links->where('association_id', $request->association_id)->where('type', 'from_association');
 
         } else {
             $links->where('user_id', Auth::id())->where('type', 'from_user');

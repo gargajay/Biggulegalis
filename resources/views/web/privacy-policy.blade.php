@@ -7,9 +7,9 @@
 
 @section('content')
 
-<section class="">
+<section class="privacy-policy-section">
 
-    <div class=" text-center">
+    <div class="text-center">
         <h1>{{ config('app.name') }}</h1>
     </div>
     <h3 class="">Privacy Policy</h3>

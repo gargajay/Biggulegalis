@@ -52,6 +52,47 @@
 }
 
 /* Add more styles as needed */
+/* public/css/styles.css */
+
+.delete-account-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.delete-account-header {
+    color: #333;
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+}
+
+.delete-account-content {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-top: 20px;
+}
+
+.delete-account-content p {
+    margin-bottom: 15px;
+}
+
+.delete-account-content ol,
+.delete-account-content ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.delete-account-content li {
+    margin-bottom: 10px;
+}
+
+.delete-account-content a {
+    color: #007bff;
+    text-decoration: underline;
+}
+
+/* Add more styles as needed */
 
 </style>
 <body>

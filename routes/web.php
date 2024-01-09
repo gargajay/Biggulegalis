@@ -36,6 +36,12 @@ Route::group([], function () {
     Route::match(['get', 'post'], 'reset-password/{token}', [AuthController::class, 'resetPassword'])->name('reset-password')->middleware(['SkipLogAfterRequest']);
 
 
+    // routes/web.php
+
+Route::get('privacy-policy', [DashboardController::class, 'privacyPolicy'])->name('privacy-policy');
+Route::get('how-do-delete-account', [DashboardController::class, 'howDoDeleteAccount'])->name('how-do-delete-account');
+
+  
     Route::middleware(['auth'])->group(function () {
         //Route with auth
 

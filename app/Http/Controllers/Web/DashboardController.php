@@ -18,4 +18,16 @@ class DashboardController extends Controller
 
         return view('web.dashboard.index', $data);
     }
+
+    public function privacyPolicy()
+    {
+        return view('web.privacy-policy');
+    }
+
+    public function howDoDeleteAccount()
+    {
+        return view('web.how-delete');
+    }
+
+    
 }

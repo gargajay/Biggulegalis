@@ -82,6 +82,27 @@ class Association extends Model
         }
     }
 
+    public static function assocationTypes(){
+        return [
+            'Country Association',
+            'State Assocation',
+            'Dist Assocation',
+            'Teshil/Other'
+        ];
+    }
+
+    public static function getAllAssociations(){
+       return Association::select('id','name')->get();
+    }
+
+    public static function permissonTypes(){
+        return [
+            'Open',
+            'Invite only',
+            'Close',
+        ];
+    }
+
     public function getIsChildAttribute(){
        $exit =  Association::where('parent_id',$this->id)->first();
        if(!empty($exit)){

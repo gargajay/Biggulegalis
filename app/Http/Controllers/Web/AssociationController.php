@@ -24,9 +24,9 @@ class AssociationController extends Controller
     {
         // Define the data table structure
         $datatable = [
-            'column' => ['option' => 'Option', 'srno' => 'S No.', 'name' => 'Name', 'status' => 'Status','type'=>'Association Type','parent'=>'Parent','association_type'=>'Association Type'],
+            'column' => ['option' => 'Option', 'srno' => 'S No.', 'name' => 'Name', 'status' => 'Status','type'=>'Association Type','parent'=>'Parent','permission_type'=>'Permisson Type'],
             'search_column' => ['name'],
-            'order_column' => ['association_type'],
+            'order_column' => ['name'],
         ];
 
         // Process the data table filters and options
@@ -75,6 +75,9 @@ class AssociationController extends Controller
         $associationObject->name = $request->name;
         $associationObject->location = $request->location;
         $associationObject->description = $request->description;
+        $associationObject->parent_id = $request->parent_id;
+        $associationObject->association_type = $request->association_type;
+        $associationObject->permission_type = $request->permission_type;
 
         // if data not save show error
         PublicException::NotSave($associationObject->save());

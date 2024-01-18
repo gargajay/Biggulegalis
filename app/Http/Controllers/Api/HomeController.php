@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+
 use App\Exceptions\PublicException;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
@@ -40,7 +41,7 @@ class HomeController extends Controller
     public function filterMembers(Request $request)
     {
         $members = User::with('addresses')->where('id', '!=', Auth::id())->where('user_type', USER_TYPE['USER'])
-        ->select('id', 'full_name', 'image', 'address_id');
+            ->select('id', 'full_name', 'image', 'address_id');
         $latitude = $request->latitude ?? null;
         $longitude = $request->longitude ?? null;
         if ($latitude && $longitude) {
@@ -68,12 +69,12 @@ class HomeController extends Controller
             $members->where('full_name', 'LIKE', '%' . $request->search . '%');
         }
         $members = newPagination($members->latest());
-        return Helper::SuccessReturn($members,'MEMBERS_FETCH');
+        return Helper::SuccessReturn($members, 'MEMBERS_FETCH');
     }
 
     public function getCountries(Request $request)
     {
-        $data = Association::where(['parent_id'=>0])->get();
+        $data = Association::where(['parent_id' => 0])->get();
         return Helper::SuccessReturn($data, 'COUNTRY_DATA_FETCH');
     }
 
@@ -88,7 +89,7 @@ class HomeController extends Controller
         PublicException::Validator($request->all(), $rules);
 
         $country_id = $request->country_id ?? 1;
-        $data = Association::where('association_type','2')->where('parent_id', $country_id)->with('country')->get();
+        $data = Association::where('association_type', '2')->where('parent_id', $country_id)->with('country')->get();
         return Helper::SuccessReturn($data, 'STATE_DATA_FETCH');
         PublicException::Error('SOMETHING_WENT_WRONG');
     }
@@ -102,13 +103,13 @@ class HomeController extends Controller
         ];
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
-        
-        $data = Association::where('association_type','3')->latest();
 
-        if(!empty($request->state_id)){
+        $data = Association::where('association_type', '3')->latest();
+
+        if (!empty($request->state_id)) {
             $data = $data->where('parent_id', $request->state_id);
-         }
-         $data = $data->with('stateBarCouncil')->get();
+        }
+        $data = $data->with('stateBarCouncil')->get();
         return Helper::SuccessReturn($data, 'DISTRICT_DATA_FETCH');
         PublicException::Error('SOMETHING_WENT_WRONG');
     }
@@ -123,12 +124,12 @@ class HomeController extends Controller
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
 
-        $data = Association::where('association_type','4')->latest();
+        $data = Association::where('association_type', '4')->latest();
 
-        if(!empty($request->district_id)){
+        if (!empty($request->district_id)) {
             $data = $data->where('parent_id', $request->district_id);
-         }
-         $data = $data->with('districtBarAssociation')->get();
+        }
+        $data = $data->with('districtBarAssociation')->get();
 
         return Helper::SuccessReturn($data, 'TEHSIL_DATA_FETCH');
     }
@@ -149,7 +150,7 @@ class HomeController extends Controller
         // //     $userIds =  $userIds->where('association_id',$request->association_id);
         // // }
         //  $userIds = $userIds->pluck('user_id');
-        $users =  User::where('user_type','!=','admin')->with('userAssociation', 'addresses');
+        $users =  User::where('user_type', '!=', 'admin')->with('userAssociation', 'addresses');
         $data = newPagination($users->latest());
 
         return Helper::SuccessReturn($data, 'MEMBER_FETCH');
@@ -166,31 +167,31 @@ class HomeController extends Controller
 
         $association = Association::where('id', $request->association_id)->first();
 
-        $userIds =   UserAssociation::where('association_id',$association->id)->where('status',1)->pluck('user_id');
-        $members =   User::with('userAssociation')->whereIn('id',$userIds)->latest()->get();
+        $userIds =   UserAssociation::where('association_id', $association->id)->where('status', 1)->pluck('user_id');
+        $members =   User::with('userAssociation')->whereIn('id', $userIds)->latest()->get();
         $gallerys = Gallery::where('association_id', $request->association_id)->latest()->get();
 
-      //  $president_id =   UserAssociation::where('association_id',$association->id)->where('user_role_id',4)->pluck('user_id');
-        $president_id = UserAssociation::where('association_id', $association->id)->where('status',1)
-    ->whereJsonContains('roles', 4)
-    ->pluck('user_id');
+        //  $president_id =   UserAssociation::where('association_id',$association->id)->where('user_role_id',4)->pluck('user_id');
+        $president_id = UserAssociation::where('association_id', $association->id)->where('status', 1)
+            ->whereJsonContains('roles', 4)
+            ->pluck('user_id');
 
 
-    $auth_comm_id = UserAssociation::where('association_id', $association->id)->where('status',1)
-    ->whereJsonContains('roles', 3)
-    ->pluck('user_id');
+        $auth_comm_id = UserAssociation::where('association_id', $association->id)->where('status', 1)
+            ->whereJsonContains('roles', 3)
+            ->pluck('user_id');
 
-    $members_auth =   User::with('userAssociation')->whereIn('id',$auth_comm_id)->latest()->get();
+        $members_auth =   User::with('userAssociation')->whereIn('id', $auth_comm_id)->latest()->get();
 
-    $note_public_id = UserAssociation::where('association_id', $association->id)->where('status',1)
-    ->whereJsonContains('roles', 2)
-    ->pluck('user_id');
+        $note_public_id = UserAssociation::where('association_id', $association->id)->where('status', 1)
+            ->whereJsonContains('roles', 2)
+            ->pluck('user_id');
 
-    $members_notry =   User::with('userAssociation')->whereIn('id',$note_public_id)->latest()->get();
+        $members_notry =   User::with('userAssociation')->whereIn('id', $note_public_id)->latest()->get();
 
 
 
-        $president = User::with('userAssociation')->whereIn('id',$president_id)->latest()->first();
+        $president = User::with('userAssociation')->whereIn('id', $president_id)->latest()->first();
 
         $links = Link::where('association_id', $request->association_id)->latest()->get();
         $announcements = Announcement::where('association_id', $request->association_id)->latest()->get();
@@ -201,73 +202,73 @@ class HomeController extends Controller
 
         $office =   UserAssociation::where(function ($query) {
             $query->orWhereJsonContains('roles', 5)
-                  ->orWhereJsonContains('roles', 6)
-                  ->orWhereJsonContains('roles', 4)
-                  ->orWhereJsonContains('roles', 7);
-        })->where('status',1)
-        ->where('association_id', $request->association_id)
-        ->pluck('user_id')->toArray();
+                ->orWhereJsonContains('roles', 6)
+                ->orWhereJsonContains('roles', 4)
+                ->orWhereJsonContains('roles', 7);
+        })->where('status', 1)
+            ->where('association_id', $request->association_id)
+            ->pluck('user_id')->toArray();
 
-        $officeBear =   User::with('userAssociation')->whereIn('id',$office)->latest()->get();
+        $officeBear =   User::with('userAssociation')->whereIn('id', $office)->latest()->get();
 
 
         $committee = Committee::where('association_id',  $request->association_id)->latest()->first();
         $cmembers = [];
-        if(!empty($committee)){
+        if (!empty($committee)) {
             $committee->members;
-        
+
             $cmembers =   User::whereIn('id', $committee->members)->with('addresses', 'userAssociation')->latest()->get();
         }
         $oldMembers = OldMember::where('association_id', $request->association_id)->latest()->get();
-    
+
 
         $associationTabs = [
             [
-                'id' =>1,
+                'id' => 1,
                 'name' => 'overview',
                 'type' => 'overview',
                 'information' => [],
-                'president'=>$president,
-                'description'=>$association->description
+                'president' => $president,
+                'description' => $association->description
             ],
             [
-                'id' =>2,
+                'id' => 2,
                 'name' => 'members',
                 'type' => 'members',
                 'information' => $members
             ],
             [
-                'id' =>3,
+                'id' => 3,
                 'name' => 'gallery',
                 'type' => 'gallery',
                 'information' => $gallerys
             ],
             [
-                'id' =>4,
+                'id' => 4,
                 'name' => 'links',
                 'type' => 'links',
                 'information' => $links
             ],
             [
-                'id' =>5,
+                'id' => 5,
                 'name' => 'quotes',
                 'type' => 'quotes',
                 'information' => $quotes
             ],
             [
-                'id' =>6,
+                'id' => 6,
                 'name' => 'announcements',
                 'type' => 'announcements',
                 'information' => $announcements
             ],
             [
-                'id' =>7,
+                'id' => 7,
                 'name' => 'Notary public',
                 'type' => 'members',
                 'information' =>  $members_notry
             ],
             [
-                'id' =>8,
+                'id' => 8,
                 'name' => 'Oath commissioner',
                 'type' => 'members',
                 'information' => $members_auth
@@ -291,22 +292,23 @@ class HomeController extends Controller
                 'type' => 'others',
                 'information' => $others,
             ],
-            [
-                'id' => 11,
-                'name' => 'disciplinary committee',
-                'type' => 'members',
-                'information' => $cmembers
-            ]
+           
 
-            
-         
+
+
+        ];
+
+        $associationTabs [] =    [
+            'id' => 11,
+            'name' => 'disciplinary committee',
+            'type' => 'members',
+            'information' => $cmembers
         ];
 
         $association->tabs = $associationTabs;
-        
+
 
         return Helper::SuccessReturn($association, 'ASSOCIATION_FETCH');
-
     }
 
 
@@ -332,12 +334,12 @@ class HomeController extends Controller
         ]);
 
         $quote->user_id = Auth::id();
-       
+
         // if data not save show error
-    
+
         PublicException::NotSave($quote->save());
         // add quote members
-      
+
         return Helper::SuccessReturn($quote->load('association'), !empty($id) ? 'QUOTE_UPDATED' : 'QUOTE_ADDED');
     }
 
@@ -354,50 +356,50 @@ class HomeController extends Controller
     }
 
     public function otherPerson(Request $request)
-{
-    $rules = [
-        'id' => ['nullable'],
-        'name' => ['required', 'string', 'max:255'],
-        'description' => ['nullable'],
-        'association_id' => ['required','iexists:associations,id'],
-        'work' => ['nullable'],
-        'contact_no' => ['nullable']
-    ];
+    {
+        $rules = [
+            'id' => ['nullable'],
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable'],
+            'association_id' => ['required', 'iexists:associations,id'],
+            'work' => ['nullable'],
+            'contact_no' => ['nullable']
+        ];
 
-    // Validate the user input data
-    PublicException::Validator($request->all(), $rules);
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
 
-    $otherPerson = OtherPerson::find($request->id) ? OtherPerson::find($request->id):new OtherPerson();
+        $otherPerson = OtherPerson::find($request->id) ? OtherPerson::find($request->id) : new OtherPerson();
 
-    // Update other person fields
-    $otherPerson = Helper::UpdateObjectIfKeyNotEmpty($otherPerson, [
-        'name',
-        'description',
-        'association_id',
-        'work',
-        'contect_no'
-    ]);
+        // Update other person fields
+        $otherPerson = Helper::UpdateObjectIfKeyNotEmpty($otherPerson, [
+            'name',
+            'description',
+            'association_id',
+            'work',
+            'contect_no'
+        ]);
 
-    $otherPerson->user_id= auth::id();
+        $otherPerson->user_id = auth::id();
 
-    // Save the updated other person
-    PublicException::NotSave($otherPerson->save());
+        // Save the updated other person
+        PublicException::NotSave($otherPerson->save());
 
-    return Helper::SuccessReturn($otherPerson->load('association'), 'OTHER_PERSON_UPDATED');
-}
+        return Helper::SuccessReturn($otherPerson->load('association'), 'OTHER_PERSON_UPDATED');
+    }
 
-public function deleteOtherPerson(Request $request)
-{
-    $rules = [
-        'id' => ['required','iexists:other_persons,id']
-    ];
+    public function deleteOtherPerson(Request $request)
+    {
+        $rules = [
+            'id' => ['required', 'iexists:other_persons,id']
+        ];
 
-    // Validate the user input data
-    PublicException::Validator($request->all(), $rules);
+        // Validate the user input data
+        PublicException::Validator($request->all(), $rules);
 
-    OtherPerson::find($request->id)->delete();
-    return Helper::SuccessReturn(null, 'OTHER_PERSON_DELETED');
-}
+        OtherPerson::find($request->id)->delete();
+        return Helper::SuccessReturn(null, 'OTHER_PERSON_DELETED');
+    }
 
     // annocements
 
@@ -423,12 +425,12 @@ public function deleteOtherPerson(Request $request)
         ]);
 
         $announcement->user_id = Auth::id();
-       
+
         // if data not save show error
-    
+
         PublicException::NotSave($announcement->save());
         // add announcement members
-      
+
         return Helper::SuccessReturn($announcement->load('association'), !empty($id) ? 'ANNOUNCEMENT_UPDATED' : 'ANNOUNCEMENT_ADDED');
     }
 
@@ -450,8 +452,8 @@ public function deleteOtherPerson(Request $request)
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable'],
-            'id' => ['nullable','iexists:compliants,id'],
-            'association_id' => ['required','iexists:associations,id']
+            'id' => ['nullable', 'iexists:compliants,id'],
+            'association_id' => ['required', 'iexists:associations,id']
 
         ];
 
@@ -467,12 +469,12 @@ public function deleteOtherPerson(Request $request)
         ]);
 
         $announcement->user_id = Auth::id();
-       
+
         // if data not save show error
-    
+
         PublicException::NotSave($announcement->save());
         // add announcement members
-      
+
         return Helper::SuccessReturn($announcement->load('association'), !empty($id) ? 'compliant_UPDATED' : 'ANNOUNCEMENT_ADDED');
     }
 
@@ -490,9 +492,10 @@ public function deleteOtherPerson(Request $request)
     }
 
 
-    
 
-    public function sendInvitation(Request $request){
+
+    public function sendInvitation(Request $request)
+    {
         $rules = [
             'user_id' => ['required', 'integer', 'iexists:users,id'],
             'association_id' => ['required', 'integer', 'iexists:associations,id']
@@ -504,7 +507,7 @@ public function deleteOtherPerson(Request $request)
 
         $invitation = new Invitation();
         $invitation->user_id = $request->user_id;
-        $invitation->msg = Auth::user()->full_name.' sent you request to join in his association';
+        $invitation->msg = Auth::user()->full_name . ' sent you request to join in his association';
         $invitation->association_id = $request->association_id;
         PublicException::NotSave($invitation->save());
 
@@ -515,7 +518,7 @@ public function deleteOtherPerson(Request $request)
         ];
 
         $notificationData = [[
-            'receiver_id' =>$request->user_id,
+            'receiver_id' => $request->user_id,
             'title' => ['Invitation for join assocation'],
             'body' => ['Invitation'],
             'type' => 'Invitation',
@@ -533,9 +536,4 @@ public function deleteOtherPerson(Request $request)
         $Data = Document::latest()->get();
         return Helper::SuccessReturn($Data, 'Document list');
     }
-
-
 }
-
-
-

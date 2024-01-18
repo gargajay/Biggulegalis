@@ -140,7 +140,7 @@ class UserController extends Controller
             if ($asso->permission_type == 3) {
                 PublicException::Error('You cannot be directly join this assoication . connect to priesent of association for inviation');
             }
-            $userAssociation =  UserAssociation::where('association_id', $request->association_id)->where('user_id', $userObject->id)->first();
+            $userAssociation =  UserAssociation::where('user_id', $userObject->id)->first();
 
             if (empty($userAssociation)) {
                 $new = true;

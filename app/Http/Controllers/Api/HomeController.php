@@ -123,7 +123,7 @@ class HomeController extends Controller
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
 
-        $data = Association::latest();
+        $data = Association::where('association_type','4')->latest();
 
         if(!empty($request->district_id)){
             $data = $data->where('parent_id', $request->district_id);

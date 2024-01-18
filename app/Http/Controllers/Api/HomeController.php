@@ -298,12 +298,16 @@ class HomeController extends Controller
 
         ];
 
-        $associationTabs [] =    [
-            'id' => 11,
-            'name' => 'disciplinary committee',
-            'type' => 'members',
-            'information' => $cmembers
-        ];
+        if($association->association_type==1 || $association->association_type==2){
+            $associationTabs [] =    [
+                'id' => 11,
+                'name' => 'disciplinary committee',
+                'type' => 'members',
+                'information' => $cmembers
+            ];
+        }
+
+       
 
         $association->tabs = $associationTabs;
 

@@ -142,15 +142,19 @@ class HomeController extends Controller
         ];
         // validate input data using the Validator method of the PublicException class
         PublicException::Validator($request->all(), $rules);
-        // $userIds =   UserAssociation::latest();
+        $userIds =   UserAssociation::where(function ($query) {
+            $query->orWhereJsonContains('roles', 9);
+        })->pluck('user_id')->toArray();
 
-        // $search =  $request->search;
+         $search =  $request->search;
 
         // // if(!empty($request->association_id)){
         // //     $userIds =  $userIds->where('association_id',$request->association_id);
         // // }
         //  $userIds = $userIds->pluck('user_id');
-        $users =  User::where('user_type', '!=', 'admin')->with('userAssociation', 'addresses');
+
+        $users =  User::where('user_type', '!=', 'admin')->whereNotIn('id',$userIds)->with('userAssociation', 'addresses');
+        $users = $users->where('full_name', 'like', '%' . $search . '%');
         $data = newPagination($users->latest());
 
         return Helper::SuccessReturn($data, 'MEMBER_FETCH');

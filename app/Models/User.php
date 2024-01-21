@@ -304,16 +304,7 @@ class User extends Authenticatable
                 'name' => 'Staff',
                 'type' => 'Clearks',
                 'information' => $members,
-            ],
-            [
-                'id' => 8,
-                'name' => 'Compliant',
-                'type' => 'compliant',
-                'information' => $compliants
-            ],
-
-
-
+            ]
         ];
 
         // checking is user roles in prisent or vice prisent 
@@ -323,6 +314,21 @@ class User extends Authenticatable
         $checkPresent = array_intersect($userRoles, [4]);
         // Check if there are common elements between $userRoles and $rolesToCheck
         $commonRoles = array_intersect($userRoles, $rolesToCheck);
+
+
+        $rolesNotInUserRoles = array_diff($rolesToCheck, $userRoles);
+
+        if($rolesNotInUserRoles){
+            $associationTabs[] = [
+                'id' => 8,
+                'name' => 'Complaint',
+                'type' => 'compliant',
+                'information' => $compliants
+            ];
+        }
+
+
+    
 
         if ($commonRoles) {
 

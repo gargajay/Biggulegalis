@@ -277,15 +277,15 @@ class User extends Authenticatable
 
         $members =   User::where('parent_id', Auth::id())->with('addresses', 'userAssociation')->latest()->get();
 
-        $gallerys = Gallery::where('user_id', auth::id())->latest()->get();
-        $links = Link::where('user_id', auth::id())->latest()->get();
+        $gallerys = Gallery::where('association_id', $association->id)->latest()->get();
+        $links = Link::where('association_id', $association->id)->latest()->get();
         $announcements = Announcement::where('user_id', auth::id())->latest()->get();
 
 
-        $compliants = Compliant::where('user_id', auth::id())->latest()->get();
+        $compliants = Compliant::where('association_id', $association->id)->latest()->get();
 
-        $quotes = Quote::where('user_id', auth::id())->latest()->get();
-        $others = OtherPerson::where('user_id', auth::id())->latest()->get();
+        $quotes = Quote::where('association_id', $association->id)->latest()->get();
+        $others = OtherPerson::where('association_id', $association->id)->latest()->get();
 
         $oldMembers = OldMember::where('association_id',  $association->id)->latest()->get();
         $committee = Committee::where('association_id',  $association->id)->latest()->first();

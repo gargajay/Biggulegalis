@@ -305,21 +305,6 @@ class User extends Authenticatable
                 'type' => 'Clearks',
                 'information' => $members,
             ],
-
-            [
-                'id' => 3,
-                'name' => 'gallery',
-                'type' => 'gallery',
-                'information' => $gallerys
-            ],
-            [
-                'id' => 4,
-                'name' => 'links',
-                'type' => 'links',
-                'information' => $links
-            ],
-
-
             [
                 'id' => 8,
                 'name' => 'Compliant',
@@ -340,6 +325,19 @@ class User extends Authenticatable
         $commonRoles = array_intersect($userRoles, $rolesToCheck);
 
         if ($commonRoles) {
+
+            $associationTabs[] =   [
+                'id' => 3,
+                'name' => 'gallery',
+                'type' => 'gallery',
+                'information' => $gallerys
+            ];
+            $associationTabs[] =  [
+                'id' => 4,
+                'name' => 'links',
+                'type' => 'links',
+                'information' => $links
+            ];
             $associationTabs[] = [
                 'id' => 7,
                 'name' => 'office bearers',
@@ -369,7 +367,7 @@ class User extends Authenticatable
 
             $associationTabs[] =   [
                 'id' => 5,
-                'name' => 'quotes',
+                'name' => 'Courts',
                 'type' => 'quotes',
                 'information' => $quotes
             ];

@@ -251,7 +251,7 @@ class HomeController extends Controller
             ],
             [
                 'id' => 5,
-                'name' => 'quotes',
+                'name' => 'Courts',
                 'type' => 'quotes',
                 'information' => $quotes
             ],

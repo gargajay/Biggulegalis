@@ -451,7 +451,7 @@ class UserController extends Controller
         $userAssociation->user_id = $userObject->id;
         PublicException::NotSave($userAssociation->save());
 
-        $userAssociation->roles = json_decode("[8]");
+        $userAssociation->roles = json_decode("[9]");
 
         PublicException::NotSave($userAssociation->save());
 

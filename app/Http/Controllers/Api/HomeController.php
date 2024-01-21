@@ -171,7 +171,11 @@ class HomeController extends Controller
 
         $association = Association::where('id', $request->association_id)->first();
 
-        $userIds =   UserAssociation::where('association_id', $association->id)->where('status', 1)->pluck('user_id');
+        $userIds =   UserAssociation::where(function ($query) {
+            $query->WhereJsonContains('roles', 8);
+        })->where('status', 1)
+            ->where('association_id', $request->association_id)
+            ->pluck('user_id')->toArray();
         $members =   User::with('userAssociation')->whereIn('id', $userIds)->latest()->get();
         $gallerys = Gallery::where('association_id', $request->association_id)->latest()->get();
 
@@ -224,6 +228,15 @@ class HomeController extends Controller
             $cmembers =   User::whereIn('id', $committee->members)->with('addresses', 'userAssociation')->latest()->get();
         }
         $oldMembers = OldMember::where('association_id', $request->association_id)->latest()->get();
+
+        $staffids =   UserAssociation::where(function ($query) {
+            $query->WhereJsonContains('roles', 9);
+            })->where('status', 1)
+            ->where('association_id', $request->association_id)
+            ->pluck('user_id')->toArray();
+
+            $staff =   User::with('userAssociation')->whereIn('id', $staffids)->latest()->get();
+
 
 
         $associationTabs = [
@@ -288,7 +301,8 @@ class HomeController extends Controller
                 'name' => 'Office bearers',
                 'type' => 'officebear',
                 'information' => $officeBear,
-                'old_member' => $oldMembers
+                'old_member' => $oldMembers,
+                'staff' =>$staff
             ],
             [
                 'id' => 11,

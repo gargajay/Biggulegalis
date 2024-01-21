@@ -527,6 +527,11 @@ class HomeController extends Controller
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
 
+        $userPermissionArray =  User::getAllPermissions(Auth::id(),true,true);
+          if(!in_array(10,$userPermissionArray)){
+            return response()->json(['success' => FALSE, 'status' =>400, 'message' => __("message.no_permission")], 200);
+          }
+
         $invitation = new Invitation();
         $invitation->user_id = $request->user_id;
         $invitation->msg = Auth::user()->full_name . ' sent you request to join in his association';

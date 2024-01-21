@@ -279,7 +279,7 @@ class HomeController extends Controller
             ],
             [
                 'id' => 9,
-                'name' => 'Complaint',
+                'name' => 'Complaints',
                 'type' => 'compliant',
                 'information' => $compliants
             ],

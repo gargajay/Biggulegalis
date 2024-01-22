@@ -54,7 +54,7 @@ class UserAssociation extends Model
             elseif (collect($roles)->contains(fn ($role) => in_array($role, [2, 3]))) {
                 $userAssociation->permissions = [1, 3, 4, 8];
             } else {
-                $userAssociation->permissions = [3, 4, 8];
+                $userAssociation->permissions = [8];
             }
 
             return $userAssociation;

@@ -274,8 +274,14 @@ class User extends Authenticatable
 
         $office =   User::with('userAssociation', 'addresses')->whereIn('id', $officeId)->latest()->get();
 
+        $staffIds =   UserAssociation::where(function ($query) {
+            $query->whereJsonContains('roles', 9);
+        })->where('status', 1)
+            ->where('association_id', $association->id)
+            ->pluck('user_id')->toArray();
 
-        $members =   User::where('parent_id', Auth::id())->with('addresses', 'userAssociation')->latest()->get();
+
+        $members =   User::whereIn('id',$staffIds)->with('addresses', 'userAssociation')->latest()->get();
 
         $gallerys = Gallery::where('association_id', $association->id)->latest()->get();
         $links = Link::where('association_id', $association->id)->latest()->get();

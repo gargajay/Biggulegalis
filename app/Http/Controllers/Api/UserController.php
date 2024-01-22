@@ -564,7 +564,7 @@ class UserController extends Controller
 
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
-        User::where(['id' => $request->staff_id, 'parent_id' => Auth::id()])->first()->delete();
+        User::where(['id' => $request->staff_id])->first()->delete();
         return Helper::SuccessReturn(null, 'STAFF_DELETED');
     }
 

@@ -210,6 +210,11 @@ class User extends Authenticatable
                 'name' => 'office bearers mangement',
                 'is_selected' => false
             ],
+            [
+                'id' => 12,
+                'name' => 'all members mangement',
+                'is_selected' => false
+            ],
 
         ];
 

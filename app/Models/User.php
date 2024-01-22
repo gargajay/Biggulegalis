@@ -302,6 +302,18 @@ class User extends Authenticatable
             $cmembers =   User::whereIn('id', $committee->members)->with('addresses', 'userAssociation')->latest()->get();
         }
 
+        $OtherAllMemberIds  =     UserAssociation::where(function ($query) {
+            $query->orWhereJsonContains('roles', 8)
+                ->orWhereJsonContains('roles', 2)
+                ->orWhereJsonContains('roles', 3);
+        })->where('status', 1)
+            ->where('association_id', $association->id)
+            ->pluck('user_id')->toArray();
+
+
+            $Allothers =   User::whereIn('id',$OtherAllMemberIds)->with('addresses', 'userAssociation')->latest()->get();
+   
+
         $allpermissions =  User::getAllPermissions(auth::id());
 
         $associationTabs = [
@@ -324,7 +336,7 @@ class User extends Authenticatable
 
         $rolesNotInUserRoles = array_diff($rolesToCheck, $userRoles);
 
-        if($rolesNotInUserRoles){
+        if(!$rolesNotInUserRoles){
             $associationTabs[] = [
                 'id' => 8,
                 'name' => 'Complaint',
@@ -389,6 +401,13 @@ class User extends Authenticatable
                 'name' => 'Announcments',
                 'type' => 'Announcments',
                 'information' => $announcements
+            ];
+
+            $associationTabs[] =     [
+                'id' => 12,
+                'name' => 'All Others Members',
+                'type' => 'offcebear',
+                'information' => $Allothers,
             ];
         }
 

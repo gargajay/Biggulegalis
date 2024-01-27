@@ -563,4 +563,15 @@ class HomeController extends Controller
         $Data = Document::latest()->get();
         return Helper::SuccessReturn($Data, 'Document list');
     }
+
+    public function buyDocument(Request $request)
+    {
+        $Data = Document::find($request->document_id);
+        $url = url('payment?document_id='). $Data->id."&u_id=". base64_encode(Auth::id());
+      $response =  ['url'=>$url];
+        return Helper::SuccessReturn($url, 'payment url');
+
+    }
+
+    
 }

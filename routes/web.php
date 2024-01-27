@@ -12,6 +12,7 @@ use App\Http\Controllers\Web\TranslateController;
 use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Web\WorkoutHoursController;
 use App\Http\Controllers\Web\AssociationController;
+use App\Http\Controllers\Web\RazorpayController;
 use App\Models\Association;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,10 @@ Route::group([], function () {
     Route::post('login', [AuthController::class, 'login'])->name('login')->middleware(['SkipLogAfterRequest']);
     Route::match(['get', 'post'], 'forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
     Route::match(['get', 'post'], 'reset-password/{token}', [AuthController::class, 'resetPassword'])->name('reset-password')->middleware(['SkipLogAfterRequest']);
+
+    Route::get('payment',[RazorpayController::class,'payment']);
+    Route::post('razorpay-payment',[RazorpayController::class,'store'])->name('razorpay.payment.store');
+
 
 
     // routes/web.php

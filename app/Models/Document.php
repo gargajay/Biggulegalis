@@ -12,6 +12,8 @@ class Document extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public $appends = ['is_buy_me','payment_url'];
+
     protected $fillable = [
         'title',
         'description',
@@ -33,11 +35,11 @@ class Document extends Model
 
     protected function getFileAttribute($value)
     {
-        return Helper::FilePublicLink($value,DOCUMENT_IMAGE_INFO);
+        return Helper::FilePublicLink($value, DOCUMENT_IMAGE_INFO);
     }
 
-    
-     public function getStatusAttribute()
+
+    public function getStatusAttribute()
     {
         if ($this->deleted_at === null) {
             return 'Active';
@@ -47,7 +49,24 @@ class Document extends Model
     }
 
 
-   
+    public function getIsBuyMeAttribute()
+    {
+        $d =  Payment::where(['user_id' => Auth::id(), 'id' => $this->id])->first();
 
+        if (!empty($d)) {
+            return true;
+        }
 
+        return false;
+    }
+
+    public function getPaymentUrlAttribute()
+    {
+        if($this->price>0){
+           return $url = url('payment?document_id='). $this->id."&u_id=". base64_encode(Auth::id()??0);
+
+        }
+
+        return "";
+    }
 }

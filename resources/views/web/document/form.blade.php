@@ -19,6 +19,14 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="col-sm-12 form-group">
+                                    <label class="control-label">Price</label>
+                                    <input class="form-control" type="text" placeholder="Name" name="price" value="{{$documentObject->price}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-sm-12 form-group">
                                     <label class="control-label">File</label>
                                     <input class="form-control" type="file" placeholder="Name" name="file" >
                                 </div>

@@ -24,7 +24,7 @@ class DocumentController extends Controller
     {
         // Define the data table structure
         $datatable = [
-            'column' => ['option' => 'Option', 'srno' => 'S No.', 'title' => 'Name','file' => 'File', 'status' => 'Status'],
+            'column' => ['option' => 'Option', 'srno' => 'S No.', 'title' => 'Name','file' => 'File','price'=>'Price', 'status' => 'Status'],
             'search_column' => ['title'],
             'order_column' => ['title'],
         ];
@@ -73,6 +73,7 @@ class DocumentController extends Controller
 
         $documentObject = $id ? Document::withTrashed()->findOrFail($id) : new Document;
         $documentObject->title = $request->title;
+        $documentObject->price = $request->price;
 
         if ($request->has('file')) {
             $documentObject->file = Helper::FileUpload('file', DOCUMENT_IMAGE_INFO);

@@ -54,7 +54,6 @@ Route::group([], function () {
     Route::post('get-gallery', [GalleryController::class, 'getGallery']);
     Route::post('get-gallery-details', [GalleryController::class, 'getGalleryDetails']);
     Route::post('member-list', [HomeController::class, 'getAllMembers']);
-    Route::post('document-list', [HomeController::class, 'getAllDocument']);
 
 
 
@@ -91,6 +90,7 @@ Route::group([], function () {
             Route::post('invitation_accept_reject', [LinkController::class, 'invitationAcceptReject']);
             Route::post('invitation-accept-reject', [LinkController::class, 'invitationAcceptReject']);
             Route::post('send-invitation', [HomeController::class, 'sendInvitation']);
+            Route::get('buy-document', [HomeController::class, 'buyDocument']);
              /******************************-----announcement API-----************************************/
 
 
@@ -109,6 +109,7 @@ Route::group([], function () {
 
     /******************************-----compliant API-----************************************/
 
+    Route::post('document-list', [HomeController::class, 'getAllDocument']);
 
          Route::post('compliant', [HomeController::class, 'compliant']); // staff/
          Route::post('delete-compliant', [HomeController::class, 'deletecompliant']);

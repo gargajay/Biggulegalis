@@ -416,7 +416,7 @@ class AuthController extends Controller
             
             return Helper::SuccessReturn($OtpVerificationObject, 'OTP_SEND_SUCCESS');
 
-            $messageBody = 'Your verification code is ' . $otp . '. This code will expire in ' . secondsToTimeFormat(OTP_EXPIRE_TIME) . '.';
+            $messageBody = 'Biggulegalis:- your verification code is ' . $otp . '. This code will expire in ' . secondsToTimeFormat(OTP_EXPIRE_TIME) . '.';
             if (Helper::SendMessage([$phoneNumber], $messageBody)) {
                 $successArray['phone_token'] = $OtpVerificationObject->token;
                 $successArray['phone_resend_time'] = OTP_RESEND_TIME;

@@ -39,11 +39,15 @@ class RazorpayController extends Controller
                     'json_response' => json_encode((array)$response)
                 ]);
             } catch(Exception $e) {
+
+                dd('errpr');
                // return $e->getMessage();
                 Session::flash('error', $e->getMessage());
                 return redirect()->back();
             }
         }
+        dd('succes');
+
         Session::flash('success',('Payment Successful'));
         return redirect()->back();
     }

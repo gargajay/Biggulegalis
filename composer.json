@@ -18,6 +18,7 @@
         "league/flysystem-aws-s3-v3": "3.0",
         "propaganistas/laravel-phone": "^5.0",
         "rap2hpoutre/laravel-log-viewer": "^2.3",
+        "razorpay/razorpay": "*",
         "stripe/stripe-php": "^10.12",
         "twilio/sdk": "^6.44"
     },

@@ -3,7 +3,7 @@
 ?>
 @extends('web.layouts.app')
 
-@section('title', 'Privacy Policy')
+@section('title', 'Payment')
 
 
 @section('content')

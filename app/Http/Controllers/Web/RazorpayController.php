@@ -7,6 +7,7 @@ use App\Models\Document;
 use App\Models\Payment;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Razorpay\Api\Api;
 
@@ -14,6 +15,8 @@ class RazorpayController extends Controller
 {
     public function store(Request $request) {
         $input = $request->all();
+
+        Log::info("paymet".json_encode($input));
 
        // dd($request->user_id);
 
@@ -40,16 +43,14 @@ class RazorpayController extends Controller
                 ]);
             } catch(Exception $e) {
 
-                dd('errpr');
                // return $e->getMessage();
                 Session::flash('error', $e->getMessage());
-                return redirect()->back();
+                return redirect('payment?document_id=' . $request->document_id . '&u_id=' . $request->user_id);
             }
         }
-        dd('succes');
 
         Session::flash('success',('Payment Successful'));
-        return redirect()->back();
+        return redirect('payment?document_id=' . $request->document_id . '&u_id=' . $request->user_id);
     }
 
     public function payment(Request $request){

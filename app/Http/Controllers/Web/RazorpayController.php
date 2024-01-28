@@ -25,6 +25,7 @@ class RazorpayController extends Controller
             try {
                 $response = $api->payment->fetch($input['razorpay_payment_id'])->capture(array('amount' => $payment['amount']));
 
+                dd(22);
 
 
                 $payment = Payment::create([

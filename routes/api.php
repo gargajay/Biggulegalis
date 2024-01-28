@@ -39,7 +39,6 @@ Route::group([], function () {
     Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
     Route::get('app-settings', [AuthController::class, 'appSettings']);
     Route::get('get-goal', [AuthController::class, 'getGoal']);
-    Route::get('get-all-document', [HomeController::class, 'getAllDocument']);
 
     
     Route::get('checkCron', [CronController::class, 'sendLinkReminder']);
@@ -98,6 +97,9 @@ Route::group([], function () {
         Route::post('delete-announcement', [HomeController::class, 'deleteAnnouncement']);
 
         /******************************-----Quote API-----************************************/
+
+        Route::get('get-all-document', [HomeController::class, 'getAllDocument']);
+
 
 
         Route::post('other-person', [HomeController::class, 'otherPerson']); // staff/

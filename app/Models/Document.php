@@ -62,8 +62,9 @@ class Document extends Model
 
     public function getPaymentUrlAttribute()
     {
+        $user_id = Auth::id();
         if($this->price>0){
-           return $url = url('payment?document_id='). $this->id."&u_id=". base64_encode(Auth::id()??0);
+           return $url = url('payment?document_id='). $this->id."&u_id=". base64_encode($user_id);
 
         }
 

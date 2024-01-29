@@ -342,7 +342,7 @@ class User extends Authenticatable
         Log::info("iuser roles".json_encode($userRoles));
 
 
-        $rolesNotInUserRoles = array_diff($rolesToCheck, $userRoles);
+        $rolesNotInUserRoles = array_intersect($rolesToCheck, $userRoles);
         Log::info("iuserintersection".json_encode( $rolesNotInUserRoles));
 
 

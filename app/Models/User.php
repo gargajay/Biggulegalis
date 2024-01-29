@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable
 {
@@ -338,8 +339,12 @@ class User extends Authenticatable
         // Check if there are common elements between $userRoles and $rolesToCheck
         $commonRoles = array_intersect($userRoles, $rolesToCheck);
 
+        Log::info("iuser roles".json_encode($userRoles));
+
 
         $rolesNotInUserRoles = array_diff($rolesToCheck, $userRoles);
+        Log::info("iuserintersection".json_encode( $rolesNotInUserRoles));
+
 
         if($rolesNotInUserRoles){
             $associationTabs[] = [

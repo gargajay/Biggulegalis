@@ -346,7 +346,7 @@ class User extends Authenticatable
         Log::info("iuserintersection".json_encode( $rolesNotInUserRoles));
 
 
-        if($rolesNotInUserRoles){
+        if(!$rolesNotInUserRoles){
             $associationTabs[] = [
                 'id' => 8,
                 'name' => 'Complaint',

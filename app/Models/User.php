@@ -341,7 +341,7 @@ class User extends Authenticatable
 
         $rolesNotInUserRoles = array_diff($rolesToCheck, $userRoles);
 
-        if(!$rolesNotInUserRoles){
+        if($rolesNotInUserRoles){
             $associationTabs[] = [
                 'id' => 8,
                 'name' => 'Complaint',

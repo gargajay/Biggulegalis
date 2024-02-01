@@ -34,7 +34,6 @@ Route::group([], function () {
     Route::post('login', [AuthController::class, 'login'])->name('login')->middleware(['SkipLogAfterRequest']);
     Route::post('social-login', [AuthController::class, 'socialLogin']);
     Route::post('send-otp', [AuthController::class, 'sendOTP']);
-    Route::post('verify-otp', [AuthController::class, 'verifyOTP']);
     Route::post('reset-password', [AuthController::class, 'resetPasswordUsingOTP']);
     Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
     Route::get('app-settings', [AuthController::class, 'appSettings']);
@@ -66,6 +65,8 @@ Route::group([], function () {
     Route::middleware(['auth:api', 'UserLocalization'])->group(function () {
 
         //Route with auth
+        Route::post('verify-otp', [AuthController::class, 'verifyOTP']);
+
 
         /******************************-----AUTH API-----************************************/
         Route::post('change-password', [AuthController::class, 'changePassword'])->middleware(['SkipLogAfterRequest']);

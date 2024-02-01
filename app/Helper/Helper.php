@@ -13,6 +13,9 @@ use Twilio\Rest\Client;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
+use Exception;
+
 
 class Helper
 {
@@ -350,6 +353,58 @@ class Helper
 
         return array_column($messages, 'sid');
     }
+
+
+    public static function SendMessage2(array $phoneNumbers = [], string $messageBody = '')
+{
+
+   
+    
+    $messageIds = [];
+
+  
+
+    try{
+       
+        foreach ($phoneNumbers as $phoneNumber) {
+            // Make the HTTP POST request to Telesign's messaging endpoint
+            $phoneNumber = str_replace('+', '', $phoneNumber);
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, 'https://rest-ww.telesign.com/v1/messaging');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array(
+                'is_primary' => true,
+                'phone_number' => $phoneNumber,
+                'message' =>  $messageBody,
+                'message_type' => 'otp',
+                'account_lifecycle_event' => 'create',
+            )));
+            
+            $headers = array();
+            $headers[] = 'accept: application/json';
+            $headers[] = 'authorization: Basic RjBCMUFFNjMtOTk5RC00MUI1LUIxMEMtMkVENDg2OTAxODlFOlhqTklPdGVDc3RSc0FYbDl1Rk5WcE5wRkdvMStMVldVa1JIc3FSTCs0LzZuQ0hjenZsalhudENkVXBidjFNLzdSNm5CNWVNd21nSVlBdTR6U2ozZlpnPT0=';
+            $headers[] = 'content-type: application/x-www-form-urlencoded';
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            
+            $result = curl_exec($ch);
+            
+            
+            curl_close($ch);
+
+            $result = json_decode($result);
+            $messageIds[] =  $result->reference_id;
+        }
+    }catch(Exception $e){
+  return $e->getMessage();
+    }
+
+    // Get Telesign credentials from the configuration
+   
+
+    return $messageIds;
+}
 
 
     /**

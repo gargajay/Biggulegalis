@@ -405,7 +405,7 @@ class AuthController extends Controller
             $OtpVerificationObject = new OtpVerification;
             $OtpVerificationObject->contact = $phoneNumber;
             $OtpVerificationObject->mode = OTP_MODE['SMS'];
-            $OtpVerificationObject->otp = 1234;
+            $OtpVerificationObject->otp = $otp;
             $OtpVerificationObject->purpose = $request->otp_purpose;
             $OtpVerificationObject->token = randomString(20);
              
@@ -414,10 +414,9 @@ class AuthController extends Controller
                 PublicException::Error('SOMETHING_WENT_WRONG');
             }
             
-            return Helper::SuccessReturn($OtpVerificationObject, 'OTP_SEND_SUCCESS');
 
-            $messageBody = 'Biggulegalis:- your verification code is ' . $otp . '. This code will expire in ' . secondsToTimeFormat(OTP_EXPIRE_TIME) . '.';
-            if (Helper::SendMessage([$phoneNumber], $messageBody)) {
+            $messageBody = 'Biggulegalis:- your verification code is ' . $otp;
+            if (Helper::SendMessage2([$phoneNumber], $messageBody)) {
                 $successArray['phone_token'] = $OtpVerificationObject->token;
                 $successArray['phone_resend_time'] = OTP_RESEND_TIME;
             }

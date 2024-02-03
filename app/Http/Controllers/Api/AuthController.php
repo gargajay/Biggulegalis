@@ -347,45 +347,45 @@ class AuthController extends Controller
         $otp = generateOTP(OTP_LENGHT);
         $successArray = [];
 
-        if ($request->email) {
-            // get last otp
-            $OtpVerificationObject = OtpVerification::where(['contact' => $request->email, 'mode' => OTP_MODE['EMAIL']])->first();
+        // if ($request->email) {
+        //     // get last otp
+        //     $OtpVerificationObject = OtpVerification::where(['contact' => $request->email, 'mode' => OTP_MODE['EMAIL']])->first();
 
-            if (!IsEmpty($OtpVerificationObject)) {
-                $difference = Carbon::now()->diffInSeconds(Carbon::parse($OtpVerificationObject->created_at));
-                if ($difference <= OTP_RESEND_TIME) {
-                    PublicException::CustomError('OTP_RESEND', ['seconds' => secondsToTimeFormat(OTP_RESEND_TIME - $difference)]);
-                }
-            }
-            //delete previous otp
-            OtpVerification::where(['contact' => $request->email, 'mode' => OTP_MODE['EMAIL']])->delete();
+        //     if (!IsEmpty($OtpVerificationObject)) {
+        //         $difference = Carbon::now()->diffInSeconds(Carbon::parse($OtpVerificationObject->created_at));
+        //         if ($difference <= OTP_RESEND_TIME) {
+        //             PublicException::CustomError('OTP_RESEND', ['seconds' => secondsToTimeFormat(OTP_RESEND_TIME - $difference)]);
+        //         }
+        //     }
+        //     //delete previous otp
+        //     OtpVerification::where(['contact' => $request->email, 'mode' => OTP_MODE['EMAIL']])->delete();
 
-            $OtpVerificationObject = new OtpVerification;
-            $OtpVerificationObject->contact = $request->email;
-            $OtpVerificationObject->mode = OTP_MODE['EMAIL'];
-            $OtpVerificationObject->otp = $otp;
-            $OtpVerificationObject->purpose = $request->otp_purpose;
-            $OtpVerificationObject->token = randomString(20);
+        //     $OtpVerificationObject = new OtpVerification;
+        //     $OtpVerificationObject->contact = $request->email;
+        //     $OtpVerificationObject->mode = OTP_MODE['EMAIL'];
+        //     $OtpVerificationObject->otp = $otp;
+        //     $OtpVerificationObject->purpose = $request->otp_purpose;
+        //     $OtpVerificationObject->token = randomString(20);
 
-            // if the data cannot be saved
-            PublicException::NotSave($OtpVerificationObject->save());
+        //     // if the data cannot be saved
+        //     PublicException::NotSave($OtpVerificationObject->save());
 
-            $userObject = User::select('full_name')->where('email', $request->email)->where('user_type', USER_TYPE['USER'])->first();
+        //     $userObject = User::select('full_name')->where('email', $request->email)->where('user_type', USER_TYPE['USER'])->first();
 
-            $mailData = [
-                'to' => $request->email,
-                'subject' => 'Forgot One-Time Password',
-                'otp' => $otp,
-                'userObject' => $userObject,
-                'otpExpireTime' => secondsToTimeFormat(OTP_EXPIRE_TIME),
-                'view' => 'mail.forgot-password-otp',
-            ];
+        //     $mailData = [
+        //         'to' => $request->email,
+        //         'subject' => 'Forgot One-Time Password',
+        //         'otp' => $otp,
+        //         'userObject' => $userObject,
+        //         'otpExpireTime' => secondsToTimeFormat(OTP_EXPIRE_TIME),
+        //         'view' => 'mail.forgot-password-otp',
+        //     ];
 
-            if (Helper::SendMail($mailData)) {
-                $successArray['email_token'] = $OtpVerificationObject->token;
-                $successArray['email_resend_time'] = OTP_RESEND_TIME;
-            }
-        }
+        //     if (Helper::SendMail($mailData)) {
+        //         $successArray['token'] = $OtpVerificationObject->token;
+        //         $successArray['email_resend_time'] = OTP_RESEND_TIME;
+        //     }
+        // }
 
         if ($request->phone) {
 
@@ -417,7 +417,7 @@ class AuthController extends Controller
 
             $messageBody = 'Biggulegalis:- your verification code is ' . $otp;
             if (Helper::SendMessage2([$phoneNumber], $messageBody)) {
-                $successArray['phone_token'] = $OtpVerificationObject->token;
+                $successArray['token'] = $OtpVerificationObject->token;
                 $successArray['phone_resend_time'] = OTP_RESEND_TIME;
             }
         }

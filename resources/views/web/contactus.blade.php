@@ -8,7 +8,6 @@
 
 
 <section class="contact-us-section" style="margin-top: 10px;">
-    <div class="container">
    
     <div class="row">
         <div class="col-md-12">
@@ -51,7 +50,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
     <script>
      document.getElementById("backButton").addEventListener("click", function() {

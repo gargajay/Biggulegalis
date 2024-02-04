@@ -64,8 +64,9 @@ class UserController extends Controller
         // Begin database transaction
         DB::beginTransaction();
 
+        $user_id = $request->user_id ?? Auth::id();
 
-        $userObject = User::find(Auth::id());
+        $userObject = User::find($user_id);
 
         // set the object properties with the input data
         $userObject   =    Helper::UpdateObjectIfKeyNotEmpty($userObject, [

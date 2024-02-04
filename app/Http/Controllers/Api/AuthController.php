@@ -451,13 +451,12 @@ class AuthController extends Controller
 
         // Check if the OTP has been expired
         if (Carbon::parse($OtpVerificationObject->created_at)->addSeconds(OTP_EXPIRE_TIME)->isBefore(Carbon::now())) {
-            PublicException::Empty($OtpVerificationObject, 'OTP_EXPIRED');
+            PublicException::Error('OTP_EXPIRED');
         }
 
         // Check if the OTP has been tried multiple times
         if ($OtpVerificationObject->otp_counter >= OTP_RETRY_ATTEMPTS) {
-            PublicException::Empty($OtpVerificationObject, 'OTP_VERIFY_LIMIT');
-
+            PublicException::Error('OTP_VERIFY_LIMIT');
         }
 
         // Check if the OTP matches
@@ -490,10 +489,7 @@ class AuthController extends Controller
         PublicException::NotSave($OtpVerificationObject->save());
         //save opt counter
         DB::commit();
-        PublicException::Empty($OtpVerificationObject, 'INVALID_OTP');
-
-       // PublicException::Error('INVALID_OTP');
-        
+        PublicException::Error('INVALID_OTP');
     }
 
 

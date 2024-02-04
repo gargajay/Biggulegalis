@@ -53,7 +53,7 @@ class Document extends Model
     {
         $d =  Payment::where(['user_id' => Auth::id(), 'document_id' => $this->id])->first();
 
-        if (!empty($d)) {
+        if (!empty($d) || $this->price==0.0) {
             return true;
         }
 

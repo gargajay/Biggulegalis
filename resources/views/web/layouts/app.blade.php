@@ -3,9 +3,34 @@
 <head>
     <title>@yield('title')</title>
     <!-- ... your existing head content ... -->
+    <!-- Main CSS-->
+    <link rel="stylesheet" type="text/css" href="{{dynamicCacheVersion('public/assets/css/main.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{dynamicCacheVersion('public/assets/css/animate.css')}}">
+    <!-- Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="{{dynamicCacheVersion('public/assets/css/custom.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{dynamicCacheVersion('public/assets/css/bootstrap-social.css')}}">
+
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Data Table-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.4.0/css/buttons.dataTables.min.css" />
 </head>
 <style>
     /* public/css/styles.css */
+
+    :root {
+            --my-primary-color: <?php echo !empty(config('app.settings.app_color')) ? config('app.settings.app_color') : '#009688';  ?>;
+            --my-secondary-color: <?php echo colorDarken(!empty(config('app.settings.app_color')) ? config('app.settings.app_color') : '#007065', 33);  ?>;
+            --my-third-color: <?php echo colorDarken(!empty(config('app.settings.app_color')) ? config('app.settings.app_color') : '#00635a', 55);  ?>;
+            --my-forth-color: <?php echo colorDarken(!empty(config('app.settings.app_color')) ? config('app.settings.app_color') : '#007d71', 45);  ?>;
+            --my-fifth-color: <?php echo colorDarken(!empty(config('app.settings.app_color')) ? config('app.settings.app_color') : '#278663', 65);  ?>;
+            --my-sixth-color: <?php echo colorDarken(!empty(config('app.settings.app_color')) ? config('app.settings.app_color') : '#004a43', 145);  ?>;
+            --my-seventh-color: <?php echo colorDarken(!empty(config('app.settings.app_color')) ? config('app.settings.app_color') : '#004a43', 10);  ?>;
+
+            --sidebar-primary-color: <?php echo !empty(config('app.settings.sidebar_color')) ? config('app.settings.sidebar_color') : '#222d32';  ?>;
+            --sidebar-secondary-color: <?php echo colorDarken(!empty(config('app.settings.sidebar_color')) ? config('app.settings.sidebar_color') : '#0d1214', 30);  ?>;
+
+        }
 
 .privacy-policy-section {
     max-width: 800px;

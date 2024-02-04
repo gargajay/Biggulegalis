@@ -29,5 +29,11 @@ class DashboardController extends Controller
         return view('web.how-delete');
     }
 
+    public function contactUs()
+    {
+        
+        return view('web.contactus');
+    }
+
     
 }

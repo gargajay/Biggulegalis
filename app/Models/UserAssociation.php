@@ -93,18 +93,18 @@ class UserAssociation extends Model
     }
 
     public function getCountryIdAttribute(){
-      return  $this->getParents(1);
+      return  $this->getParents(1) ?? 0;
     }
 
     public function getStateIdAttribute(){
-        return  $this->getParents(2);
+        return  $this->getParents(2) ?? 0;
       }
       public function getDistIdAttribute(){
-        return  $this->getParents(3);
+        return  $this->getParents(3) ?? 0;
       }
 
       public function getTehsilIdAttribute(){
-        return  $this->getParents(4);
+        return  $this->getParents(4) ?? 0;
       }
 
     public function getRolesAttribute($value)
@@ -187,13 +187,13 @@ class UserAssociation extends Model
         if($type==1){
            return $parentData['country_id'];
         }elseif($type==2){
-            $parentData['state_id'];
+            return $parentData['state_id'];
         }
         elseif($type==3){
-            $parentData['dist_id'];
+            return $parentData['dist_id'];
         }
         elseif($type==4){
-            $parentData['tehsil_id'];
+            return  $parentData['tehsil_id'];
         }
     }
 }

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 class DashboardController extends Controller
 {
@@ -33,6 +36,44 @@ class DashboardController extends Controller
     {
         
         return view('web.contactus');
+    }
+
+
+    public function submit(Request $request)
+    {
+        // Validate the form data
+        $request->validate([
+            'email' => 'required|email',
+            'phone' => 'required',
+            'description' => 'required',
+        ]);
+
+        // Retrieve validated data
+        $data = $request->only(['email', 'phone', 'description']);
+
+        // Send email
+        // Mail::send('mail.contact', $data, function ($message) use ($data) {
+        //     $message->from($data['email']);
+        //     $message->to('your-email@example.com'); // Update recipient email address
+        //     $message->subject('Contact Form Submission: ' . $data['subject']); // Subject of the email
+        // });
+
+        $mailData = [
+            'to' => 'info@biggulegalis.com',
+            'subject' => 'Contact Form Submission:',
+            'data'=>$data,
+            'view' => 'mail.send-mail',
+        ];
+
+
+        // Send the email
+        if (Helper::SendMail($mailData)) {
+            Session::flash('success',('Your message has been sent successfully!'));
+
+            return redirect()->back();
+
+        }
+
     }
 
     

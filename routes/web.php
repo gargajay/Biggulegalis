@@ -46,6 +46,7 @@ Route::group([], function () {
 Route::get('privacy-policy', [DashboardController::class, 'privacyPolicy'])->name('privacy-policy');
 Route::get('how-do-delete-account', [DashboardController::class, 'howDoDeleteAccount'])->name('how-do-delete-account');
 Route::get('contact', [DashboardController::class, 'contactUs']);
+Route::post('contact', [DashboardController::class, 'submit']);
 
 
 

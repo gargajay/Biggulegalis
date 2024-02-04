@@ -51,7 +51,7 @@ class Document extends Model
 
     public function getIsBuyMeAttribute()
     {
-        $d =  Payment::where(['user_id' => Auth::id(), 'id' => $this->id])->first();
+        $d =  Payment::where(['user_id' => Auth::id(), 'document_id' => $this->id])->first();
 
         if (!empty($d)) {
             return true;

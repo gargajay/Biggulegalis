@@ -19,7 +19,7 @@
             <h1>Contact us</h1>
         </div>
         <div class="btn-group btn-group-sm">
-            <button type="button" class="btn btn-primary modal-link" >back</button>
+            <button type="button" class="btn btn-primary modal-link" id="backButton" >back</button>
         </div>
     </div>
                 <div class="tile-body">
@@ -53,6 +53,53 @@
         </div>
     </div>
     </div>
+    <script>
+     document.getElementById("backButton").addEventListener("click", function() {
+      // Send a message to Swift
+      sendEvent("goBack", {});
+    });
+    function sendEvent(event, ...data) {
+        try {
+            console.info("event:" + event);
+            console.info("data:");
+            console.info(data);
+            if (/Android/.test(navigator.userAgent)) {
+                console.info("Device is Android");
+                // The WebView is on an Android device
+                if (typeof Biggulegalis !== "undefined") {
+                    if (data.length > 1) {
+                        Biggulegalis.sendEvent(event, JSON.stringify(data))
+                    } else {
+                        Biggulegalis.sendEvent(event, data[0])
+                    }
+                } else {
+                    console.error("StraightTrippin object is not defined.");
+                }
+            } else if (/iPhone|iPad|iPod|iOS|Mac|Apple/.test(navigator.userAgent)) {
+                console.info("Device is iOS");
+                // The WebView is on an iOS device
+                if (typeof webkit !== "undefined") {
+
+                    if (data.length > 1) {
+                        window.webkit.messageHandlers.Biggulegalis.postMessage({
+                            event: event,
+                            data: data
+                        });
+                    } else {
+                        window.webkit.messageHandlers.Biggulegalis.postMessage({
+                            event: event,
+                            data: data[0]
+                        });
+                    }
+                } else {
+                    console.error("Biggulegalis object is not defined.");
+                }
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
+</script>
 </section>
 
 

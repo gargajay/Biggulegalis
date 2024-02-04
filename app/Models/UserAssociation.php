@@ -78,7 +78,7 @@ class UserAssociation extends Model
 
 
 
-    protected $appends = ['association_name','parent_id'];
+    protected $appends = ['association_name','country_id','state_id','dist_id','tehsil_id'];
 
     public function userRole()
     {
@@ -92,13 +92,20 @@ class UserAssociation extends Model
         return $name;
     }
 
-    public function getParentIdAttribute(){
-        $assocation = Association::where('id',$this->association_id)->first();
-        if($assocation){
-          return  $assocation->parent_id ?? 0;
-        }
-        return  0;
+    public function getCountryIdAttribute(){
+      return  $this->getParents(1);
     }
+
+    public function getStateIdAttribute(){
+        return  $this->getParents(2);
+      }
+      public function getDistIdAttribute(){
+        return  $this->getParents(3);
+      }
+
+      public function getTehsilIdAttribute(){
+        return  $this->getParents(4);
+      }
 
     public function getRolesAttribute($value)
     {
@@ -140,5 +147,53 @@ class UserAssociation extends Model
             }
         }
         return false;
+    }
+
+    public function getParents($type){
+        $parentData =[
+            'country_id' => 0,
+            'state_id' => 0,
+            'dist_id' => 0,
+            'tehsil_id' =>0
+        ];
+        if($this->association_id){
+            $assocation = Association::where('id',$this->association_id)->first();
+            if($assocation->association_type==1){
+                $parentData['country_id'] = $assocation->id;
+
+            }elseif($assocation->association_type==2){
+                $parentData['country_id'] = $assocation->parent_id;
+                $parentData['state_id'] = $assocation->id;
+                
+            }
+            elseif($assocation->association_type==3){
+                $parentData['country_id'] = 1;
+                $parentData['state_id'] = $assocation->parent_id;
+                $parentData['dist_id'] = $assocation->id;
+                
+            }
+            elseif($assocation->association_type==4){
+                $parent = Association::where('id',$assocation->parent_id)->first();
+
+                $parentData['country_id'] = 1;
+                $parentData['state_id'] = $parent ? $parent->parent_id:0;
+                $parentData['dist_id'] = $assocation->parent_id;
+                $parentData['tehsil_id'] = $assocation->id;
+               
+            }
+
+        }
+
+        if($type==1){
+           return $parentData['country_id'];
+        }elseif($type==2){
+            $parentData['state_id'];
+        }
+        elseif($type==3){
+            $parentData['dist_id'];
+        }
+        elseif($type==4){
+            $parentData['tehsil_id'];
+        }
     }
 }

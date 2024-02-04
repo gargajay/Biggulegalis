@@ -558,7 +558,7 @@ class UserController extends Controller
     public function deleteStaff(Request $request)
     {
         $rules = [
-            'member_id' => ['required', 'iexists:users,id'],
+            'staff_id' => ['required', 'iexists:users,id'],
             'association_id' => ['required', 'iexists:associations,id']
         ];
 

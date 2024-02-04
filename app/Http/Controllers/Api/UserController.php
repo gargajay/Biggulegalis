@@ -558,13 +558,20 @@ class UserController extends Controller
     public function deleteStaff(Request $request)
     {
         $rules = [
-            'staff_id' => ['required', 'iexists:users,id'],
-            'association_id' => ['required', 'iexists:associations,id']
+            'association_id' => ['nullable', 'iexists:associations,id']
         ];
 
         // Validate the user input data
         PublicException::Validator($request->all(), $rules);
-        User::where(['id' => $request->staff_id])->first()->delete();
+
+        if(!empty($request->staff_id)){
+            User::where(['id' => $request->staff_id])->first()->delete();
+
+        }
+
+        if(!empty($request->member_id) && !empty($request->association_id)){
+            OldMember::where(['id' => $request->member_id,'association_id'=>$request->association_id])->first()->delete();
+        }
         return Helper::SuccessReturn(null, 'STAFF_DELETED');
     }
 

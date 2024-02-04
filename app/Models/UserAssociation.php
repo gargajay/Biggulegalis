@@ -78,7 +78,7 @@ class UserAssociation extends Model
 
 
 
-    protected $appends = ['association_name','parent_id'];
+    protected $appends = ['association_name'];
 
     public function userRole()
     {
@@ -92,13 +92,13 @@ class UserAssociation extends Model
         return $name;
     }
 
-    public function getParentIdAttribute(){
-        $assocation = Association::where('id',$this->association_id)->first();
-        if($assocation){
-          return  $assocation->parent_id ?? 0;
-        }
-        return  0;
-    }
+    // public function getParentIdAttribute(){
+    //     $assocation = Association::where('id',$this->association_id)->first();
+    //     if($assocation){
+    //       return  $assocation->parent_id ?? 0;
+    //     }
+    //     return  0;
+    // }
 
     public function getRolesAttribute($value)
     {

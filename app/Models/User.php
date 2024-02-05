@@ -141,11 +141,18 @@ class User extends Authenticatable
         'Update' => ['addresses', 'userAssociation']
     ];
 
+    public $appends = ['notification_count'];
+
 
 
     protected function getFullNameAttribute($value)
     {
         return ucwords(strtolower($value ?? trim($this->first_name . ' ' . $this->last_name)));
+    }
+
+    protected function getNotificationCountAttribute()
+    {
+         return rand(10,2);
     }
 
     // protected function setFullNameAttribute($value)

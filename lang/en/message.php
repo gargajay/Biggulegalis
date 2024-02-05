@@ -151,7 +151,7 @@ return [
     
 
     'JOINED_MEMBER' => 'New member joined in association.',
-    'Invitation' => 'Assocation send to invitation to join them',
+    'Invitation' => 'Assocation send invitation to join them',
 
     
 ];

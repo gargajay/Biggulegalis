@@ -128,22 +128,22 @@ class UserAssociation extends Model
         if (in_array($prisent_id, $roles)) {
             $checkIsPresentInAssociation = UserAssociation::where('association_id', $association_id)->whereJsonContains('roles', $prisent_id)->first();
             if ($checkIsPresentInAssociation) {
-                return 'You cannot choose the present role as it is already assigned.';
+                return 'You cannot choose the role of president as it has already been assigned.';
             }
         } elseif (in_array($vprisent_id, $roles)) {
             $checkIsPresentInAssociation = UserAssociation::where('association_id', $association_id)->whereJsonContains('roles', $vprisent_id)->first();
             if ($checkIsPresentInAssociation) {
-                return 'You cannot choose the vice present role as it is already assigned.';
+                return 'You cannot choose the role of vice president as it has already been assigned.';
             }
         } elseif (in_array($secretary_id, $roles)) {
             $checkIsPresentInAssociation = UserAssociation::where('association_id', $association_id)->whereJsonContains('roles', $secretary_id)->first();
             if ($checkIsPresentInAssociation) {
-                return 'You cannot choose the secretary role as it is already assigned.';
+                return 'You cannot choose the role of secretary as it has already been assigned.';
             }
         } elseif (in_array($joinsecretary_id, $roles)) {
             $checkIsPresentInAssociation = UserAssociation::where('association_id', $association_id)->whereJsonContains('roles', $joinsecretary_id)->first();
             if ($checkIsPresentInAssociation) {
-                return 'You cannot choose the Joint Secretary role as it is already assigned.';
+                return 'You cannot choose the role of  joint secretary as it has already been assigned..';
             }
         }
         return false;

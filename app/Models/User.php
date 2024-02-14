@@ -152,7 +152,7 @@ class User extends Authenticatable
 
     protected function getNotificationCountAttribute()
     {
-         return rand(10,2);
+         return 0;
     }
 
     // protected function setFullNameAttribute($value)

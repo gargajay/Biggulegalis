@@ -418,6 +418,8 @@ class AuthController extends Controller
             $messageBody = 'Biggulegalis:- your verification code is ' . $otp;
             if (Helper::SendMessage2([$phoneNumber], $messageBody)) {
                 $successArray['token'] = $OtpVerificationObject->token;
+                $successArray['phone_token'] = $OtpVerificationObject->token;
+                $successArray['email_token'] = $OtpVerificationObject->token;
                 $successArray['phone_resend_time'] = OTP_RESEND_TIME;
             }
         }

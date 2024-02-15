@@ -150,9 +150,36 @@ class User extends Authenticatable
         return ucwords(strtolower($value ?? trim($this->first_name . ' ' . $this->last_name)));
     }
 
-    protected function getNotificationCountAttribute()
+    public function getNotificationCountAttribute()
     {
-         return 2;
+        $count = 0;
+        $links = Invitation::latest();
+
+        $ass =   UserAssociation::where('user_id', Auth::id())->first();
+
+        if (!empty($ass)) {
+
+            $officeBearesIds =   UserAssociation::where(function ($query) {
+                $query->orWhereJsonContains('roles', 5)
+                    ->orWhereJsonContains('roles', 6)
+                    ->orWhereJsonContains('roles', 4)
+                    ->orWhereJsonContains('roles', 7);
+            })->where('status', 1)
+                ->where('association_id', $ass->id)
+                ->pluck('user_id')->toArray();
+
+            if (in_array(Auth::id(), $officeBearesIds)) {
+                $count =   $links->where('association_id', $ass->id)->where('type', 'from_association')->count();
+            }else{
+                $count =  $links->where('user_id', Auth::id())->where('type', 'from_user')->count();
+
+            }
+        }else{
+            $count =  $links->where('user_id', Auth::id())->where('type', 'from_user')->count();
+        }
+
+
+        return $count;
     }
 
     // protected function setFullNameAttribute($value)
@@ -294,7 +321,7 @@ class User extends Authenticatable
             ->pluck('user_id')->toArray();
 
 
-        $members =   User::whereIn('id',$staffIds)->with('addresses', 'userAssociation')->latest()->get();
+        $members =   User::whereIn('id', $staffIds)->with('addresses', 'userAssociation')->latest()->get();
 
         $gallerys = Gallery::where('association_id', $association->id)->latest()->get();
         $links = Link::where('association_id', $association->id)->latest()->get();
@@ -324,8 +351,8 @@ class User extends Authenticatable
             ->pluck('user_id')->toArray();
 
 
-            $Allothers =   User::whereIn('id',$OtherAllMemberIds)->with('addresses', 'userAssociation')->latest()->get();
-   
+        $Allothers =   User::whereIn('id', $OtherAllMemberIds)->with('addresses', 'userAssociation')->latest()->get();
+
 
         $allpermissions =  User::getAllPermissions(auth::id());
 
@@ -346,14 +373,14 @@ class User extends Authenticatable
         // Check if there are common elements between $userRoles and $rolesToCheck
         $commonRoles = array_intersect($userRoles, $rolesToCheck);
 
-        Log::info("iuser roles".json_encode($userRoles));
+        Log::info("iuser roles" . json_encode($userRoles));
 
 
         $rolesNotInUserRoles = array_intersect($rolesToCheck, $userRoles);
-        Log::info("iuserintersection".json_encode( $rolesNotInUserRoles));
+        Log::info("iuserintersection" . json_encode($rolesNotInUserRoles));
 
 
-        if(!$rolesNotInUserRoles){
+        if (!$rolesNotInUserRoles) {
             $associationTabs[] = [
                 'id' => 8,
                 'name' => 'Complaint',
@@ -363,7 +390,7 @@ class User extends Authenticatable
         }
 
 
-    
+
 
         if ($commonRoles) {
 

@@ -114,10 +114,10 @@ class CustomValidator
                 $totalError++;
             }
 
-            if (!preg_match('/[A-Z]/', $value)) {
-                $errorCode = 'uppercase_required';
-                $totalError++;
-            }
+            // if (!preg_match('/[A-Z]/', $value)) {
+            //     $errorCode = 'uppercase_required';
+            //     $totalError++;
+            // }
 
             if (!preg_match('/[a-z]/', $value)) {
                 $errorCode = 'lowercase_required';

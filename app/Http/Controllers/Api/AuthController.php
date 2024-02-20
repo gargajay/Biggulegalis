@@ -63,6 +63,9 @@ class AuthController extends Controller
         // Begin database transaction
         DB::beginTransaction();
 
+        Log::info("device_token signup".json_encode($request->device_token));
+
+
         $addressObject = new Address();
         $addressObject->type = ADDRESS_TYPE['USER_ADDRESS'];
         $addressObject->latitude = $request->latitude;
@@ -76,6 +79,8 @@ class AuthController extends Controller
         $userObject = new User;
         $userObject->account_type = ACCOUNT_TYPE['NORMAL'];
         $userObject->user_type = USER_TYPE['USER'];
+
+
 
         $userObject   =    Helper::UpdateObjectIfKeyNotEmpty($userObject,[
             'full_name',

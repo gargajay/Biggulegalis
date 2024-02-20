@@ -133,15 +133,20 @@ class UserController extends Controller
         if (!empty($request->is_role_info)) {
 
             $asso = Association::where('id', $request->association_id)->first();
+            $userAssociation =  UserAssociation::where('user_id', $userObject->id)->first();
+
 
             if ($asso->id == 2) {
+                if(!empty($userAssociation)){
+                    $userAssociation->delete();
+                }
+                
                 return Helper::SuccessReturn($userObject->load(User::$customRelations['Update'], 'goal'), 'PROFILE_UPDATED');
             }
             // 3 close permissiom
             if ($asso->permission_type == 3) {
                 PublicException::Error('You cannot be directly join this assoication . connect to priesent of association for inviation');
             }
-            $userAssociation =  UserAssociation::where('user_id', $userObject->id)->first();
 
             if (empty($userAssociation)) {
                 $new = true;

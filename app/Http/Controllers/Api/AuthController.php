@@ -19,6 +19,8 @@ use App\Models\Address;
 use App\Models\Goal;
 use App\Models\PasswordReset;
 use App\Models\WorkoutHours;
+use Illuminate\Support\Facades\Log;
+
 
 class AuthController extends Controller
 {
@@ -165,6 +167,7 @@ class AuthController extends Controller
             PublicException::Error('LOGIN_FAILED');
         }
 
+        Log::info("device_token".json_encode($request->device_token));
         // Update device token and type if device token is provided
         $userObject = User::find(Auth::id());
 
@@ -193,7 +196,7 @@ class AuthController extends Controller
         // if data not save show error
         PublicException::NotSave($userObject->save());
 
-       // User::logoutFromAllDevices($userObject->id);
+       User::logoutFromAllDevices($userObject->id);
 
         // Retrieve the user object and generate access token
         $userObject->access_token = $userObject->createToken($userObject->id . ' token')->accessToken;

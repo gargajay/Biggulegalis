@@ -111,7 +111,7 @@ class PushNotification
                             'sendby' => $sendby ?? Auth::check() ? Auth::id() : 0,
                             'data' => json_encode($value['push_notification_data'] ?? []),
                             'content-available' => 1,
-                            'type' => $data['type'],
+                            'type' => $value['type'],
                             'badge' => 1,
                             'sound' => 'default',
                             'priority' => 10,

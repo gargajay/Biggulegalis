@@ -208,7 +208,7 @@ class UserController extends Controller
                 ->unique() // This will ensure uniqueness
                 ->toArray();
 
-                Log::info("memebers".json_decode($members));
+                Log::info("memebers".json_encode($members));
           
 
             foreach ($members as $member) {

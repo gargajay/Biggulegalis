@@ -197,14 +197,18 @@ class UserController extends Controller
         if ($new) {
 
 
-            $members =   UserAssociation::where(function ($query) {
+            $members = UserAssociation::where(function ($query) {
                 $query->orWhereJsonContains('roles', 5)
                     ->orWhereJsonContains('roles', 6)
                     ->orWhereJsonContains('roles', 4)
                     ->orWhereJsonContains('roles', 7);
             })->where('status', 1)
                 ->where('association_id', $request->association_id)
-                ->pluck('user_id')->toArray();
+                ->pluck('user_id')
+                ->unique() // This will ensure uniqueness
+                ->toArray();
+
+          
 
             foreach ($members as $member) {
                 $checkUser = User::where('id', $member)->first();

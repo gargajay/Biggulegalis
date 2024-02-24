@@ -292,186 +292,190 @@ class User extends Authenticatable
 
     public function tabs()
     {
+        $associationTabs = [];
         $Userassociation =   UserAssociation::where('user_id', Auth::id())->first();
-        $association = Association::where('id', $Userassociation->association_id)->first();
-        $userIds =   UserAssociation::where('association_id', $association->id)->where('status', 1)->pluck('user_id');
-
-        $president_id = UserAssociation::where('association_id', $association->id)
-            ->whereJsonContains('roles', 4)
-            ->where('user_id', Auth::id())
-            ->pluck('user_id')->where('status', 1)->toArray();
-
-        $officeId =   UserAssociation::where(function ($query) {
-            $query->orWhereJsonContains('roles', 5)
-                ->orWhereJsonContains('roles', 6)
-                ->orWhereJsonContains('roles', 7);
-        })->where('status', 1)
-            ->where('association_id', $association->id)
-            ->pluck('user_id')->toArray();
-
-        $officeId =  array_merge($officeId, $president_id);
-
-
-        $office =   User::with('userAssociation', 'addresses')->whereIn('id', $officeId)->latest()->get();
-
-        $staffIds =   UserAssociation::where(function ($query) {
-            $query->whereJsonContains('roles', 9);
-        })->where('status', 1)
-            ->where('association_id', $association->id)
-            ->pluck('user_id')->toArray();
-
-
-        $members =   User::whereIn('id', $staffIds)->with('addresses', 'userAssociation')->latest()->get();
-
-        $gallerys = Gallery::where('association_id', $association->id)->latest()->get();
-        $links = Link::where('association_id', $association->id)->latest()->get();
-        $announcements = Announcement::where('user_id', auth::id())->latest()->get();
-
-
-        $compliants = Compliant::where('association_id', $association->id)->latest()->get();
-
-        $quotes = Quote::where('association_id', $association->id)->latest()->get();
-        $others = OtherPerson::where('association_id', $association->id)->latest()->get();
-
-        $oldMembers = OldMember::where('association_id',  $association->id)->latest()->get();
-        $committee = Committee::where('association_id',  $association->id)->latest()->first();
-        $cmembers = [];
-        if (!empty($committee)) {
-            $committee->members;
-
-            $cmembers =   User::whereIn('id', $committee->members)->with('addresses', 'userAssociation')->latest()->get();
+        if(!empty($Userassociation)){
+            $association = Association::where('id', $Userassociation->association_id)->first();
+            $userIds =   UserAssociation::where('association_id', $association->id)->where('status', 1)->pluck('user_id');
+    
+            $president_id = UserAssociation::where('association_id', $association->id)
+                ->whereJsonContains('roles', 4)
+                ->where('user_id', Auth::id())
+                ->pluck('user_id')->where('status', 1)->toArray();
+    
+            $officeId =   UserAssociation::where(function ($query) {
+                $query->orWhereJsonContains('roles', 5)
+                    ->orWhereJsonContains('roles', 6)
+                    ->orWhereJsonContains('roles', 7);
+            })->where('status', 1)
+                ->where('association_id', $association->id)
+                ->pluck('user_id')->toArray();
+    
+            $officeId =  array_merge($officeId, $president_id);
+    
+    
+            $office =   User::with('userAssociation', 'addresses')->whereIn('id', $officeId)->latest()->get();
+    
+            $staffIds =   UserAssociation::where(function ($query) {
+                $query->whereJsonContains('roles', 9);
+            })->where('status', 1)
+                ->where('association_id', $association->id)
+                ->pluck('user_id')->toArray();
+    
+    
+            $members =   User::whereIn('id', $staffIds)->with('addresses', 'userAssociation')->latest()->get();
+    
+            $gallerys = Gallery::where('association_id', $association->id)->latest()->get();
+            $links = Link::where('association_id', $association->id)->latest()->get();
+            $announcements = Announcement::where('user_id', auth::id())->latest()->get();
+    
+    
+            $compliants = Compliant::where('association_id', $association->id)->latest()->get();
+    
+            $quotes = Quote::where('association_id', $association->id)->latest()->get();
+            $others = OtherPerson::where('association_id', $association->id)->latest()->get();
+    
+            $oldMembers = OldMember::where('association_id',  $association->id)->latest()->get();
+            $committee = Committee::where('association_id',  $association->id)->latest()->first();
+            $cmembers = [];
+            if (!empty($committee)) {
+                $committee->members;
+    
+                $cmembers =   User::whereIn('id', $committee->members)->with('addresses', 'userAssociation')->latest()->get();
+            }
+    
+            $OtherAllMemberIds  =     UserAssociation::where(function ($query) {
+                $query->orWhereJsonContains('roles', 8)
+                    ->orWhereJsonContains('roles', 2)
+                    ->orWhereJsonContains('roles', 3);
+            })->where('status', 1)
+                ->where('association_id', $association->id)
+                ->pluck('user_id')->toArray();
+    
+    
+            $Allothers =   User::whereIn('id', $OtherAllMemberIds)->with('addresses', 'userAssociation')->latest()->get();
+    
+    
+            $allpermissions =  User::getAllPermissions(auth::id());
+    
+            $associationTabs = [
+                [
+                    'id' => 1,
+                    'name' => 'Staff',
+                    'type' => 'Clearks',
+                    'information' => $members,
+                ]
+            ];
+    
+            // checking is user roles in prisent or vice prisent 
+            $userRoles = $Userassociation->roles->pluck('id')->toArray();
+            $rolesToCheck = [4, 5, 6, 7];
+    
+            $checkPresent = array_intersect($userRoles, [4]);
+            // Check if there are common elements between $userRoles and $rolesToCheck
+            $commonRoles = array_intersect($userRoles, $rolesToCheck);
+    
+            Log::info("iuser roles" . json_encode($userRoles));
+    
+    
+            $rolesNotInUserRoles = array_intersect($rolesToCheck, $userRoles);
+            Log::info("iuserintersection" . json_encode($rolesNotInUserRoles));
+    
+    
+            if (!$rolesNotInUserRoles) {
+                $associationTabs[] = [
+                    'id' => 8,
+                    'name' => 'Complaint',
+                    'type' => 'compliant',
+                    'information' => $compliants
+                ];
+            }
+    
+    
+    
+    
+            if ($commonRoles) {
+    
+                $associationTabs[] =   [
+                    'id' => 3,
+                    'name' => 'gallery',
+                    'type' => 'gallery',
+                    'information' => $gallerys
+                ];
+                $associationTabs[] =  [
+                    'id' => 4,
+                    'name' => 'links',
+                    'type' => 'links',
+                    'information' => $links
+                ];
+                $associationTabs[] = [
+                    'id' => 7,
+                    'name' => 'office bearers',
+                    'type' => 'offcebear',
+                    'information' => $office
+                ];
+                $associationTabs[] =   [
+                    'id' => 9,
+                    'name' => 'Old members',
+                    'type' => 'old_member',
+                    'information' => $oldMembers
+                ];
+    
+                $associationTabs[] =  [
+                    'id' => 10,
+                    'name' => 'disciplinary committee',
+                    'type' => 'committee',
+                    'information' => $cmembers
+                ];
+    
+                $associationTabs[] =     [
+                    'id' => 11,
+                    'name' => 'Others',
+                    'type' => 'others',
+                    'information' => $others,
+                ];
+    
+                $associationTabs[] =   [
+                    'id' => 5,
+                    'name' => 'Courts',
+                    'type' => 'quotes',
+                    'information' => $quotes
+                ];
+    
+                $associationTabs[] =   [
+                    'id' => 2,
+                    'name' => 'Announcments',
+                    'type' => 'Announcments',
+                    'information' => $announcements
+                ];
+    
+                $associationTabs[] =     [
+                    'id' => 12,
+                    'name' => 'All Others Members',
+                    'type' => 'offcebear',
+                    'information' => $Allothers,
+                ];
+            }
+    
+    
+    
+            if (!$checkPresent) {
+                // Filter $associationTabs based on permission IDs
+                $filteredAssociationTabs = array_filter($associationTabs, function ($tab) use ($allpermissions) {
+                    // Check if tab id is in the $allpermissions array and the corresponding permission is selected
+                    $permission = collect($allpermissions)->firstWhere('id', $tab['id']);
+                    return $permission && $permission['is_selected'];
+                });
+    
+                // Reindex the array to ensure keys are consecutive
+                $filteredAssociationTabs = array_values($filteredAssociationTabs);
+    
+                return $filteredAssociationTabs;
+            }
+    
+            return $associationTabs;
         }
-
-        $OtherAllMemberIds  =     UserAssociation::where(function ($query) {
-            $query->orWhereJsonContains('roles', 8)
-                ->orWhereJsonContains('roles', 2)
-                ->orWhereJsonContains('roles', 3);
-        })->where('status', 1)
-            ->where('association_id', $association->id)
-            ->pluck('user_id')->toArray();
-
-
-        $Allothers =   User::whereIn('id', $OtherAllMemberIds)->with('addresses', 'userAssociation')->latest()->get();
-
-
-        $allpermissions =  User::getAllPermissions(auth::id());
-
-        $associationTabs = [
-            [
-                'id' => 1,
-                'name' => 'Staff',
-                'type' => 'Clearks',
-                'information' => $members,
-            ]
-        ];
-
-        // checking is user roles in prisent or vice prisent 
-        $userRoles = $Userassociation->roles->pluck('id')->toArray();
-        $rolesToCheck = [4, 5, 6, 7];
-
-        $checkPresent = array_intersect($userRoles, [4]);
-        // Check if there are common elements between $userRoles and $rolesToCheck
-        $commonRoles = array_intersect($userRoles, $rolesToCheck);
-
-        Log::info("iuser roles" . json_encode($userRoles));
-
-
-        $rolesNotInUserRoles = array_intersect($rolesToCheck, $userRoles);
-        Log::info("iuserintersection" . json_encode($rolesNotInUserRoles));
-
-
-        if (!$rolesNotInUserRoles) {
-            $associationTabs[] = [
-                'id' => 8,
-                'name' => 'Complaint',
-                'type' => 'compliant',
-                'information' => $compliants
-            ];
-        }
-
-
-
-
-        if ($commonRoles) {
-
-            $associationTabs[] =   [
-                'id' => 3,
-                'name' => 'gallery',
-                'type' => 'gallery',
-                'information' => $gallerys
-            ];
-            $associationTabs[] =  [
-                'id' => 4,
-                'name' => 'links',
-                'type' => 'links',
-                'information' => $links
-            ];
-            $associationTabs[] = [
-                'id' => 7,
-                'name' => 'office bearers',
-                'type' => 'offcebear',
-                'information' => $office
-            ];
-            $associationTabs[] =   [
-                'id' => 9,
-                'name' => 'Old members',
-                'type' => 'old_member',
-                'information' => $oldMembers
-            ];
-
-            $associationTabs[] =  [
-                'id' => 10,
-                'name' => 'disciplinary committee',
-                'type' => 'committee',
-                'information' => $cmembers
-            ];
-
-            $associationTabs[] =     [
-                'id' => 11,
-                'name' => 'Others',
-                'type' => 'others',
-                'information' => $others,
-            ];
-
-            $associationTabs[] =   [
-                'id' => 5,
-                'name' => 'Courts',
-                'type' => 'quotes',
-                'information' => $quotes
-            ];
-
-            $associationTabs[] =   [
-                'id' => 2,
-                'name' => 'Announcments',
-                'type' => 'Announcments',
-                'information' => $announcements
-            ];
-
-            $associationTabs[] =     [
-                'id' => 12,
-                'name' => 'All Others Members',
-                'type' => 'offcebear',
-                'information' => $Allothers,
-            ];
-        }
-
-
-
-        if (!$checkPresent) {
-            // Filter $associationTabs based on permission IDs
-            $filteredAssociationTabs = array_filter($associationTabs, function ($tab) use ($allpermissions) {
-                // Check if tab id is in the $allpermissions array and the corresponding permission is selected
-                $permission = collect($allpermissions)->firstWhere('id', $tab['id']);
-                return $permission && $permission['is_selected'];
-            });
-
-            // Reindex the array to ensure keys are consecutive
-            $filteredAssociationTabs = array_values($filteredAssociationTabs);
-
-            return $filteredAssociationTabs;
-        }
-
-        return $associationTabs;
+       
     }
 
     protected function setFirstNameAttribute($value)

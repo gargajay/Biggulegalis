@@ -532,7 +532,13 @@ class HomeController extends Controller
             return response()->json(['success' => FALSE, 'status' =>400, 'message' => __("message.no_permission")], 200);
           }
 
+          $appnotification = false;
+
+          $invitation = Invitation::where(['user_id'=>$request->user_id,'association_id'=>$request->association_id,'type'=>'from_user'])->first();
+     if(empty($invitation)){
         $invitation = new Invitation();
+        $appnotification = true;
+     }
         $invitation->user_id = $request->user_id;
         $invitation->msg = Auth::user()->full_name . ' sent you request to join in his association';
         $invitation->association_id = $request->association_id;
@@ -553,7 +559,9 @@ class HomeController extends Controller
             'model_id' => $request->user_id,
             'model_name' => get_class($invitation),
         ]];
-        PushNotification::Notification($notificationData, true, true, Auth::id());
+
+        
+        PushNotification::Notification($notificationData, $appnotification, true, Auth::id());
 
         return Helper::SuccessReturn(null, 'Invitation_sent');
     }

@@ -208,14 +208,14 @@ class UserController extends Controller
                 ->unique() // This will ensure uniqueness
                 ->toArray();
 
-                Log::info("memebers".json_encode($members));
+                Log::info("memebersqss".json_encode($members));
           
 
             foreach ($members as $member) {
                 $checkUser = User::where('id', $member)->first();
                 if (!empty($checkUser)) {
                     $notificationData = [[
-                        'receiver_id' => $members,
+                        'receiver_id' => $member,
                         'title' => ['New Member Joined Assoication'],
                         'body' => ['JOINED_MEMBER'],
                         'type' => 'NEW_MEMBER',

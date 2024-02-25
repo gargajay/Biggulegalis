@@ -175,7 +175,6 @@ class HomeController extends Controller
             $query->WhereJsonContains('roles', 8)
             ->orWhereJsonContains('roles', 2)
             ->orWhereJsonContains('roles', 3);
-
         })->where('status', 1)
             ->where('association_id', $request->association_id)
             ->pluck('user_id')->toArray();
@@ -257,9 +256,6 @@ class HomeController extends Controller
                 'type' => 'members',
                 'information' => $members
             ],
-
-           
-
             [
                 'id' => 3,
                 'name' => 'gallery',
@@ -312,7 +308,7 @@ class HomeController extends Controller
         ];
 
         if(auth('api')->id()){
-            $associationTabs = [
+            $associationTabs[] = [
                 'id' => 6,
                 'name' => 'announcements',
                 'type' => 'announcements',

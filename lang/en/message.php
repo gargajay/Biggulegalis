@@ -144,7 +144,14 @@ return [
     'TEHSIL_DATA_FETCH' => 'Tehsil fetched successfully.',
     'GROUP_ROLE_DATA_FETCH' => 'Role list fetched successfully.',
     'MEMBER_FETCH' => 'Member list fetched successfully.',   
-    'ASSOCIATION_FETCH' => 'Association details fetched successfully.',   
+    'ASSOCIATION_FETCH' => 'Association details fetched successfully.',  
+    
+    'Announcement' => 'There is a new announcement for your association. Please check the Announcements tab.',
+
+
+
+
+
     
     
 

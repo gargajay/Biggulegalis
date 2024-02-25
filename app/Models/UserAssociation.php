@@ -26,6 +26,8 @@ class UserAssociation extends Model
                 $invitation->msg = Auth::user()->full_name . ' send you request to join  in your association';
                 $invitation->association_id = $userAssociation->association_id;
                 $invitation->save();
+
+                
             }
 
             //  self::handleRoles($userAssociation);

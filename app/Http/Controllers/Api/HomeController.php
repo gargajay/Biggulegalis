@@ -451,6 +451,33 @@ class HomeController extends Controller
         // if data not save show error
 
         PublicException::NotSave($announcement->save());
+
+        $members = UserAssociation::where('association_id', $request->association_id)
+            ->pluck('user_id')
+            ->unique() // This will ensure uniqueness
+            ->toArray();
+
+            $userData = [
+                'id' => Auth::id(),
+                'full_name' => Auth::user()->full_name,
+                'image' => Auth::user()->image,
+            ];
+
+        foreach ($members as $member) {
+            $checkUser = User::where('id', $member)->first();
+            if (!empty($checkUser)) {
+                $notificationData = [[
+                    'receiver_id' => $member,
+                    'title' => ['New Announcement'],
+                    'body' => ['Announcement'],
+                    'type' => 'announcement',
+                    'app_notification_data' => $userData,
+                    'model_id' =>  $announcement->id,
+                    'model_name' => get_class( $announcement),
+                ]];
+                PushNotification::Notification($notificationData, true, true, $announcement->user_id);
+            }
+        }
         // add announcement members
 
         return Helper::SuccessReturn($announcement->load('association'), !empty($id) ? 'ANNOUNCEMENT_UPDATED' : 'ANNOUNCEMENT_ADDED');

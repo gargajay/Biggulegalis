@@ -197,6 +197,7 @@ class UserController extends Controller
         if ($new) {
 
 
+            
             $members = UserAssociation::where(function ($query) {
                 $query->orWhereJsonContains('roles', 5)
                     ->orWhereJsonContains('roles', 6)

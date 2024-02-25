@@ -314,7 +314,7 @@ class HomeController extends Controller
                 'type' => 'announcements',
                 'information' => $announcements
             ];
-            $associationTabs [] =  [
+            $associationTabs[] =  [
                 'id' => 9,
                 'name' => 'Complaints',
                 'type' => 'compliant',
@@ -323,7 +323,7 @@ class HomeController extends Controller
         }
 
         if($association->association_type==1 || $association->association_type==2){
-            $associationTabs [] =    [
+            $associationTabs[] =    [
                 'id' => 11,
                 'name' => 'disciplinary committee',
                 'type' => 'members',

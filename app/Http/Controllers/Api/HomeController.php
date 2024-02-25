@@ -254,6 +254,9 @@ class HomeController extends Controller
                 'type' => 'members',
                 'information' => $members
             ],
+
+           
+
             [
                 'id' => 3,
                 'name' => 'gallery',
@@ -272,12 +275,7 @@ class HomeController extends Controller
                 'type' => 'quotes',
                 'information' => $quotes
             ],
-            [
-                'id' => 6,
-                'name' => 'announcements',
-                'type' => 'announcements',
-                'information' => $announcements
-            ],
+           
             [
                 'id' => 7,
                 'name' => 'Notary public',
@@ -303,12 +301,27 @@ class HomeController extends Controller
                 'name' => 'Others',
                 'type' => 'others',
                 'information' => $others,
-            ],
+            ]
            
 
 
 
         ];
+
+        if(auth('api')->id()){
+            $associationTabs = [
+                'id' => 6,
+                'name' => 'announcements',
+                'type' => 'announcements',
+                'information' => $announcements
+            ];
+            $associationTabs [] =  [
+                'id' => 9,
+                'name' => 'Complaints',
+                'type' => 'compliant',
+                'information' => $compliants
+            ];
+        }
 
         if($association->association_type==1 || $association->association_type==2){
             $associationTabs [] =    [
@@ -319,14 +332,7 @@ class HomeController extends Controller
             ];
         }
 
-        if(auth('api')->id()){
-            $associationTabs [] =  [
-                'id' => 9,
-                'name' => 'Complaints',
-                'type' => 'compliant',
-                'information' => $compliants
-            ];
-        }
+       
 
        
 

@@ -319,7 +319,7 @@ class HomeController extends Controller
             ];
         }
 
-        if(Auth::id()){
+        if(auth('api')->id()){
             $associationTabs [] =  [
                 'id' => 9,
                 'name' => 'Complaints',

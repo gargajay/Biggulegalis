@@ -172,7 +172,10 @@ class HomeController extends Controller
         $association = Association::where('id', $request->association_id)->first();
 
         $userIds =   UserAssociation::where(function ($query) {
-            $query->WhereJsonContains('roles', 8);
+            $query->WhereJsonContains('roles', 8)
+            ->whereJsonContains('roles', 2)
+            ->whereJsonContains('roles', 3);
+
         })->where('status', 1)
             ->where('association_id', $request->association_id)
             ->pluck('user_id')->toArray();

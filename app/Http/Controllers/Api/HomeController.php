@@ -173,8 +173,8 @@ class HomeController extends Controller
 
         $userIds =   UserAssociation::where(function ($query) {
             $query->WhereJsonContains('roles', 8)
-            ->whereJsonContains('roles', 2)
-            ->whereJsonContains('roles', 3);
+            ->orWhereJsonContains('roles', 2)
+            ->orWhereJsonContains('roles', 3);
 
         })->where('status', 1)
             ->where('association_id', $request->association_id)

@@ -291,12 +291,6 @@ class HomeController extends Controller
                 'information' => $members_auth
             ],
             [
-                'id' => 9,
-                'name' => 'Complaints',
-                'type' => 'compliant',
-                'information' => $compliants
-            ],
-            [
                 'id' => 10,
                 'name' => 'Office bearers',
                 'type' => 'officebear',
@@ -322,6 +316,15 @@ class HomeController extends Controller
                 'name' => 'disciplinary committee',
                 'type' => 'members',
                 'information' => $cmembers
+            ];
+        }
+
+        if(Auth::id()){
+            $associationTabs [] =  [
+                'id' => 9,
+                'name' => 'Complaints',
+                'type' => 'compliant',
+                'information' => $compliants
             ];
         }
 

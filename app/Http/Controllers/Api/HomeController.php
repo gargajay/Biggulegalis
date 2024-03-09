@@ -457,6 +457,9 @@ class HomeController extends Controller
         $announcement->user_id = Auth::id();
 
         // if data not save show error
+        if ($request->has('file')) {
+            $announcement->file = Helper::FileUpload('file', EVENT_IMAGE_INFO);
+        }
 
         PublicException::NotSave($announcement->save());
 
@@ -470,6 +473,8 @@ class HomeController extends Controller
                 'full_name' => Auth::user()->full_name,
                 'image' => Auth::user()->image,
             ];
+
+
 
         foreach ($members as $member) {
             $checkUser = User::where('id', $member)->first();

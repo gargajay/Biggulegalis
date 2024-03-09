@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helper\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,5 +29,11 @@ class Announcement extends Model
     {
         return $this->belongsTo(Association::class,'association_id');
     }
+
+    protected function getFileAttribute($value)
+    {
+        return Helper::FilePublicLink($value, EVENT_IMAGE_INFO);
+    }
+
 }
 

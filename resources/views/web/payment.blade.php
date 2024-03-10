@@ -50,8 +50,14 @@
     </div>
     <script>
         document.getElementById("backButton").addEventListener("click", function() {
-            // Send a message to Swift
-            sendEvent("goBack", {});
+            var currentURL = window.location.href;
+    
+    // Concatenate #goBack to the current URL
+    var newURL = currentURL + "#goBack";
+    
+    // Redirect to the new URL
+    window.location.href = newURL;
+            
         });
 
         function sendEvent(event, ...data) {

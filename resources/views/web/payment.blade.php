@@ -23,7 +23,7 @@
         <h1>{{config('app.name')}}</h1>
     </div>
     <div class="login-box">
-        <a href="#" id="backButton" class="btn btn-sm btn-secondary" style="position: absolute; top: 10px; left: 10px;">Back</a>
+        <a href="#goBack" id="backButton" class="btn btn-sm btn-secondary" style="position: absolute; top: 10px; left: 10px;">Back</a>
 
         <form class="login-form" action="{{ route('razorpay.payment.store') }}" method="POST">
             @csrf
@@ -49,16 +49,16 @@
         </form>
     </div>
     <script>
-        document.getElementById("backButton").addEventListener("click", function() {
-            var currentURL = window.location.href;
+    //     document.getElementById("backButton").addEventListener("click", function() {
+    //         var currentURL = window.location.href;
     
-    // Concatenate #goBack to the current URL
-    var newURL = currentURL + "#goBack";
+    // // Concatenate #goBack to the current URL
+    // var newURL = currentURL + "#goBack";
     
-    // Redirect to the new URL
-    window.location.href = newURL;
+    // // Redirect to the new URL
+    // window.location.href = newURL;
             
-        });
+    //     });
 
         function sendEvent(event, ...data) {
             try {

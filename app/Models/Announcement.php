@@ -34,6 +34,5 @@ class Announcement extends Model
     {
         return Helper::FilePublicLink($value, EVENT_IMAGE_INFO);
     }
-
 }
 

@@ -44,6 +44,7 @@ Route::group([], function () {
     // routes/web.php
 
 Route::get('privacy-policy', [DashboardController::class, 'privacyPolicy'])->name('privacy-policy');
+Route::get('about-us', [DashboardController::class, 'about'])->name('about-us');
 Route::get('how-do-delete-account', [DashboardController::class, 'howDoDeleteAccount'])->name('how-do-delete-account');
 Route::get('contact', [DashboardController::class, 'contactUs']);
 Route::post('contact', [DashboardController::class, 'submit']);

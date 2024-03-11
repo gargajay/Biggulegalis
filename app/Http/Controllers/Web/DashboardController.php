@@ -38,6 +38,12 @@ class DashboardController extends Controller
         return view('web.contactus');
     }
 
+    public function about()
+    {
+        
+        return view('web.about');
+    }
+
 
     public function submit(Request $request)
     {

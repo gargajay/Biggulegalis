@@ -118,8 +118,9 @@ class UserAssociation extends Model
         return $value;
     }
 
-    public static function checkPresentExitInAssocation($association_id, $roles)
+    public static function checkPresentExitInAssocation($association_id, $roles,$user_id="")
     {
+        $user_id = $user_id ?? Auth::id();
         //prisent id
         $prisent_id = 4;
         // vice seceurty 6
@@ -129,22 +130,22 @@ class UserAssociation extends Model
         $vprisent_id = 5;
         if (in_array($prisent_id, $roles)) {
             $checkIsPresentInAssociation = UserAssociation::where('association_id', $association_id)->whereJsonContains('roles', $prisent_id)->first();
-            if ($checkIsPresentInAssociation && $checkIsPresentInAssociation->user_id != Auth::id()) {
+            if ($checkIsPresentInAssociation && $checkIsPresentInAssociation->user_id != $user_id) {
                 return 'You cannot choose the role of president as it has already been assigned.';
             }
         } elseif (in_array($vprisent_id, $roles)) {
             $checkIsPresentInAssociation = UserAssociation::where('association_id', $association_id)->whereJsonContains('roles', $vprisent_id)->first();
-            if ($checkIsPresentInAssociation && $checkIsPresentInAssociation->user_id != Auth::id()) {
+            if ($checkIsPresentInAssociation && $checkIsPresentInAssociation->user_id != $user_id) {
                 return 'You cannot choose the role of vice president as it has already been assigned.';
             }
         } elseif (in_array($secretary_id, $roles)) {
             $checkIsPresentInAssociation = UserAssociation::where('association_id', $association_id)->whereJsonContains('roles', $secretary_id)->first();
-            if ($checkIsPresentInAssociation && $checkIsPresentInAssociation->user_id != Auth::id()) {
+            if ($checkIsPresentInAssociation && $checkIsPresentInAssociation->user_id != $user_id) {
                 return 'You cannot choose the role of secretary as it has already been assigned.';
             }
         } elseif (in_array($joinsecretary_id, $roles)) {
             $checkIsPresentInAssociation = UserAssociation::where('association_id', $association_id)->whereJsonContains('roles', $joinsecretary_id)->first();
-            if ($checkIsPresentInAssociation && $checkIsPresentInAssociation->user_id != Auth::id()) {
+            if ($checkIsPresentInAssociation && $checkIsPresentInAssociation->user_id != $user_id) {
                 return 'You cannot choose the role of  joint secretary as it has already been assigned..';
             }
         }

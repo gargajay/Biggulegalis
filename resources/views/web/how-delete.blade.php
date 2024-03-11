@@ -42,6 +42,17 @@
             <li>By email: info@biggulegalis.com</li>
         </ul>
 
+        <hr> <!-- Add a horizontal line for separation -->
+
+        <h3>Refund Policy</h3>
+
+        <p>Our refund policy is as follows:</p>
+        <ul>
+            <li>Refunds will be provided only in cases where there has been an overcharge or billing error.</li>
+            <li>We do not offer refunds for services already rendered.</li>
+            <li>For any billing-related queries or concerns, please contact our support team at info@biggulegalis.com</li>
+        </ul>
+
     </div>
 
 </section>

@@ -65,7 +65,7 @@ class DashboardController extends Controller
         // });
 
         $mailData = [
-            'to' => 'info@biggulegalis.com',
+            'to' => 'mohit1990sumbria@gmail.com',
             'subject' => 'Contact Form Submission:',
             'data'=>$data,
             'view' => 'mail.send-mail',

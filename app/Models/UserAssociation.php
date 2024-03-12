@@ -199,4 +199,9 @@ class UserAssociation extends Model
             return  $parentData['tehsil_id'];
         }
     }
+
+    public function association()
+    {
+        return $this->hasOne(Association::class, 'association_id');
+    }
 }

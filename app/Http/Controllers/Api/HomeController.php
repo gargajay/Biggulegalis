@@ -240,7 +240,7 @@ class HomeController extends Controller
             $staff =   User::with('userAssociation')->whereIn('id', $staffids)->latest()->get();
 
 
-            $associationTabs = [
+            $associationTabs[] = [
                 [
                     'id' => 1,
                     'name' => 'overview',
@@ -257,6 +257,21 @@ class HomeController extends Controller
                 ]
 
                 ];
+
+                if(auth('api')->id()){
+                    $associationTabs[] = [
+                        'id' => 6,
+                        'name' => 'announcements',
+                        'type' => 'announcements',
+                        'information' => $announcements
+                    ];
+                    $associationTabs[] =  [
+                        'id' => 9,
+                        'name' => 'Complaints',
+                        'type' => 'compliant',
+                        'information' => $compliants
+                    ];
+                }
 
 
         
@@ -315,20 +330,7 @@ class HomeController extends Controller
 
         ];
 
-        if(auth('api')->id()){
-            $associationTabs[] = [
-                'id' => 6,
-                'name' => 'announcements',
-                'type' => 'announcements',
-                'information' => $announcements
-            ];
-            $associationTabs[] =  [
-                'id' => 9,
-                'name' => 'Complaints',
-                'type' => 'compliant',
-                'information' => $compliants
-            ];
-        }
+        
 
         if($association->association_type==1 || $association->association_type==2){
             $associationTabs[] =    [

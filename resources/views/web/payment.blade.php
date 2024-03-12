@@ -44,7 +44,7 @@
             <input type="hidden" name="document_id" value="{{$document->id}}">
 
 
-                <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="{{ env('RAZORPAY_KEY') }}" data-prefill.user_id="{{$user_id}}" data-amount="{{$document->price*100}}" data-buttontext="Pay {{$document->price}} INR" data-name="Biggulegalis official" data-description="Razorpay payment" data-image="{{asset('assets/images/lawyer-icon.png')}}" data-prefill.name="ABC" data-prefill.email="{{$user_id}}@gmail.com" data-theme.color="#ff7529">
+                <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="{{ config('settings.stripe.public_key') }}" data-prefill.user_id="{{$user_id}}" data-amount="{{$document->price*100}}" data-buttontext="Pay {{$document->price}} INR" data-name="Biggulegalis official" data-description="Razorpay payment" data-image="{{asset('assets/images/lawyer-icon.png')}}" data-prefill.name="ABC" data-prefill.email="{{$user_id}}@gmail.com" data-theme.color="#ff7529">
                 </script>
         </form>
     </div>

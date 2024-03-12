@@ -21,7 +21,7 @@ class RazorpayController extends Controller
        // dd($request->user_id);
 
         //dd($input);
-        $api = new Api (env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
+        $api = new Api (config('settings.stripe.public_key'), config('settings.stripe.secret_key'));
         $payment = $api->payment->fetch($input['razorpay_payment_id']);
 
         if(count($input) && !empty($input['razorpay_payment_id'])) {

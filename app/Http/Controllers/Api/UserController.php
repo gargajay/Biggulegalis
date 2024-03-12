@@ -168,7 +168,7 @@ class UserController extends Controller
                 }
             }
             if (!empty($request->roles)) {
-                $exit =  UserAssociation::checkPresentExitInAssocation($request->association_id, storeJsonArray($request->roles));
+                $exit =  UserAssociation::checkPresentExitInAssocation($request->association_id, storeJsonArray($request->roles),$user_id);
                 if ($exit) {
                     PublicException::Error($exit);
                 }

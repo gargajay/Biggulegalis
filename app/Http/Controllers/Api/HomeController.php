@@ -157,8 +157,8 @@ class HomeController extends Controller
         $users = $users->where(function($query) use ($search) {
             $query->where('full_name', 'like', '%' . $search . '%')
                   ->orWhereHas('userAssociation', function($assocQuery) use ($search) {
-                        $assocQuery->where('name', 'like', '%' . $search . '%')
-                                   ->orWhereHas('association', function($associationQuery) use ($search) {
+                        
+                    $assocQuery->orWhereHas('association', function($associationQuery) use ($search) {
                                         $associationQuery->where('name', 'like', '%' . $search . '%');
                                     });
                   });

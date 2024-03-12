@@ -220,7 +220,7 @@
 
 
                     <!-- TWILIO Settings -->
-                    <div class="col-lg-12 mb-4">
+                    <!-- <div class="col-lg-12 mb-4">
                         <div class="bs-component">
                             <div class="card">
                                 <?php
@@ -252,11 +252,11 @@
                                 </form>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!--End TWILIO Settings -->
 
                     <!-- S3 Bucket Settings -->
-                    <div class="col-lg-12 mb-4">
+                    <!-- <div class="col-lg-12 mb-4">
                         <div class="bs-component">
                             <div class="card">
                                 <?php
@@ -296,11 +296,11 @@
                                 </form>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!--End S3 Bucket Settings -->
 
                     <!-- Stripe Settings -->
-                    {{--<div class="col-lg-12 mb-4">
+                    <div class="col-lg-12 mb-4">
                         <div class="bs-component">
                             <div class="card">
                                 <?php
@@ -313,7 +313,7 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-lg-4 col-sm-6 form-group">
-                                                <label class="control-label">Secret Key</label>
+                                                <label class="control-label">Rozarpay Key</label>
                                                 <input class="form-control" type="input" placeholder="Secret Key" name="secret_key" value="{{!empty($value['secret_key']) ? $value['secret_key'] : ''}}">
                                             </div>
                                             <div class="col-lg-4 col-sm-6 form-group">
@@ -328,7 +328,7 @@
                                 </form>
                             </div>
                         </div>
-                    </div>--}}
+                    </div>
                     <!--End Stripe Settings -->
 
                 </div>

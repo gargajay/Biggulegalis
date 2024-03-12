@@ -155,13 +155,13 @@ class HomeController extends Controller
 
         $users =  User::where('user_type', '!=', 'admin')->whereNotIn('id',$userIds)->with('userAssociation', 'addresses');
         $users = $users->where(function($query) use ($search) {
-            $query->where('full_name', 'like', '%' . $search . '%')
-                  ->orWhereHas('userAssociation', function($assocQuery) use ($search) {
+            
+            $query->whereHas('userAssociation', function($assocQuery) use ($search) {
                         
-                    $assocQuery->orWhereHas('association', function($associationQuery) use ($search) {
+                    $assocQuery->whereHas('association', function($associationQuery) use ($search) {
                                         $associationQuery->where('name', 'like', '%' . $search . '%');
                                     });
-                  });
+                  })->where('full_name', 'like', '%' . $search . '%');
         });
 
         $data = newPagination($users->latest());

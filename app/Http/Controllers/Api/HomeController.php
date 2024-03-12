@@ -154,7 +154,12 @@ class HomeController extends Controller
         //  $userIds = $userIds->pluck('user_id');
 
         $users =  User::where('user_type', '!=', 'admin')->whereNotIn('id',$userIds)->with('userAssociation', 'addresses');
-        $users = $users->where('full_name', 'like', '%' . $search . '%');
+        $users = $users->where(function($query) use ($search) {
+            $query->where('full_name', 'like', '%' . $search . '%')
+                  ->orWhereHas('userAssociation', function($assocQuery) use ($search) {
+                        $assocQuery->where('name', 'like', '%' . $search . '%');
+                  });
+        });
         $data = newPagination($users->latest());
 
         return Helper::SuccessReturn($data, 'MEMBER_FETCH');

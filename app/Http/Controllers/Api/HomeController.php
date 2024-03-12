@@ -241,7 +241,7 @@ class HomeController extends Controller
             $staff =   User::with('userAssociation')->whereIn('id', $staffids)->latest()->get();
 
 
-            $associationTabs[] = [
+            $associationTabs = [
                 [
                     'id' => 1,
                     'name' => 'overview',

@@ -161,7 +161,7 @@ class HomeController extends Controller
                     $assocQuery->whereHas('association', function($associationQuery) use ($search) {
                                         $associationQuery->where('name', 'like', '%' . $search . '%');
                                     });
-                  })->where('full_name', 'like', '%' . $search . '%');
+                  })->OrWhere('full_name', 'like', '%' . $search . '%');
         });
 
         $data = newPagination($users->latest());

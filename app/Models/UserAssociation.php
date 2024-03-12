@@ -202,6 +202,6 @@ class UserAssociation extends Model
 
     public function association()
     {
-        return $this->hasOne(Association::class, 'association_id');
+        return $this->belongsTo(Association::class, 'association_id');
     }
 }

@@ -471,9 +471,10 @@ class HomeController extends Controller
         $announcement->user_id = Auth::id();
         $announcement = Helper::UpdateObjectIfKeyNotEmpty($announcement, [
             'name',
-            'description',
             'association_id'
         ]);
+
+        $announcement->description = $request->description;
 
         $announcement->user_id = Auth::id();
 
@@ -496,22 +497,25 @@ class HomeController extends Controller
             ];
 
 
-
-        foreach ($members as $member) {
-            $checkUser = User::where('id', $member)->first();
-            if (!empty($checkUser)) {
-                $notificationData = [[
-                    'receiver_id' => $member,
-                    'title' => ['New Announcement'],
-                    'body' => ['Announcement'],
-                    'type' => 'announcement',
-                    'app_notification_data' => $userData,
-                    'model_id' =>  $announcement->id,
-                    'model_name' => get_class( $announcement),
-                ]];
-                PushNotification::Notification($notificationData, true, true, $announcement->user_id);
+            if(empty($id)){
+                foreach ($members as $member) {
+                    $checkUser = User::where('id', $member)->first();
+                    if (!empty($checkUser)) {
+                        $notificationData = [[
+                            'receiver_id' => $member,
+                            'title' => ['New Announcement'],
+                            'body' => ['Announcement'],
+                            'type' => 'announcement',
+                            'app_notification_data' => $userData,
+                            'model_id' =>  $announcement->id,
+                            'model_name' => get_class( $announcement),
+                        ]];
+                        PushNotification::Notification($notificationData, true, true, $announcement->user_id);
+                    }
+                }
             }
-        }
+
+        
         // add announcement members
 
         return Helper::SuccessReturn($announcement->load('association'), !empty($id) ? 'ANNOUNCEMENT_UPDATED' : 'ANNOUNCEMENT_ADDED');

@@ -163,6 +163,7 @@ class HomeController extends Controller
 
     public function getAssociationDetail(Request $request)
     {
+        $additionalTabs = [];
         $rules = [
             'association_id' => ['required'],
         ];
@@ -277,7 +278,7 @@ class HomeController extends Controller
         
 
 
-        $associationTabs = [
+        $additionalTabs = [
            
             [
                 'id' => 3,
@@ -330,6 +331,7 @@ class HomeController extends Controller
 
         ];
 
+        $associationTabs = array_merge($associationTabs, $additionalTabs);
         
 
         if($association->association_type==1 || $association->association_type==2){

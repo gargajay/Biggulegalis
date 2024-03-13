@@ -293,14 +293,14 @@ class User extends Authenticatable
     public function tabs()
     {
         $associationTabs = [];
-        $Userassociation =   UserAssociation::where('user_id', Auth::id())->first();
+        $Userassociation =   UserAssociation::where('user_id', auth('api')->id())->first();
         if(!empty($Userassociation)){
             $association = Association::where('id', $Userassociation->association_id)->first();
             $userIds =   UserAssociation::where('association_id', $association->id)->where('status', 1)->pluck('user_id');
     
             $president_id = UserAssociation::where('association_id', $association->id)
                 ->whereJsonContains('roles', 4)
-                ->where('user_id', Auth::id())
+                ->where('user_id', auth('api')->id())
                 ->pluck('user_id')->where('status', 1)->toArray();
     
             $officeId =   UserAssociation::where(function ($query) {
@@ -327,7 +327,7 @@ class User extends Authenticatable
     
             $gallerys = Gallery::where('association_id', $association->id)->latest()->get();
             $links = Link::where('association_id', $association->id)->latest()->get();
-            $announcements = Announcement::where('user_id', auth::id())->latest()->get();
+            $announcements = Announcement::where('user_id',auth('api')->id())->latest()->get();
     
     
             $compliants = Compliant::where('association_id', $association->id)->latest()->get();
@@ -356,7 +356,7 @@ class User extends Authenticatable
             $Allothers =   User::whereIn('id', $OtherAllMemberIds)->with('addresses', 'userAssociation')->latest()->get();
     
     
-            $allpermissions =  User::getAllPermissions(auth::id());
+            $allpermissions =  User::getAllPermissions(auth('api')->id());
     
             $associationTabs = [
                 [

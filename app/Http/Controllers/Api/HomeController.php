@@ -384,6 +384,9 @@ class HomeController extends Controller
             'association_id'
         ]);
 
+        $quote->name = $request->name;
+        $quote->description = $request->description;
+
         $quote->user_id = Auth::id();
 
         // if data not save show error

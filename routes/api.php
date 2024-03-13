@@ -62,6 +62,8 @@ Route::group([], function () {
     // Route::post('liap/apple-notifications', [SubscriptionController::class, 'appleNotifications']);
 
     
+    Route::post('get-profile', [UserController::class, 'getProfile']);
+
 
     Route::middleware(['auth:api', 'UserLocalization'])->group(function () {
 
@@ -82,10 +84,10 @@ Route::group([], function () {
         Route::get('get-commite-members', [UserController::class, 'getCommiteMembers']);
         Route::post('add-commite-members', [UserController::class, 'addCommiteMembers']);
         Route::post('delete-commite-members', [UserController::class, 'deleteCommiteMember']);
+
         
         Route::middleware(['CheckAssociation'])->group(function () {
             Route::post('save-permissions', [UserController::class, 'savePermission']);
-            Route::post('get-profile', [UserController::class, 'getProfile']);
             Route::post('invitation_accept_reject', [LinkController::class, 'invitationAcceptReject']);
             Route::post('invitation-accept-reject', [LinkController::class, 'invitationAcceptReject']);
             Route::post('send-invitation', [HomeController::class, 'sendInvitation']);

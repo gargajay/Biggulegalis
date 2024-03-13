@@ -247,7 +247,7 @@ class UserController extends Controller
         }else{
             Log::info('pp');
 
-            $userId = Auth::id();
+            $userId = auth('api')->id();
 
         }
         $userObject = User::where('id', $userId)->with('userAssociation', 'addresses')->first();

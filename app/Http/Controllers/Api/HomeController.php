@@ -551,9 +551,10 @@ class HomeController extends Controller
         $announcement->user_id = Auth::id();
         $announcement = Helper::UpdateObjectIfKeyNotEmpty($announcement, [
             'name',
-            'description',
             'association_id'
         ]);
+
+        $announcement->description = $request->description;
 
         $announcement->user_id = Auth::id();
 

@@ -216,7 +216,7 @@ class User extends Authenticatable
             ],
             [
                 'id' => 5,
-                'name' => 'Quotes',
+                'name' => 'courts',
                 'is_selected' => false
             ],
             [

@@ -161,29 +161,32 @@ class UserAssociation extends Model
         ];
         if($this->association_id){
             $assocation = Association::where('id',$this->association_id)->first();
-            if($assocation->association_type==1){
-                $parentData['country_id'] = $assocation->id;
-
-            }elseif($assocation->association_type==2){
-                $parentData['country_id'] = $assocation->parent_id;
-                $parentData['state_id'] = $assocation->id;
-                
+            if(!empty($assocation)){
+                if($assocation->association_type==1){
+                    $parentData['country_id'] = $assocation->id;
+    
+                }elseif($assocation->association_type==2){
+                    $parentData['country_id'] = $assocation->parent_id;
+                    $parentData['state_id'] = $assocation->id;
+                    
+                }
+                elseif($assocation->association_type==3){
+                    $parentData['country_id'] = 1;
+                    $parentData['state_id'] = $assocation->parent_id;
+                    $parentData['dist_id'] = $assocation->id;
+                    
+                }
+                elseif($assocation->association_type==4){
+                    $parent = Association::where('id',$assocation->parent_id)->first();
+    
+                    $parentData['country_id'] = 1;
+                    $parentData['state_id'] = $parent ? $parent->parent_id:0;
+                    $parentData['dist_id'] = $assocation->parent_id;
+                    $parentData['tehsil_id'] = $assocation->id;
+                   
+                }
             }
-            elseif($assocation->association_type==3){
-                $parentData['country_id'] = 1;
-                $parentData['state_id'] = $assocation->parent_id;
-                $parentData['dist_id'] = $assocation->id;
-                
-            }
-            elseif($assocation->association_type==4){
-                $parent = Association::where('id',$assocation->parent_id)->first();
-
-                $parentData['country_id'] = 1;
-                $parentData['state_id'] = $parent ? $parent->parent_id:0;
-                $parentData['dist_id'] = $assocation->parent_id;
-                $parentData['tehsil_id'] = $assocation->id;
-               
-            }
+          
 
         }
 

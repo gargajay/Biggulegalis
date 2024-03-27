@@ -277,11 +277,7 @@ class Helper
                     $jsonData = json_decode($data);
 
                 }
-                elseif (is_string($data) && strpos($data, ',') !== false) {
-                    // It's a string array
-                    $dataArray = explode(',', $data);
-                    $jsonData = json_encode($dataArray);
-                } elseif (is_string($data)) {
+               elseif (is_string($data)) {
                    
                     // It's a normal string
                     $jsonData = $data;

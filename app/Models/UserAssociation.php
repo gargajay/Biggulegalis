@@ -48,9 +48,9 @@ class UserAssociation extends Model
         // Check if roles is present and is an array
         if (isset($roles) && is_array($roles)) {
             // Check if roles contain values between 4 and 7
-            if (collect($roles)->contains(fn ($role) => in_array($role, [4]))) {
+            if (collect($roles)->contains(fn ($role) => in_array($role, [4,6]))) {
                 $userAssociation->permissions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12];
-            } elseif (collect($roles)->contains(fn ($role) => in_array($role, [5, 6, 7]))) {
+            } elseif (collect($roles)->contains(fn ($role) => in_array($role, [5,7]))) {
                 $userAssociation->permissions = [1, 2, 3, 4, 6, 7, 8,12];
             }
             // Check if roles contain values 2, 3, or 8
@@ -58,7 +58,7 @@ class UserAssociation extends Model
                 $userAssociation->permissions = [1, 3, 4, 8];
             } else {
                 $userAssociation->permissions = [8];
-            }
+            } 
 
             return $userAssociation;
         }

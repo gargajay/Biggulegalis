@@ -420,13 +420,17 @@ class User extends Authenticatable
                     'type' => 'old_member',
                     'information' => $oldMembers
                 ];
+
+                if($association->association_type==1 || $association->association_type==2){
+                    $associationTabs[] =  [
+                        'id' => 10,
+                        'name' => 'disciplinary committee',
+                        'type' => 'committee',
+                        'information' => $cmembers
+                    ];
+                }
     
-                $associationTabs[] =  [
-                    'id' => 10,
-                    'name' => 'disciplinary committee',
-                    'type' => 'committee',
-                    'information' => $cmembers
-                ];
+               
     
                 $associationTabs[] =     [
                     'id' => 11,

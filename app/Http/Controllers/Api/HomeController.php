@@ -672,10 +672,10 @@ class HomeController extends Controller
                     'body' => ['NEW_VERSION'],
                     'type' => 'NEW_MEMBER',
                     'app_notification_data' => $userData,
-                    'model_id' => 1,
+                    'model_id' => 93,
                     'model_name' => get_class($checkUser),
                 ]];
-                PushNotification::Notification($notificationData, true, true, 5);
+                PushNotification::Notification($notificationData, true, true, 93);
             }
         }
     }

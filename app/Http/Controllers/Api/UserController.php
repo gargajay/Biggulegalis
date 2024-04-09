@@ -302,10 +302,10 @@ class UserController extends Controller
     public function getCommiteMembers(Request $request)
     {
         $userIds =  UserAssociation::where(function ($query) {
-            $query->orWhereJsonContains('roles', 4)
-                ->orWhereJsonContains('roles', 5)
-                ->orWhereJsonContains('roles', 6)
-                ->orWhereJsonContains('roles', 7);
+            // $query->orWhereJsonContains('roles', 4)
+            //     ->orWhereJsonContains('roles', 5)
+            //     ->orWhereJsonContains('roles', 6)
+            //     ->orWhereJsonContains('roles', 7);
         })->where('status',1)
             ->pluck('user_id')->toArray();
 

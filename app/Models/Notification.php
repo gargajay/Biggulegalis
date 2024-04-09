@@ -57,7 +57,7 @@ class Notification extends Model
 
         static::saving(function ($model) {
             $rules = [
-                'send_by' => 'required|iexists:users,id',
+                // 'send_by' => 'required|iexists:users,id',
                 'received_by' => 'required|iexists:users,id',
                 'title' => 'required|valid_json',
                 'body' => 'required|valid_json',
@@ -71,7 +71,7 @@ class Notification extends Model
 
         static::updating(function ($model) {
             $rules = [
-                'send_by' => 'required|iexists:users,id',
+                // 'send_by' => 'required|iexists:users,id',
                 'received_by' => 'required|iexists:users,id',
                 'title' => 'required|valid_json',
                 'body' => 'required|valid_json',

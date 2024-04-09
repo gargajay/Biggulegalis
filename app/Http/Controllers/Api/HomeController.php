@@ -652,11 +652,15 @@ class HomeController extends Controller
 
     public function sendNotificationforNewversion(){
         $members = UserAssociation::where(function ($query) {
-            
         })->pluck('user_id')
         ->unique() // This will ensure uniqueness
         ->toArray();
 
+        $userData = [
+            'id' =>5,
+        'full_name' => 'eff'
+           ,
+        ];
       
 
         foreach ($members as $member) {
@@ -667,11 +671,11 @@ class HomeController extends Controller
                     'title' => ['New App Version Released!'],
                     'body' => ['NEW_VERSION'],
                     'type' => 'NEW_MEMBER',
-                    'app_notification_data' => [],
+                    'app_notification_data' => $userData,
                     'model_id' => 1,
                     'model_name' => get_class($checkUser),
                 ]];
-                PushNotification::Notification($notificationData, true, true, 1);
+                PushNotification::Notification($notificationData, true, true, 5);
             }
         }
     }

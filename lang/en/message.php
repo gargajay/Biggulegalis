@@ -158,6 +158,8 @@ return [
     
 
     'JOINED_MEMBER' => 'New member joined in association.',
+    'NEW_VERSION' => 'Update now available on Play Store. Experience the latest features!',
+    
     'Invitation' => 'Assocation send invitation to join them',
 
     

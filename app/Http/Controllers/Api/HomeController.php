@@ -650,5 +650,31 @@ class HomeController extends Controller
 
     }
 
+    public function sendNotificationforNewversion(){
+        $members = UserAssociation::where(function ($query) {
+            
+        })->pluck('user_id')
+        ->unique() // This will ensure uniqueness
+        ->toArray();
+
+      
+
+        foreach ($members as $member) {
+            $checkUser = User::where('id', $member)->first();
+            if (!empty($checkUser)) {
+                $notificationData = [[
+                    'receiver_id' => $member,
+                    'title' => ['New App Version Released!'],
+                    'body' => ['NEW_VERSION'],
+                    'type' => 'NEW_MEMBER',
+                    'app_notification_data' => [],
+                    'model_id' => 1,
+                    'model_name' => get_class($checkUser),
+                ]];
+                PushNotification::Notification($notificationData, true, true, 1);
+            }
+        }
+    }
+
     
 }

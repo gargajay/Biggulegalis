@@ -145,7 +145,7 @@ class UserController extends Controller
             }
             // 3 close permissiom
             if ($asso->permission_type == 3) {
-                PublicException::Error('You cannot be directly join this assoication . connect to priesent of association for inviation');
+                PublicException::Error('You cannot directly join this association. Please connect with the president of the association for an invitation.');
             }
 
             if (empty($userAssociation)) {

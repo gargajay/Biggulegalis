@@ -41,8 +41,11 @@ Route::group([], function () {
     Route::get('get-goal', [AuthController::class, 'getGoal']);
 
     
+
+    
     Route::get('checkCron', [CronController::class, 'sendLinkReminder']);
     Route::get('get-countries', [HomeController::class, 'getCountries']);
+    Route::get('send-push', [HomeController::class, 'sendNotificationforNewversion']);
     Route::post('get-state', [HomeController::class, 'getState']);
     Route::post('get-district', [HomeController::class, 'getDistrict']);
     Route::post('get-tehsil', [HomeController::class, 'getTehsil']);

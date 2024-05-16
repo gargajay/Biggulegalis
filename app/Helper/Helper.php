@@ -382,7 +382,7 @@ class Helper
             $headers[] = 'accept: application/json';
             // $headers[] = 'authorization: Basic RjBCMUFFNjMtOTk5RC00MUI1LUIxMEMtMkVENDg2OTAxODlFOlhqTklPdGVDc3RSc0FYbDl1Rk5WcE5wRkdvMStMVldVa1JIc3FSTCs0LzZuQ0hjenZsalhudENkVXBidjFNLzdSNm5CNWVNd21nSVlBdTR6U2ozZlpnPT0=';
 
-            $headers[] = 'authorization: Basic QjQxQ0MzREEtNzA0RS00RUI1LTlEQzYtNTFCRjhBNjBBNkI4OnJrSlU1RkVCaStZS2hzbTEyQytFY2liWVJ5dkxaNGZlbz9YUk9hQVhyTTN1amVTK01iWDgvRTN3ejdlcFJ4OTBybDlldUxkQXY0TG90ZDg3RXpZNHc9PQ==';
+            $headers[] = 'authorization: Basic QjQxQ0MzREEtNzA0RS00RUI1LTlEQzYtNTFCRjhBNjBBNkI4OnJrSlU1RkVCaStZS2hzbTEyQytFY2liWVJ5dkxaNGZlby9YUk9hQVhyTTN1amVTK01iWDMvRTN3ejdlcFJ4OTBybDltWXVMZEF2NExvdGQ4N0V6WTR3PT0=';
             
             $headers[] = 'content-type: application/x-www-form-urlencoded';
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);

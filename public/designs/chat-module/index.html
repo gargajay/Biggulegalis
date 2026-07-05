@@ -1,0 +1,1101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Biggulegalis Chat Module Design</title>
+  <style>
+    :root {
+      --ink: #11171b;
+      --muted: #777d83;
+      --line: #e5e7e9;
+      --soft: #f6f7f8;
+      --red: #d63a32;
+      --blue: #1f4f72;
+      --green: #188052;
+      --shadow: 0 18px 44px rgba(17, 23, 27, .14);
+      --radius: 8px;
+      font-family: Poppins, Inter, Arial, sans-serif;
+      color: var(--ink);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #3f3f3f;
+      min-height: 100vh;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(4, 360px);
+      gap: 34px;
+      padding: 36px;
+      align-items: start;
+    }
+
+    .screen-wrap { color: #fff; }
+    .screen-title {
+      margin: 0 0 10px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .phone {
+      width: 360px;
+      height: 800px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status {
+      height: 28px;
+      background: #bfbfbf;
+      color: #242729;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .topbar {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+
+    .brand-mark {
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--ink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-style: normal;
+      line-height: 1;
+    }
+
+    .hamburger,
+    .icon-btn {
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 26px;
+      line-height: 1;
+      padding: 4px;
+    }
+
+    .content {
+      height: 636px;
+      overflow: hidden;
+      padding: 16px 14px 96px;
+      background: #fff;
+    }
+
+    .content.flush { padding: 0 0 86px; }
+
+    .page-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 2px 0 16px;
+    }
+
+    .seal {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 5px solid #f3f3f3;
+      background: #fff;
+      box-shadow: 0 2px 9px rgba(0,0,0,.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--red);
+      font-weight: 900;
+      font-size: 22px;
+    }
+
+    .seal.small {
+      width: 42px;
+      height: 42px;
+      border-width: 4px;
+      font-size: 18px;
+      flex: 0 0 auto;
+    }
+
+    .heading-text h1,
+    .chat-head h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.15;
+      color: #182a44;
+    }
+
+    .sub {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 22px;
+      border-bottom: 1px solid var(--line);
+      margin: 0 -14px 14px;
+      padding: 0 14px;
+      white-space: nowrap;
+    }
+
+    .tab {
+      position: relative;
+      padding: 12px 0 13px;
+      color: #818489;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .tab.active {
+      color: #26364f;
+      font-weight: 700;
+    }
+
+    .tab.active:after {
+      content: "";
+      position: absolute;
+      height: 2px;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      background: #26364f;
+    }
+
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 14px;
+      background: #fbfbfc;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 12px 0 8px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .text-link {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .list { display: grid; gap: 10px; }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 68px;
+    }
+
+    .card.grow { align-items: flex-start; }
+    .card-body { min-width: 0; flex: 1; }
+    .card-title {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.25;
+      font-weight: 800;
+      color: #252b31;
+    }
+
+    .card-meta {
+      margin-top: 3px;
+      color: #8b8f94;
+      font-size: 12px;
+      line-height: 1.25;
+      font-weight: 600;
+    }
+
+    .card-preview {
+      margin-top: 5px;
+      color: #5e646a;
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .badge {
+      min-width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      background: var(--red);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 0 6px;
+    }
+
+    .pill {
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      background: #fff;
+      border-radius: 6px;
+      padding: 8px 9px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .pill.dark {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .pill.muted {
+      border-color: #cfd2d5;
+      color: #7d8389;
+      background: #f7f8f8;
+    }
+
+    .bottom-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 39px;
+      height: 58px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: center;
+      text-align: center;
+      font-size: 12px;
+      color: var(--ink);
+    }
+
+    .nav-item {
+      display: grid;
+      place-items: center;
+      gap: 2px;
+      font-weight: 500;
+    }
+
+    .nav-icon {
+      font-size: 21px;
+      line-height: 1;
+      height: 22px;
+    }
+
+    .nav-item.active {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #11171b;
+      color: #fff;
+      justify-self: center;
+      transform: translateY(-16px);
+      border: 4px solid #fff;
+      box-shadow: 0 -1px 0 var(--line);
+      font-size: 0;
+    }
+
+    .system-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 39px;
+      background: #fafafa;
+      color: #9a9a9a;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      font-size: 22px;
+    }
+
+    .chat-top {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .back { font-size: 26px; font-weight: 700; }
+    .chat-head { flex: 1; min-width: 0; }
+    .chat-head h1 { font-size: 15px; }
+
+    .messages {
+      height: 544px;
+      padding: 14px 12px 86px;
+      overflow: hidden;
+      background: #f7f8f8;
+    }
+
+    .date-chip {
+      width: fit-content;
+      margin: 0 auto 14px;
+      padding: 5px 10px;
+      border-radius: 13px;
+      background: #e9ecef;
+      color: #62686e;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .msg-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      align-items: flex-end;
+    }
+
+    .msg-row.me { justify-content: flex-end; }
+    .avatar {
+      width: 31px;
+      height: 31px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      color: var(--red);
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+
+    .bubble {
+      max-width: 238px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 12px;
+      line-height: 1.35;
+      box-shadow: 0 1px 1px rgba(0,0,0,.03);
+    }
+
+    .me .bubble {
+      color: #fff;
+      background: #11171b;
+      border-color: #11171b;
+    }
+
+    .sender {
+      color: #25354d;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 3px;
+    }
+
+    .me .sender { color: #dbe6ef; }
+    .time {
+      display: block;
+      margin-top: 4px;
+      color: #8a9096;
+      font-size: 10px;
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .me .time { color: #c7ccd0; }
+
+    .doc {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      background: #f1f3f4;
+      border-radius: 6px;
+      color: var(--ink);
+      min-width: 180px;
+    }
+
+    .doc-icon {
+      width: 28px;
+      height: 34px;
+      border-radius: 4px;
+      background: #fff;
+      border: 1px solid #d7dade;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+    }
+
+    .photo-msg {
+      width: 170px;
+      height: 112px;
+      border-radius: 7px;
+      background:
+        linear-gradient(135deg, rgba(214,58,50,.9), rgba(31,79,114,.75)),
+        repeating-linear-gradient(45deg, #eee 0 8px, #ddd 8px 16px);
+      display: flex;
+      align-items: end;
+      padding: 8px;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .link-card {
+      padding: 8px;
+      background: #f2f7fb;
+      border-left: 3px solid var(--blue);
+      color: var(--ink);
+      border-radius: 5px;
+      margin-top: 4px;
+    }
+
+    .composer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 39px;
+      min-height: 64px;
+      background: #fff;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+    }
+
+    .compose-input {
+      flex: 1;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 0 13px;
+      display: flex;
+      align-items: center;
+      color: #8a9096;
+      font-size: 13px;
+      background: #fafafa;
+    }
+
+    .round {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 0;
+      display: grid;
+      place-items: center;
+      background: #11171b;
+      color: #fff;
+      font-size: 18px;
+      flex: 0 0 auto;
+    }
+
+    .round.light {
+      background: #f1f3f4;
+      color: var(--ink);
+    }
+
+    .request-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .request-actions .pill { flex: 1; text-align: center; }
+
+    .empty {
+      height: 350px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--muted);
+      padding: 20px;
+    }
+
+    .empty-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 14px;
+      color: var(--red);
+      font-size: 30px;
+      background: #fff;
+    }
+
+    .empty h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      color: var(--ink);
+    }
+
+    .sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 39px;
+      padding: 14px 16px 18px;
+      border-radius: 18px 18px 0 0;
+      background: #fff;
+      box-shadow: 0 -12px 30px rgba(17,23,27,.18);
+      border-top: 1px solid var(--line);
+    }
+
+    .sheet-handle {
+      width: 42px;
+      height: 4px;
+      border-radius: 3px;
+      background: #d5d8db;
+      margin: 0 auto 14px;
+    }
+
+    .attachment-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #555b61;
+    }
+
+    .attachment-grid .round {
+      margin: 0 auto 6px;
+      background: #f4f5f6;
+      color: var(--ink);
+    }
+
+    .notes {
+      grid-column: 1 / -1;
+      background: #fff;
+      color: var(--ink);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      max-width: 1510px;
+      box-shadow: var(--shadow);
+    }
+
+    .notes h2 { margin: 0 0 10px; font-size: 20px; }
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .note {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: #fafafa;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 1550px) {
+      .board { grid-template-columns: repeat(3, 360px); }
+      .notes-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 1160px) {
+      .board { grid-template-columns: repeat(2, 360px); }
+    }
+
+    @media (max-width: 760px) {
+      .board { grid-template-columns: 360px; padding: 16px; }
+      .notes-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="board">
+    <section class="screen-wrap">
+      <h2 class="screen-title">01 Chat Home</h2>
+      <div class="phone">
+        <div class="status"><span>8:49</span><span>▥  ◉ 95</span></div>
+        <div class="topbar">
+          <div class="brand"><span class="brand-mark">B</span>BIGGULEGALIS</div>
+          <button class="hamburger">☰</button>
+        </div>
+        <div class="content">
+          <div class="page-heading">
+            <div class="seal">⚖</div>
+            <div class="heading-text">
+              <h1>Chat</h1>
+              <div class="sub">Find Bar Council members and start personal chats</div>
+            </div>
+          </div>
+          <div class="tabs">
+            <div class="tab active">members</div>
+            <div class="tab">personal</div>
+            <div class="tab">requests</div>
+          </div>
+          <div class="search">⌕ Search members or chats</div>
+          <div class="section-label"><span>Bar Council Members</span><span class="text-link">See all</span></div>
+          <div class="list">
+            <div class="card">
+              <div class="avatar">P</div>
+              <div class="card-body">
+                <p class="card-title">President, Punjab</p>
+                <div class="card-meta">Punjab Bar Council | Office Bearer</div>
+                <div class="card-preview">Personal chat request accepted</div>
+              </div>
+              <span class="pill dark">Message</span>
+            </div>
+            <div class="card">
+              <div class="avatar">N</div>
+              <div class="card-body">
+                <p class="card-title">Navdeep Singh</p>
+                <div class="card-meta">District Association Ludhiana | Member</div>
+                <div class="card-preview">Send request to start one-to-one chat</div>
+              </div>
+              <span class="pill">Request</span>
+            </div>
+          </div>
+          <div class="section-label"><span>Personal Chats</span><span class="text-link">3 new</span></div>
+          <div class="list">
+            <div class="card">
+              <div class="avatar">A</div>
+              <div class="card-body">
+                <p class="card-title">Adv. Simran Kaur</p>
+                <div class="card-preview">Photo shared</div>
+              </div>
+              <span class="badge">1</span>
+            </div>
+            <div class="card">
+              <div class="avatar">R</div>
+              <div class="card-body">
+                <p class="card-title">Rohit Sharma</p>
+                <div class="card-preview">Can we connect regarding the case?</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <nav class="bottom-nav">
+          <div class="nav-item"><div class="nav-icon">⌂</div><div>Home</div></div>
+          <div class="nav-item"><div class="nav-icon">⌕</div><div>Search</div></div>
+          <div class="nav-item active"><div class="nav-icon">✉</div><div>Chat</div></div>
+          <div class="nav-item"><div class="nav-icon">♟</div><div>Profile</div></div>
+        </nav>
+        <div class="system-nav"><span>☰</span><span>⌂</span><span>↩</span></div>
+      </div>
+    </section>
+
+    <section class="screen-wrap">
+      <h2 class="screen-title">02 Bar Council Member List</h2>
+      <div class="phone">
+        <div class="status"><span>8:50</span><span>▥  ◉ 94</span></div>
+        <div class="topbar">
+          <div class="brand"><span class="brand-mark">B</span>BIGGULEGALIS</div>
+          <button class="hamburger">☰</button>
+        </div>
+        <div class="content">
+          <div class="page-heading">
+            <div class="seal">⚖</div>
+            <div class="heading-text">
+              <h1>Punjab Bar Council</h1>
+              <div class="sub">Members available for one-to-one chat</div>
+            </div>
+          </div>
+          <div class="search">⌕ Search member name, role or association</div>
+          <div class="list">
+            <div class="card">
+              <div class="avatar">S</div>
+              <div class="card-body">
+                <p class="card-title">Adv. Simran Kaur</p>
+                <div class="card-meta">Joint Secretary</div>
+                <div class="card-preview">Personal chat active</div>
+              </div>
+              <span class="pill dark">Open</span>
+            </div>
+            <div class="card">
+              <div class="avatar">N</div>
+              <div class="card-body">
+                <p class="card-title">Navdeep Singh</p>
+                <div class="card-meta">Member</div>
+                <div class="card-preview">Send request to start personal chat</div>
+              </div>
+              <span class="pill">Request</span>
+            </div>
+            <div class="card">
+              <div class="avatar">K</div>
+              <div class="card-body">
+                <p class="card-title">Kiran Advocate</p>
+                <div class="card-meta">Staff</div>
+                <div class="card-preview">Message request sent today</div>
+              </div>
+              <span class="pill muted">Sent</span>
+            </div>
+            <div class="card">
+              <div class="avatar">R</div>
+              <div class="card-body">
+                <p class="card-title">Rohit Sharma</p>
+                <div class="card-meta">Oath Commissioner</div>
+                <div class="card-preview">Send request to start personal chat</div>
+              </div>
+              <span class="pill">Request</span>
+            </div>
+          </div>
+        </div>
+        <nav class="bottom-nav">
+          <div class="nav-item"><div class="nav-icon">⌂</div><div>Home</div></div>
+          <div class="nav-item"><div class="nav-icon">⌕</div><div>Search</div></div>
+          <div class="nav-item active"><div class="nav-icon">✉</div><div>Chat</div></div>
+          <div class="nav-item"><div class="nav-icon">♟</div><div>Profile</div></div>
+        </nav>
+        <div class="system-nav"><span>☰</span><span>⌂</span><span>↩</span></div>
+      </div>
+    </section>
+
+    <section class="screen-wrap">
+      <h2 class="screen-title">03 One-to-One Member Chat</h2>
+      <div class="phone">
+        <div class="status"><span>8:51</span><span>▥  ◉ 94</span></div>
+        <div class="chat-top">
+          <div class="back">‹</div>
+          <div class="avatar">S</div>
+          <div class="chat-head">
+            <h1>Adv. Simran Kaur</h1>
+            <div class="sub">Punjab Bar Council | online</div>
+          </div>
+          <button class="icon-btn">⋮</button>
+        </div>
+        <div class="messages">
+          <div class="date-chip">Today</div>
+          <div class="msg-row">
+            <div class="avatar">P</div>
+            <div class="bubble">
+              <div class="sender">Adv. Simran Kaur</div>
+              Hello, I am sharing the document we discussed.
+              <span class="time">8:37 AM</span>
+            </div>
+          </div>
+          <div class="msg-row">
+            <div class="avatar">S</div>
+            <div class="bubble">
+              <div class="sender">Adv. Simran Kaur</div>
+              <div class="doc"><div class="doc-icon">PDF</div><div><strong>Case-notes.pdf</strong><br><small>248 KB</small></div></div>
+              <span class="time">8:39 AM</span>
+            </div>
+          </div>
+          <div class="msg-row me">
+            <div class="bubble">
+              <div class="sender">You</div>
+              Received, thank you 👍
+              <span class="time">8:41 AM</span>
+            </div>
+          </div>
+          <div class="msg-row">
+            <div class="avatar">M</div>
+            <div class="bubble">
+              <div class="sender">Adv. Simran Kaur</div>
+              Link for reference:
+              <div class="link-card"><strong>barcouncilofpunjab.org</strong><br>Latest circular and updates</div>
+              <span class="time">8:44 AM</span>
+            </div>
+          </div>
+        </div>
+        <div class="composer">
+          <button class="round light">☺</button>
+          <div class="compose-input">Message...</div>
+          <button class="round light">＋</button>
+          <button class="round">➤</button>
+        </div>
+        <div class="system-nav"><span>☰</span><span>⌂</span><span>↩</span></div>
+      </div>
+    </section>
+
+    <section class="screen-wrap">
+      <h2 class="screen-title">04 Personal Requests</h2>
+      <div class="phone">
+        <div class="status"><span>8:52</span><span>▥  ◉ 94</span></div>
+        <div class="topbar">
+          <div class="brand"><span class="brand-mark">B</span>BIGGULEGALIS</div>
+          <button class="hamburger">☰</button>
+        </div>
+        <div class="content">
+          <div class="page-heading">
+            <div class="seal">⚖</div>
+            <div class="heading-text">
+              <h1>Message Requests</h1>
+              <div class="sub">Accept to start personal chat</div>
+            </div>
+          </div>
+          <div class="tabs">
+            <div class="tab">members</div>
+            <div class="tab">personal</div>
+            <div class="tab active">requests</div>
+          </div>
+          <div class="list">
+            <div class="card grow">
+              <div class="avatar">N</div>
+              <div class="card-body">
+                <p class="card-title">Navdeep Singh</p>
+                <div class="card-meta">District Association | Member</div>
+                <div class="card-preview">Wants to send you a personal message.</div>
+                <div class="request-actions">
+                  <span class="pill dark">Accept</span>
+                  <span class="pill">Deny</span>
+                </div>
+              </div>
+            </div>
+            <div class="card grow">
+              <div class="avatar">K</div>
+              <div class="card-body">
+                <p class="card-title">Kiran Advocate</p>
+                <div class="card-meta">Punjab Bar Council | Staff</div>
+                <div class="card-preview">Request received yesterday.</div>
+                <div class="request-actions">
+                  <span class="pill dark">Accept</span>
+                  <span class="pill">Deny</span>
+                </div>
+              </div>
+            </div>
+            <div class="card grow">
+              <div class="avatar">R</div>
+              <div class="card-body">
+                <p class="card-title">Rejected Request</p>
+                <div class="card-meta">Denied • hidden from personal chat list</div>
+                <div class="card-preview">You can allow again from member profile.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <nav class="bottom-nav">
+          <div class="nav-item"><div class="nav-icon">⌂</div><div>Home</div></div>
+          <div class="nav-item"><div class="nav-icon">⌕</div><div>Search</div></div>
+          <div class="nav-item active"><div class="nav-icon">✉</div><div>Chat</div></div>
+          <div class="nav-item"><div class="nav-icon">♟</div><div>Profile</div></div>
+        </nav>
+        <div class="system-nav"><span>☰</span><span>⌂</span><span>↩</span></div>
+      </div>
+    </section>
+
+    <section class="screen-wrap">
+      <h2 class="screen-title">05 Member Message Request</h2>
+      <div class="phone">
+        <div class="status"><span>8:53</span><span>▥  ◉ 94</span></div>
+        <div class="topbar">
+          <div class="brand"><span class="brand-mark">B</span>BIGGULEGALIS</div>
+          <button class="hamburger">☰</button>
+        </div>
+        <div class="content">
+          <div class="page-heading">
+            <div class="avatar" style="width:58px;height:58px;font-size:22px;">S</div>
+            <div class="heading-text">
+              <h1>Adv. Simran Kaur</h1>
+              <div class="sub">Punjab Bar Council | Joint Secretary</div>
+            </div>
+          </div>
+          <div class="tabs">
+            <div class="tab active">profile</div>
+            <div class="tab">documents</div>
+            <div class="tab">activity</div>
+          </div>
+          <div class="card grow">
+            <div class="card-body">
+              <p class="card-title">Personal Message</p>
+              <div class="card-meta">Send a request before starting a private conversation.</div>
+              <div class="request-actions">
+                <span class="pill dark">Message Request</span>
+              </div>
+            </div>
+          </div>
+          <div class="section-label"><span>Member Details</span></div>
+          <div class="list">
+            <div class="card"><div class="card-body"><p class="card-title">Role</p><div class="card-meta">Joint Secretary</div></div></div>
+            <div class="card"><div class="card-body"><p class="card-title">Association</p><div class="card-meta">Punjab Bar Council</div></div></div>
+            <div class="card"><div class="card-body"><p class="card-title">Location</p><div class="card-meta">Punjab</div></div></div>
+          </div>
+        </div>
+        <nav class="bottom-nav">
+          <div class="nav-item active"><div class="nav-icon">⌂</div><div>Home</div></div>
+          <div class="nav-item"><div class="nav-icon">⌕</div><div>Search</div></div>
+          <div class="nav-item"><div class="nav-icon">✉</div><div>Chat</div></div>
+          <div class="nav-item"><div class="nav-icon">♟</div><div>Profile</div></div>
+        </nav>
+        <div class="system-nav"><span>☰</span><span>⌂</span><span>↩</span></div>
+      </div>
+    </section>
+
+    <section class="screen-wrap">
+      <h2 class="screen-title">06 Personal Chat</h2>
+      <div class="phone">
+        <div class="status"><span>8:54</span><span>▥  ◉ 94</span></div>
+        <div class="chat-top">
+          <div class="back">‹</div>
+          <div class="avatar">S</div>
+          <div class="chat-head">
+            <h1>Adv. Simran Kaur</h1>
+            <div class="sub">online</div>
+          </div>
+          <button class="icon-btn">⋮</button>
+        </div>
+        <div class="messages">
+          <div class="date-chip">Request accepted</div>
+          <div class="msg-row">
+            <div class="avatar">S</div>
+            <div class="bubble">
+              <div class="sender">Adv. Simran Kaur</div>
+              Hello, can I share the document here?
+              <span class="time">8:48 AM</span>
+            </div>
+          </div>
+          <div class="msg-row me">
+            <div class="bubble">
+              <div class="sender">You</div>
+              Yes, please send it.
+              <span class="time">8:49 AM</span>
+            </div>
+          </div>
+          <div class="msg-row">
+            <div class="avatar">S</div>
+            <div class="bubble">
+              <div class="sender">Adv. Simran Kaur</div>
+              <div class="photo-msg">Case photo.jpg</div>
+              <span class="time">8:51 AM</span>
+            </div>
+          </div>
+          <div class="msg-row me">
+            <div class="bubble">
+              <div class="sender">You</div>
+              Looks good. I will check and reply. 🙂
+              <span class="time">8:52 AM</span>
+            </div>
+          </div>
+        </div>
+        <div class="composer">
+          <button class="round light">☺</button>
+          <div class="compose-input">Message...</div>
+          <button class="round light">＋</button>
+          <button class="round">➤</button>
+        </div>
+        <div class="system-nav"><span>☰</span><span>⌂</span><span>↩</span></div>
+      </div>
+    </section>
+
+    <section class="screen-wrap">
+      <h2 class="screen-title">07 Empty / No Requests</h2>
+      <div class="phone">
+        <div class="status"><span>8:55</span><span>▥  ◉ 94</span></div>
+        <div class="topbar">
+          <div class="brand"><span class="brand-mark">B</span>BIGGULEGALIS</div>
+          <button class="hamburger">☰</button>
+        </div>
+        <div class="content">
+          <div class="page-heading">
+            <div class="seal">⚖</div>
+            <div class="heading-text">
+              <h1>Message Requests</h1>
+              <div class="sub">No pending personal requests</div>
+            </div>
+          </div>
+          <div class="empty">
+            <div>
+              <div class="empty-icon">✉</div>
+              <h2>No requests yet</h2>
+              <p>New personal message requests from members will appear here.</p>
+            </div>
+          </div>
+        </div>
+        <nav class="bottom-nav">
+          <div class="nav-item"><div class="nav-icon">⌂</div><div>Home</div></div>
+          <div class="nav-item"><div class="nav-icon">⌕</div><div>Search</div></div>
+          <div class="nav-item active"><div class="nav-icon">✉</div><div>Chat</div></div>
+          <div class="nav-item"><div class="nav-icon">♟</div><div>Profile</div></div>
+        </nav>
+        <div class="system-nav"><span>☰</span><span>⌂</span><span>↩</span></div>
+      </div>
+    </section>
+
+    <section class="screen-wrap">
+      <h2 class="screen-title">08 Attachment Sheet</h2>
+      <div class="phone">
+        <div class="status"><span>8:56</span><span>▥  ◉ 94</span></div>
+        <div class="chat-top">
+          <div class="back">‹</div>
+          <div class="avatar">S</div>
+          <div class="chat-head">
+            <h1>Adv. Simran Kaur</h1>
+            <div class="sub">Punjab Bar Council | online</div>
+          </div>
+          <button class="icon-btn">⋮</button>
+        </div>
+        <div class="messages">
+          <div class="date-chip">Today</div>
+          <div class="msg-row">
+            <div class="avatar">P</div>
+            <div class="bubble">
+              <div class="sender">Adv. Simran Kaur</div>
+              Share links, photos and documents from one composer.
+              <span class="time">8:56 AM</span>
+            </div>
+          </div>
+        </div>
+        <div class="composer">
+          <button class="round light">☺</button>
+          <div class="compose-input">Message...</div>
+          <button class="round light">＋</button>
+          <button class="round">➤</button>
+        </div>
+        <div class="sheet">
+          <div class="sheet-handle"></div>
+          <div class="attachment-grid">
+            <div><div class="round">📷</div>Camera</div>
+            <div><div class="round">🖼</div>Photo</div>
+            <div><div class="round">📄</div>Document</div>
+            <div><div class="round">🔗</div>Link</div>
+          </div>
+        </div>
+        <div class="system-nav"><span>☰</span><span>⌂</span><span>↩</span></div>
+      </div>
+    </section>
+
+    <section class="notes">
+      <h2>Developer Handoff Notes</h2>
+      <div class="notes-grid">
+        <div class="note"><strong>No group chat:</strong> Bar Council areas list members only. Chats are one-to-one between members.</div>
+        <div class="note"><strong>Personal chat request:</strong> Member profile sends a message request. Request inbox supports accept and deny before a private chat opens.</div>
+        <div class="note"><strong>Message payload:</strong> Design supports text, emoji, link previews, image previews, and document cards.</div>
+        <div class="note"><strong>Sender names:</strong> Every message bubble displays the sender name, including the current user as You.</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

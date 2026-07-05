@@ -19,7 +19,7 @@ class Message extends Model
         'media_type' => 'string',
         'media_url' => 'string',
         'media_extension' => 'string',
-        'is_seen' => 'string',
+        'is_seen' => 'boolean',
     ];
 
     protected $hidden = [
@@ -31,8 +31,10 @@ class Message extends Model
     {
         static::creating(function ($model) {
             $chat = Chat::find($model->chat_id);
-            $chat->updated_at = Carbon::now('UTC');
-            $chat->save();
+            if (!empty($chat)) {
+                $chat->updated_at = Carbon::now('UTC');
+                $chat->save();
+            }
         });
     }
 

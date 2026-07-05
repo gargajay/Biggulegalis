@@ -34,6 +34,15 @@ return [
     'NOTIFICATION_READ' => 'Estado de notificación actualizado con éxito.',
     'S3_SECURITY_TOKEN' => 'El token de seguridad para el depósito S3 se generó correctamente.',
     'DELETE_USER' => 'Usuario eliminado correctamente.',
+    'MEMBER_FETCH' => 'Lista de miembros obtenida correctamente.',
+    'CHAT_NOT_FOUND' => 'No se encontró el chat.',
+    'CHAT_FETCHED' => 'Lista de chats obtenida correctamente.',
+    'CHAT_DETAILS' => 'Detalles del chat obtenidos correctamente.',
+    'CHAT_REQUEST_SENT' => 'Solicitud de mensaje enviada correctamente.',
+    'CHAT_REQUEST_FETCHED' => 'Solicitudes de mensaje obtenidas correctamente.',
+    'CHAT_REQUEST_UPDATED' => 'Solicitud de mensaje actualizada correctamente.',
+    'MESSAGE_SENT' => 'Mensaje enviado correctamente.',
+    'MESSAGE_NOT_SEND' => 'Puede enviar mensajes a este usuario.',
 
     //API Response
     'RECORD_FETCHED' => 'Registros obtenidos con éxito.',

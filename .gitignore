@@ -21,3 +21,4 @@ public/upload/*
 .rnd
 /storage/logs
 /nodejs/node_modules
+/.node

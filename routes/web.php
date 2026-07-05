@@ -63,6 +63,7 @@ Route::post('contact', [DashboardController::class, 'submit']);
 
         /******************************-----DASHBOARD ROUTE-----************************************/
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('socket-test', [DashboardController::class, 'socketTest'])->name('socket-test');
 
         /******************************-----USER ROUTE-----************************************/
         Route::get('user', [UserController::class, 'index'])->name('user');

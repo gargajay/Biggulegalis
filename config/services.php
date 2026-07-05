@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'socket' => [
+        'url' => env('SOCKET_SERVER_URL'),
+        'secret' => env('SOCKET_SERVER_SECRET'),
+    ],
+
 ];

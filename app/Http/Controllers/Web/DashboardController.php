@@ -22,6 +22,20 @@ class DashboardController extends Controller
         return view('web.dashboard.index', $data);
     }
 
+    public function socketTest(Request $request)
+    {
+        $data = ['page_title' => 'Socket & Chat API Test', 'page_icon' => 'fa-comments'];
+        $data['socketUrl'] = rtrim((string) config('services.socket.url'), '/') ?: url('/');
+        $data['apiBaseUrl'] = rtrim($request->getSchemeAndHttpHost() . '/api', '/');
+        $data['sampleUsers'] = User::where('user_type', USER_TYPE['USER'])
+            ->select('id', 'full_name', 'email')
+            ->latest()
+            ->limit(10)
+            ->get();
+
+        return view('web.chat.socket-test', $data);
+    }
+
     public function privacyPolicy()
     {
         return view('web.privacy-policy');

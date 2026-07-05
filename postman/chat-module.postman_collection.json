@@ -1,0 +1,431 @@
+{
+  "info": {
+    "_postman_id": "8b9c0d6a-09b8-4fd5-92b6-8b1a8f1c8f01",
+    "name": "Biggulegalis Chat Module APIs",
+    "description": "One-to-one member chat APIs for Bar Council/Association members. Import this collection in Postman, set base_url and token, then run the requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": []
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Response is JSON', function () {",
+          "    pm.response.to.be.json;",
+          "});",
+          "",
+          "pm.test('Request completed', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 400, 401, 404, 422]);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://biggulegalis.com/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "association_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "receiver_id",
+      "value": "2",
+      "type": "string"
+    },
+    {
+      "key": "request_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "chat_id",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Chat Module",
+      "item": [
+        {
+          "name": "1. Chat Member List",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"association_id\": \"{{association_id}}\",\n  \"search\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chat-member-list",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chat-member-list"
+              ]
+            },
+            "description": "Fetch members under the selected Bar Council/Association. If association_id is empty, API uses logged-in user's association."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Send Chat Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"receiver_id\": \"{{receiver_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/send-chat-request",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "send-chat-request"
+              ]
+            },
+            "description": "Send one-to-one message request to another member in the same accepted association."
+          },
+          "response": []
+        },
+        {
+          "name": "3. Received Chat Requests",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"received\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chat-request-list",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chat-request-list"
+              ]
+            },
+            "description": "Fetch message requests received by logged-in user."
+          },
+          "response": []
+        },
+        {
+          "name": "4. Sent Chat Requests",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"sent\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chat-request-list",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chat-request-list"
+              ]
+            },
+            "description": "Fetch message requests sent by logged-in user."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Accept Chat Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"request_id\": \"{{request_id}}\",\n  \"status\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chat-request-action",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chat-request-action"
+              ]
+            },
+            "description": "Accept a pending request. This creates the one-to-one chat."
+          },
+          "response": []
+        },
+        {
+          "name": "6. Deny Chat Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"request_id\": \"{{request_id}}\",\n  \"status\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chat-request-action",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chat-request-action"
+              ]
+            },
+            "description": "Deny a pending request."
+          },
+          "response": []
+        },
+        {
+          "name": "7. Chat List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/chat-list",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chat-list"
+              ]
+            },
+            "description": "Fetch active one-to-one chats after request acceptance."
+          },
+          "response": []
+        },
+        {
+          "name": "8. Chat Messages",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"chat_id\": \"{{chat_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chat-messages",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chat-messages"
+              ]
+            },
+            "description": "Fetch paginated messages for an accepted one-to-one chat."
+          },
+          "response": []
+        },
+        {
+          "name": "9. Send Text Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"chat_id\": \"{{chat_id}}\",\n  \"message\": \"Hello, this is a one-to-one member chat message 🙂\",\n  \"media_type\": \"text\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/send-message",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "send-message"
+              ]
+            },
+            "description": "Send text/emoji/link text message. Use media_type text or link."
+          },
+          "response": []
+        },
+        {
+          "name": "10. Send Link Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"chat_id\": \"{{chat_id}}\",\n  \"message\": \"https://barcouncilofpunjab.org\",\n  \"media_type\": \"link\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/send-message",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "send-message"
+              ]
+            },
+            "description": "Send a link as message text with media_type link."
+          },
+          "response": []
+        },
+        {
+          "name": "11. Send Photo Or Document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "chat_id",
+                  "value": "{{chat_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "message",
+                  "value": "Please check this file.",
+                  "type": "text"
+                },
+                {
+                  "key": "media_type",
+                  "value": "document",
+                  "type": "text"
+                },
+                {
+                  "key": "media",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/send-message",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "send-message"
+              ]
+            },
+            "description": "Send a file. Set media_type to image for photos or document for PDFs/DOC files."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

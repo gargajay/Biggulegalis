@@ -8,23 +8,48 @@
 <body>
   <h1>Biggulegalis Socket Test</h1>
   <p>Open the browser console to see socket events.</p>
+  <input id="token" placeholder="Bearer token">
   <input id="userId" placeholder="User ID" value="1">
+  <input id="chatId" placeholder="Chat ID" value="1">
+  <button onclick="connectSocket()">Connect</button>
   <button onclick="join()">Join</button>
+  <button onclick="chatOpened()">Chat Opened</button>
+  <button onclick="chatClosed()">Chat Closed</button>
   <pre id="log"></pre>
 
-  <script src="/socket.io/socket.io.js"></script>
+  <script src="/nodejs/socket.io/socket.io.js"></script>
   <script>
-    const socket = io(window.location.origin, { transports: ['websocket'] });
+    let socket;
     const log = (data) => {
       document.getElementById('log').textContent += JSON.stringify(data, null, 2) + '\n';
     };
+
+    function connectSocket() {
+      socket = io(window.location.origin, {
+        path: '/nodejs/socket.io',
+        transports: ['polling'],
+        auth: {
+          token: document.getElementById('token').value
+        }
+      });
+
+      socket.on('connect', () => log({ connected: socket.id }));
+      socket.on('connect_error', (error) => log({ connect_error: error.message }));
+      socket.on('new_message', (message) => log({ event: 'new_message', message }));
+      socket.on('chat_request_updated', (chatRequest) => log({ event: 'chat_request_updated', chatRequest }));
+    }
 
     function join() {
       socket.emit('join', { user_id: Number(document.getElementById('userId').value) }, log);
     }
 
-    socket.on('connect', () => log({ connected: socket.id }));
-    socket.on('new_message', (message) => log({ event: 'new_message', message }));
+    function chatOpened() {
+      socket.emit('chat_opened', { chat_id: Number(document.getElementById('chatId').value) }, log);
+    }
+
+    function chatClosed() {
+      socket.emit('chat_closed', { chat_id: Number(document.getElementById('chatId').value) }, log);
+    }
   </script>
 </body>
 </html>

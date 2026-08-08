@@ -59,12 +59,22 @@
                 <h3 class="tile-title">Socket Connection</h3>
                 <div class="form-row">
                     <div class="form-group col-md-8">
-                        <label for="socketUrl">Socket URL</label>
+                        <label for="socketUrl">Socket HTTP URL</label>
                         <input class="form-control" id="socketUrl" value="{{ $socketUrl }}">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="listenerUserId">Listener User ID</label>
                         <input class="form-control" id="listenerUserId" type="number" min="1" placeholder="Receiver ID">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label for="socketIoOrigin">Socket.IO Origin</label>
+                        <input class="form-control" id="socketIoOrigin" value="{{ $socketIoOrigin }}">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="socketIoPath">Socket.IO Path</label>
+                        <input class="form-control" id="socketIoPath" value="{{ $socketIoPath }}">
                     </div>
                 </div>
                 <div class="btn-group mb-3" role="group">
@@ -139,7 +149,7 @@
 @stop
 
 @section('custom-js')
-<script src="{{ rtrim($socketUrl, '/') }}/socket.io/socket.io.js"></script>
+<script src="{{ rtrim($socketIoOrigin, '/') }}{{ $socketIoPath }}/socket.io.js"></script>
 <script type="text/javascript">
     let testSocket = null;
 
@@ -147,6 +157,8 @@
     const socketStatus = document.getElementById('socketStatus');
     const fields = {
         socketUrl: document.getElementById('socketUrl'),
+        socketIoOrigin: document.getElementById('socketIoOrigin'),
+        socketIoPath: document.getElementById('socketIoPath'),
         listenerUserId: document.getElementById('listenerUserId'),
         apiBaseUrl: document.getElementById('apiBaseUrl'),
         apiToken: document.getElementById('apiToken'),
@@ -220,7 +232,7 @@
 
         if (typeof io !== 'function') {
             addLog('Socket client unavailable', {
-                message: 'Socket.IO client script did not load. Check the Socket URL and /socket.io/socket.io.js path.'
+                message: 'Socket.IO client script did not load. Check the Socket.IO origin and path.'
             });
             updateStatus('client script unavailable', 'danger');
             return;
@@ -230,7 +242,13 @@
             testSocket.disconnect();
         }
 
-        testSocket = io(value('socketUrl'), {transports: ['websocket', 'polling']});
+        testSocket = io(value('socketIoOrigin'), {
+            path: value('socketIoPath'),
+            transports: ['polling'],
+            auth: {
+                token: value('apiToken')
+            }
+        });
         updateStatus('connecting', 'warning');
 
         testSocket.on('connect', function () {
@@ -253,6 +271,10 @@
 
         testSocket.on('new_message', function (message) {
             addLog('new_message event', message);
+        });
+
+        testSocket.on('chat_request_updated', function (chatRequest) {
+            addLog('chat_request_updated event', chatRequest);
         });
     });
 

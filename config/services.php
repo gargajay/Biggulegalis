@@ -34,6 +34,7 @@ return [
     'socket' => [
         'url' => env('SOCKET_SERVER_URL'),
         'secret' => env('SOCKET_SERVER_SECRET'),
+        'path' => env('SOCKET_IO_PATH', '/socket.io'),
     ],
 
 ];

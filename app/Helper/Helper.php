@@ -69,8 +69,18 @@ class Helper
         // Upload the file to the specified storage.
         switch ($fileInfo['storage']) {
             case 'local':
+                $uploadPath = public_path($fileInfo['path']);
+                if (!is_dir($uploadPath)) {
+                    mkdir($uploadPath, 0755, true);
+                }
+
                 // Move the file to the specified path in local storage.
-                return request()->file($fileKey)->move(public_path($fileInfo['path']), $fileName) ? $fileName : null;
+                $uploadedFile = request()->file($fileKey)->move($uploadPath, $fileName);
+                if ($uploadedFile) {
+                    chmod($uploadedFile->getPathname(), 0644);
+                }
+
+                return $uploadedFile ? $fileName : null;
             case 's3':
                 // Check if S3 credentials are provided.
                 if (empty(config('filesystems.disks.s3.key')) || empty(config('filesystems.disks.s3.secret'))) {
@@ -125,7 +135,17 @@ class Helper
 
                     // If local storage is specified, move the file to the specified path in the public directory.
                 case 'local':
-                    $fileName = $fileKeySingle->move(public_path($fileInfo['path']), $fileName) ? $fileName : null;
+                    $uploadPath = public_path($fileInfo['path']);
+                    if (!is_dir($uploadPath)) {
+                        mkdir($uploadPath, 0755, true);
+                    }
+
+                    $uploadedFile = $fileKeySingle->move($uploadPath, $fileName);
+                    if ($uploadedFile) {
+                        chmod($uploadedFile->getPathname(), 0644);
+                    }
+
+                    $fileName = $uploadedFile ? $fileName : null;
                     break;
 
                     // If S3 storage is specified, store the file in the specified bucket with the specified path and filename.

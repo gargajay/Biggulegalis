@@ -2,7 +2,7 @@
 
 use App\Exceptions\PublicException;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\CronController;
+use App\Http\Controllers\CronController;
 use App\Http\Controllers\Api\LinkController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\NotificationController;
@@ -43,7 +43,7 @@ Route::group([], function () {
     
 
     
-    Route::get('checkCron', [CronController::class, 'sendLinkReminder']);
+    Route::get('checkCron', [CronController::class, 'sendEventReminder']);
     Route::get('get-countries', [HomeController::class, 'getCountries']);
     Route::get('send-push', [HomeController::class, 'sendNotificationforNewversion']);
     Route::post('get-state', [HomeController::class, 'getState']);
@@ -146,6 +146,7 @@ Route::group([], function () {
         Route::get('chat-list', [ChatController::class, 'chatList']);
         Route::post('chat-messages', [ChatController::class, 'messages']);
         Route::post('send-message', [ChatController::class, 'sendMessage']);
+        Route::get('chat-socket-auth', [ChatController::class, 'socketAuth']);
 
 
        

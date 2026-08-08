@@ -27,7 +27,7 @@ defined('APP_IMAGE_INFO') or define("APP_IMAGE_INFO", ['path' => 'upload/app/ima
 defined('POST_IMAGE_INFO') or define("POST_IMAGE_INFO", ['path' => 'upload/post/image', 'storage' => 'local', 'default' => 'logo.png']);
 defined('EVENT_IMAGE_INFO') or define("EVENT_IMAGE_INFO", ['path' => 'upload/event/image', 'storage' => 'local', 'default' => 'event.jpg']);
 defined('GROUP_IMAGE_INFO') or define("GROUP_IMAGE_INFO", ['path' => 'upload/group/image', 'storage' => 'local', 'default' => 'logo.png']);
-defined('CHAT_IMAGE_INFO') or define("CHAT_IMAGE_INFO", ['path' => 'upload/chat', 'storage' => 's3', 'default' => 'user.png']);
+defined('CHAT_IMAGE_INFO') or define("CHAT_IMAGE_INFO", ['path' => 'upload/chat', 'storage' => 'local', 'default' => 'user.png']);
 defined('DOCUMENT_IMAGE_INFO') or define("DOCUMENT_IMAGE_INFO", ['path' => 'upload/document', 'storage' => 'local', 'default' => 'user.png']);
 
 

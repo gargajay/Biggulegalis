@@ -11,6 +11,13 @@ class Message extends Model
     protected $table = 'messages';
     protected $fillable = ['chat_id', 'sender_id', 'receiver_id', 'message', 'media_type', 'media_url', 'media_extension', 'is_seen'];
 
+    protected $appends = [
+        'media_file_name',
+        'media_display_type',
+        'media_icon',
+        'media_label',
+    ];
+
     protected $casts = [
         'id' => 'integer',
         'sender_id' => 'integer',
@@ -59,5 +66,56 @@ class Message extends Model
             return Helper::FilePublicLink($value, CHAT_IMAGE_INFO);
         }
         return $value;
+    }
+
+    protected function getMediaFileNameAttribute()
+    {
+        return $this->getRawOriginal('media_url');
+    }
+
+    protected function getMediaDisplayTypeAttribute()
+    {
+        if (empty($this->getRawOriginal('media_url'))) {
+            return null;
+        }
+
+        $mediaType = strtolower((string) $this->media_type);
+        if ($mediaType === 'image') {
+            return 'image';
+        }
+
+        if ($mediaType === 'link') {
+            return 'link';
+        }
+
+        return 'document';
+    }
+
+    protected function getMediaIconAttribute()
+    {
+        if ($this->media_display_type !== 'document') {
+            return null;
+        }
+
+        return match (strtolower((string) $this->media_extension)) {
+            'pdf' => 'pdf',
+            'doc', 'docx' => 'word',
+            'xls', 'xlsx', 'csv' => 'excel',
+            'ppt', 'pptx' => 'powerpoint',
+            'txt', 'rtf' => 'text',
+            'zip', 'rar', '7z' => 'archive',
+            default => 'file',
+        };
+    }
+
+    protected function getMediaLabelAttribute()
+    {
+        if (empty($this->getRawOriginal('media_url'))) {
+            return null;
+        }
+
+        $extension = strtoupper((string) $this->media_extension);
+
+        return $extension ? $extension . ' file' : 'File';
     }
 }

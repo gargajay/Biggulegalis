@@ -31,8 +31,10 @@ class LogAfterRequest
      */
     public function terminate($request, $response)
     {
-        $middlewares = $request->route()->middleware();
-        if (!in_array('SkipLogAfterRequest', $middlewares)) {
+        $route = $request->route();
+        $middlewares = $route ? $route->middleware() : [];
+
+        if (!in_array('SkipLogAfterRequest', $middlewares, true)) {
             Log::info('app.requests', ['path' => $request->getPathInfo(), 'ip' => $request->ip(), 'request' => $request->all(), 'user_id' => Auth::check() ? Auth::id() : '']);
         } else {
             Log::info('app.requests', ['path' => $request->getPathInfo(), 'ip' => $request->ip(), 'user_id' => Auth::check() ? Auth::id() : '']);

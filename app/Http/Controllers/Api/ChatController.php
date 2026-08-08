@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Exceptions\PublicException;
 use App\Helper\Helper;
+use App\Helper\PushNotification;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\ChatRequest;
@@ -13,6 +14,7 @@ use App\Models\UserAssociation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ChatController extends Controller
 {
@@ -73,6 +75,8 @@ class ChatController extends Controller
                 $chatRequest->status = 0;
                 $chatRequest->chat_id = null;
                 PublicException::NotSave($chatRequest->save());
+                $chatRequest->load('requester', 'receiver');
+                $this->emitSocketRequestUpdate($chatRequest);
             }
 
             return Helper::SuccessReturn($chatRequest->load('requester', 'receiver'), 'CHAT_REQUEST_SENT');
@@ -83,8 +87,10 @@ class ChatController extends Controller
             'receiver_id' => $request->receiver_id,
             'status' => 0,
         ]);
+        $chatRequest->load('requester', 'receiver');
+        $this->emitSocketRequestUpdate($chatRequest);
 
-        return Helper::SuccessReturn($chatRequest->load('requester', 'receiver'), 'CHAT_REQUEST_SENT');
+        return Helper::SuccessReturn($chatRequest, 'CHAT_REQUEST_SENT');
     }
 
     public function requestList(Request $request)
@@ -133,8 +139,10 @@ class ChatController extends Controller
         }
 
         PublicException::NotSave($chatRequest->save());
+        $chatRequest->load('requester', 'receiver', 'chat');
+        $this->emitSocketRequestUpdate($chatRequest);
 
-        return Helper::SuccessReturn($chatRequest->load('requester', 'receiver', 'chat'), 'CHAT_REQUEST_UPDATED');
+        return Helper::SuccessReturn($chatRequest, 'CHAT_REQUEST_UPDATED');
     }
 
     public function chatList()
@@ -204,24 +212,51 @@ class ChatController extends Controller
         }
 
         $receiverId = $chat->sender_id === Auth::id() ? $chat->receiver_id : $chat->sender_id;
-        $mediaPath = Helper::FileUpload('media', CHAT_IMAGE_INFO);
         $mediaExtension = $request->hasFile('media') ? $request->file('media')->getClientOriginalExtension() : null;
+        $mediaType = $this->resolveMessageMediaType($request);
+        $mediaPath = Helper::FileUpload('media', CHAT_IMAGE_INFO);
 
         $message = Message::create([
             'chat_id' => $chat->id,
             'sender_id' => Auth::id(),
             'receiver_id' => $receiverId,
             'message' => $request->message,
-            'media_type' => $request->media_type ?? ($mediaPath ? 'document' : 'text'),
+            'media_type' => $mediaType,
             'media_url' => $mediaPath,
             'media_extension' => $mediaExtension,
             'is_seen' => false,
         ]);
 
         $message->load('sender_detail', 'receiver_detail');
-        $this->emitSocketMessage($message);
+        $receiverInChat = $this->emitSocketMessage($message);
+
+        if (!$receiverInChat) {
+            $this->sendNewMessageNotification($message);
+        }
 
         return Helper::SuccessReturn($message, 'MESSAGE_SENT');
+    }
+
+    private function resolveMessageMediaType(Request $request): string
+    {
+        if (!$request->hasFile('media')) {
+            return $request->media_type ?: 'text';
+        }
+
+        $mimeType = $request->file('media')->getClientMimeType();
+
+        if (is_string($mimeType) && str_starts_with($mimeType, 'image/')) {
+            return 'image';
+        }
+
+        return 'document';
+    }
+
+    public function socketAuth()
+    {
+        return Helper::SuccessReturn([
+            'user_id' => Auth::id(),
+        ], 'USER_FETCH');
     }
 
     private function chatRequestWith($userId)
@@ -266,7 +301,76 @@ class ChatController extends Controller
         return $chat;
     }
 
-    private function emitSocketMessage($message)
+    private function emitSocketMessage($message): bool
+    {
+        $url = config('services.socket.url');
+        $secret = config('services.socket.secret');
+
+        if (empty($url) || empty($secret)) {
+            return false;
+        }
+
+        try {
+            $response = Http::withHeaders([
+                'x-socket-secret' => $secret,
+            ])->post(rtrim($url, '/') . '/emit-message', [
+                'sender_id' => $message->sender_id,
+                'receiver_id' => $message->receiver_id,
+                'message' => $message,
+            ]);
+
+            return (bool) data_get($response->json(), 'receiver_in_chat', false);
+        } catch (\Exception $e) {
+            report($e);
+        }
+
+        return false;
+    }
+
+    private function sendNewMessageNotification(Message $message): void
+    {
+        try {
+            $senderName = $message->sender_detail->full_name ?? Auth::user()->full_name ?? 'New message';
+            $body = $message->message ?: match ($message->media_display_type) {
+                'image' => 'Sent an image',
+                'document' => 'Sent a document',
+                default => 'Sent a message',
+            };
+
+            PushNotification::Notification([[
+                'receiver_id' => [$message->receiver_id],
+                'title' => [$senderName],
+                'body' => [$body],
+                'type' => 'NEW_MESSAGE',
+                'app_notification_data' => [
+                    'chat_id' => $message->chat_id,
+                    'message_id' => $message->id,
+                    'sender_id' => $message->sender_id,
+                    'receiver_id' => $message->receiver_id,
+                    'media_type' => $message->media_type,
+                    'media_display_type' => $message->media_display_type,
+                ],
+                'push_notification_data' => [
+                    'chat_id' => $message->chat_id,
+                    'message_id' => $message->id,
+                    'sender_id' => $message->sender_id,
+                    'receiver_id' => $message->receiver_id,
+                    'media_type' => $message->media_type,
+                    'media_display_type' => $message->media_display_type,
+                ],
+                'model_id' => $message->id,
+                'model_name' => Message::class,
+            ]], true, true, $message->sender_id);
+        } catch (\Exception $exception) {
+            Log::warning('New message notification failed.', [
+                'message_id' => $message->id,
+                'receiver_id' => $message->receiver_id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+    }
+
+    private function emitSocketRequestUpdate($chatRequest)
     {
         $url = config('services.socket.url');
         $secret = config('services.socket.secret');
@@ -278,10 +382,10 @@ class ChatController extends Controller
         try {
             Http::withHeaders([
                 'x-socket-secret' => $secret,
-            ])->post(rtrim($url, '/') . '/emit-message', [
-                'sender_id' => $message->sender_id,
-                'receiver_id' => $message->receiver_id,
-                'message' => $message,
+            ])->post(rtrim($url, '/') . '/emit-chat-request', [
+                'requester_id' => $chatRequest->requester_id,
+                'receiver_id' => $chatRequest->receiver_id,
+                'chat_request' => $chatRequest,
             ]);
         } catch (\Exception $e) {
             report($e);

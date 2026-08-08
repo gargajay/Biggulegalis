@@ -6,7 +6,7 @@ defined('PERMISSION_TYPE') or define("PERMISSION_TYPE", ['open' =>1, 'invite' =>
 defined('ASSOCIATION_TYPE') or define("ASSOCIATION_TYPE", ['bar_council_of_india' =>1, 'state_bar_councils' =>2,'district_bar_councils'=>3,'tehsil'=>4]);
 defined('ACCOUNT_TYPE') or define("ACCOUNT_TYPE", ['NORMAL' => 1, 'SOCIAL' => 2, 'BOTH' => 3]);
 defined('USER_TYPE') or define("USER_TYPE", ['USER' => 'user', 'ADMIN' => 'admin']);
-defined('DEVICE_TYPE') or define("DEVICE_TYPE", ['ANDROID' => 'A', 'IOS' => 'I']);
+defined('DEVICE_TYPE') or define("DEVICE_TYPE", ['ANDROID' => 'A', 'IOS' => 'I','WEB' => 'W']);
 defined('SOCIAL_PLATFORM') or define("SOCIAL_PLATFORM", [1 => 'facebook_id', 2 => 'google_id', 3 => 'apple_id', 4 => 'twitter_id', 5 => 'instagram_id']);
 defined('OTP_MODE') or define("OTP_MODE", ['EMAIL' => '1', 'SMS' => '2']);
 defined('OTP_PURPOSE') or define("OTP_PURPOSE", ['FORGOT' => 1, 'SIGNUP' => 2]);

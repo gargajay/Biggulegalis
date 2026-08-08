@@ -26,6 +26,8 @@ class DashboardController extends Controller
     {
         $data = ['page_title' => 'Socket & Chat API Test', 'page_icon' => 'fa-comments'];
         $data['socketUrl'] = rtrim((string) config('services.socket.url'), '/') ?: url('/');
+        $data['socketIoPath'] = config('services.socket.path', '/socket.io');
+        $data['socketIoOrigin'] = preg_replace('/\/nodejs$/', '', $data['socketUrl']);
         $data['apiBaseUrl'] = rtrim($request->getSchemeAndHttpHost() . '/api', '/');
         $data['sampleUsers'] = User::where('user_type', USER_TYPE['USER'])
             ->select('id', 'full_name', 'email')

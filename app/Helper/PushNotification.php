@@ -7,6 +7,8 @@ use App\Models\Notification;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class PushNotification
 {
@@ -71,7 +73,8 @@ class PushNotification
             'headers' => [
                 'Authorization' => 'key=' . $apiKey,
                 'Content-Type' => 'application/json'
-            ]
+            ],
+            'http_errors' => false,
         ]);
 
         $responses = [];
@@ -108,7 +111,7 @@ class PushNotification
                         'data' => [
                             'title' => $title,
                             'body' => $body,
-                            'sendby' => $sendby ?? Auth::check() ? Auth::id() : 0,
+                            'sendby' => $sendby ?? (Auth::check() ? Auth::id() : 0),
                             'data' => json_encode($value['push_notification_data'] ?? []),
                             'content-available' => 1,
                             'type' => $value['type'],
@@ -119,8 +122,30 @@ class PushNotification
                         ]
                     ];
 
-                    $response = $client->post('https://fcm.googleapis.com/fcm/send', ['json' => $finalData]);
-                    $responses[] = $response->getBody()->getContents();
+                    try {
+                        $response = $client->post('https://fcm.googleapis.com/fcm/send', ['json' => $finalData]);
+                        $responseBody = $response->getBody()->getContents();
+
+                        if ($response->getStatusCode() >= 400) {
+                            Log::warning('FCM push notification failed.', [
+                                'status' => $response->getStatusCode(),
+                                'body' => $responseBody,
+                                'receiver_count' => count($chunk),
+                            ]);
+                        }
+
+                        $responses[] = $responseBody;
+                    } catch (Throwable $exception) {
+                        Log::warning('FCM push notification request exception.', [
+                            'message' => $exception->getMessage(),
+                            'receiver_count' => count($chunk),
+                        ]);
+
+                        $responses[] = [
+                            'success' => false,
+                            'message' => $exception->getMessage(),
+                        ];
+                    }
                 }
             }
         }
@@ -185,7 +210,7 @@ class PushNotification
 
                     $notificationObject = new Notification();
 
-                    $notificationObject->send_by = $sendby ?? Auth::check() ? Auth::id() : 0;
+                    $notificationObject->send_by = $sendby ?? (Auth::check() ? Auth::id() : 0);
                     $notificationObject->received_by = $receiverId;
                     $notificationObject->title = $value['title'];
                     $notificationObject->body = $value['body'];

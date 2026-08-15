@@ -117,6 +117,7 @@ Route::post('contact', [DashboardController::class, 'submit']);
         /******************************-----SETTINGS ROUTE-----************************************/
         Route::get('settings', [SettingsController::class, 'index'])->name('settings');
         Route::post('settings-save/{settingName}', [SettingsController::class, 'saveSettings'])->name('settings.save');
+        Route::post('settings-test-push-notification', [SettingsController::class, 'testPushNotification'])->name('settings.test-push-notification');
 
         /******************************-----LOG ROUTE-----************************************/
         Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);

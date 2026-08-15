@@ -15,6 +15,9 @@ return [
 
     'push_notification' => [
         'key' => '',
+        'project_id' => '',
+        'client_email' => '',
+        'private_key' => '',
     ],
 
 ];

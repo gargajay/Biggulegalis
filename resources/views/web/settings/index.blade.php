@@ -119,13 +119,13 @@
                                             </div>
                                         </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-primary submitBtn" type="button"><i class="fa fa-fw fa-lg fa-check-circle"></i>Submit</button>
-                                </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+	                                    <div class="modal-footer">
+	                                        <button class="btn btn-primary submitBtn" type="button"><i class="fa fa-fw fa-lg fa-check-circle"></i>Submit</button>
+	                                    </div>
+	                                </form>
+		                            </div>
+		                        </div>
+		                    </div>
                     <!--End APP Settings -->
 
                     <!-- SMTP Settings -->
@@ -177,11 +177,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-primary submitBtn" type="button"><i class="fa fa-fw fa-lg fa-check-circle"></i>Submit</button>
-                                    </div>
-                                </form>
-                            </div>
+	                                    <div class="modal-footer">
+	                                        <button class="btn btn-primary submitBtn" type="button"><i class="fa fa-fw fa-lg fa-check-circle"></i>Submit</button>
+	                                    </div>
+	                                </form>
+		                            </div>
                         </div>
                     </div>
                     <!--End SMTP Settings -->
@@ -204,16 +204,50 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-lg-12 col-sm-6 form-group">
-                                                <label class="control-label">Push Notification Server Key</label>
-                                                <input class="form-control" type="text" placeholder="Push Notification Server Key" name="push_notification_server_key" value="{{!empty($value['push_notification_server_key']) ? $value['push_notification_server_key'] : ''}}">
+                                                <label class="control-label">Legacy Push Notification Server Key</label>
+                                                <input class="form-control" type="text" placeholder="Legacy Push Notification Server Key" name="push_notification_server_key" value="{{!empty($value['push_notification_server_key']) ? $value['push_notification_server_key'] : ''}}">
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-primary submitBtn" type="button"><i class="fa fa-fw fa-lg fa-check-circle"></i>Submit</button>
-                                    </div>
-                                </form>
-                            </div>
+                                            <div class="col-lg-4 col-sm-6 form-group">
+                                                <label class="control-label">Firebase Project ID</label>
+                                                <input class="form-control" type="text" placeholder="Firebase Project ID" name="firebase_project_id" value="{{!empty($value['firebase_project_id']) ? $value['firebase_project_id'] : ''}}">
+                                            </div>
+                                            <div class="col-lg-8 col-sm-6 form-group">
+                                                <label class="control-label">Firebase Client Email</label>
+                                                <input class="form-control" type="text" placeholder="Firebase Client Email" name="firebase_client_email" value="{{!empty($value['firebase_client_email']) ? $value['firebase_client_email'] : ''}}">
+                                            </div>
+	                                            <div class="col-lg-12 col-sm-12 form-group">
+	                                                <label class="control-label">Firebase Private Key</label>
+	                                                <textarea class="form-control" rows="5" placeholder="Firebase Private Key" name="firebase_private_key">{{!empty($value['firebase_private_key']) ? $value['firebase_private_key'] : ''}}</textarea>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                    <div class="modal-footer">
+	                                        <button class="btn btn-primary submitBtn" type="button"><i class="fa fa-fw fa-lg fa-check-circle"></i>Submit</button>
+	                                    </div>
+	                                </form>
+	                                <form method="POST" action="{{ route('settings.test-push-notification') }}" data-form-reset="true">
+	                                    <div class="card-body border-top">
+	                                        <h6 class="mb-3">Test Push Notification</h6>
+	                                        <div class="row">
+	                                            <div class="col-lg-12 col-sm-12 form-group">
+	                                                <label class="control-label">Device Token</label>
+	                                                <textarea class="form-control" rows="3" placeholder="Paste Firebase device token" name="device_token"></textarea>
+	                                            </div>
+	                                            <div class="col-lg-6 col-sm-6 form-group">
+	                                                <label class="control-label">Title</label>
+	                                                <input class="form-control" type="text" placeholder="Firebase test notification" name="title">
+	                                            </div>
+	                                            <div class="col-lg-6 col-sm-6 form-group">
+	                                                <label class="control-label">Body</label>
+	                                                <input class="form-control" type="text" placeholder="FCM v1 test push sent successfully." name="body">
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                    <div class="modal-footer">
+	                                        <button class="btn btn-success submitBtn" type="button"><i class="fa fa-fw fa-lg fa-paper-plane"></i>Send Test Push</button>
+	                                    </div>
+	                                </form>
+	                            </div>
                         </div>
                     </div>
                     <!--End PUSH_NOTIFICATION_SERVER_KEY Settings -->

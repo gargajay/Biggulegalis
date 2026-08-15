@@ -59,6 +59,9 @@ class DBSettings extends Seeder
                 'description' => 'PUSH_NOTIFICATION_SERVER_KEY setting is using to setup the push notification configuration',
                 'value' => json_encode([
                     'push_notification_server_key'=>'',
+                    'firebase_project_id'=>'',
+                    'firebase_client_email'=>'',
+                    'firebase_private_key'=>'',
                 ])
             ]
         );

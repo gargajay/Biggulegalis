@@ -7,6 +7,7 @@ use App\Models\Notification;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -33,10 +34,7 @@ class PushNotification
 
     public static function PushNotification(array $data = null, $sendby = null)
     {
-        $apiKey = config('settings.push_notification.key');
-        if (empty($apiKey)) {
-            PublicException::Error('PUSH_NOTIFICATION_CREDENTIALS');
-        }
+        $credentials = self::firebaseCredentials();
 
         if (!$data) {
             return null;
@@ -69,10 +67,12 @@ class PushNotification
 
         $users = array_combine(array_column($users, 'id'), $users);
 
+        $accessToken = self::firebaseAccessToken($credentials);
         $client = new Client([
+            'base_uri' => 'https://fcm.googleapis.com',
             'headers' => [
-                'Authorization' => 'key=' . $apiKey,
-                'Content-Type' => 'application/json'
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
             ],
             'http_errors' => false,
         ]);
@@ -99,38 +99,55 @@ class PushNotification
             foreach ($deviceTokens as $lang => $deviceTokenArray) {
                 $title = customTrans($value['title'], $lang);
                 $body = customTrans($value['body'], $lang);
-                // Split the array into chunks of 1000 values each
-                $chunks = array_chunk($deviceTokenArray, 1000);
-                foreach ($chunks as $chunk) {
+                foreach ($deviceTokenArray as $deviceToken) {
+                    $customData = self::stringifyData($value['push_notification_data'] ?? []);
                     $finalData = [
-                        'registration_ids' => $chunk,
-                        'notification' => [
-                            'title' => $title,
-                            'body' => $body,
+                        'message' => [
+                            'token' => $deviceToken,
+                            'notification' => [
+                                'title' => $title,
+                                'body' => $body,
+                            ],
+                            'data' => array_merge($customData, [
+                                'title' => (string) $title,
+                                'body' => (string) $body,
+                                'sendby' => (string) ($sendby ?? (Auth::check() ? Auth::id() : 0)),
+                                'data' => json_encode($value['push_notification_data'] ?? []),
+                                'content-available' => '1',
+                                'type' => (string) $value['type'],
+                                'badge' => '1',
+                                'sound' => 'default',
+                                'priority' => 'high',
+                                'icon' => 'default',
+                            ]),
+                            'android' => [
+                                'priority' => 'HIGH',
+                                'notification' => [
+                                    'sound' => 'default',
+                                    'default_sound' => true,
+                                ],
+                            ],
+                            'apns' => [
+                                'payload' => [
+                                    'aps' => [
+                                        'sound' => 'default',
+                                        'badge' => 1,
+                                        'content-available' => 1,
+                                    ],
+                                ],
+                            ],
                         ],
-                        'data' => [
-                            'title' => $title,
-                            'body' => $body,
-                            'sendby' => $sendby ?? (Auth::check() ? Auth::id() : 0),
-                            'data' => json_encode($value['push_notification_data'] ?? []),
-                            'content-available' => 1,
-                            'type' => $value['type'],
-                            'badge' => 1,
-                            'sound' => 'default',
-                            'priority' => 10,
-                            'icon' => 'default'
-                        ]
                     ];
 
                     try {
-                        $response = $client->post('https://fcm.googleapis.com/fcm/send', ['json' => $finalData]);
+                        $response = $client->post('/v1/projects/' . $credentials['project_id'] . '/messages:send', ['json' => $finalData]);
                         $responseBody = $response->getBody()->getContents();
 
                         if ($response->getStatusCode() >= 400) {
                             Log::warning('FCM push notification failed.', [
                                 'status' => $response->getStatusCode(),
                                 'body' => $responseBody,
-                                'receiver_count' => count($chunk),
+                                'receiver_count' => 1,
                             ]);
                         }
 
@@ -138,7 +155,7 @@ class PushNotification
                     } catch (Throwable $exception) {
                         Log::warning('FCM push notification request exception.', [
                             'message' => $exception->getMessage(),
-                            'receiver_count' => count($chunk),
+                            'receiver_count' => 1,
                         ]);
 
                         $responses[] = [
@@ -151,6 +168,94 @@ class PushNotification
         }
 
         return $responses;
+    }
+
+    private static function firebaseCredentials(): array
+    {
+        $projectId = config('settings.push_notification.project_id') ?: env('FIREBASE_PROJECT_ID');
+        $clientEmail = config('settings.push_notification.client_email') ?: env('FIREBASE_CLIENT_EMAIL');
+        $privateKey = config('settings.push_notification.private_key') ?: env('FIREBASE_PRIVATE_KEY');
+
+        if (!empty($privateKey)) {
+            $privateKey = str_replace('\\n', "\n", $privateKey);
+        }
+
+        if (empty($projectId) || empty($clientEmail) || empty($privateKey)) {
+            PublicException::Error('PUSH_NOTIFICATION_CREDENTIALS');
+        }
+
+        return [
+            'project_id' => $projectId,
+            'client_email' => $clientEmail,
+            'private_key' => $privateKey,
+        ];
+    }
+
+    private static function firebaseAccessToken(array $credentials): string
+    {
+        $cacheKey = 'firebase_access_token_' . sha1($credentials['client_email']);
+
+        return Cache::remember($cacheKey, now()->addMinutes(55), function () use ($credentials) {
+            $client = new Client(['http_errors' => false]);
+            $response = $client->post('https://oauth2.googleapis.com/token', [
+                'form_params' => [
+                    'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+                    'assertion' => self::firebaseJwt($credentials),
+                ],
+            ]);
+
+            $body = json_decode($response->getBody()->getContents(), true);
+
+            if ($response->getStatusCode() >= 400 || empty($body['access_token'])) {
+                Log::warning('FCM access token request failed.', [
+                    'status' => $response->getStatusCode(),
+                    'body' => $body,
+                ]);
+                PublicException::Error('PUSH_NOTIFICATION_CREDENTIALS');
+            }
+
+            return $body['access_token'];
+        });
+    }
+
+    private static function firebaseJwt(array $credentials): string
+    {
+        $now = time();
+        $header = self::base64UrlEncode(json_encode([
+            'alg' => 'RS256',
+            'typ' => 'JWT',
+        ]));
+        $claim = self::base64UrlEncode(json_encode([
+            'iss' => $credentials['client_email'],
+            'scope' => 'https://www.googleapis.com/auth/firebase.messaging',
+            'aud' => 'https://oauth2.googleapis.com/token',
+            'iat' => $now,
+            'exp' => $now + 3600,
+        ]));
+        $unsignedJwt = $header . '.' . $claim;
+
+        $signed = openssl_sign($unsignedJwt, $signature, $credentials['private_key'], OPENSSL_ALGO_SHA256);
+        if (!$signed) {
+            PublicException::Error('PUSH_NOTIFICATION_CREDENTIALS');
+        }
+
+        return $unsignedJwt . '.' . self::base64UrlEncode($signature);
+    }
+
+    private static function base64UrlEncode(string $value): string
+    {
+        return rtrim(strtr(base64_encode($value), '+/', '-_'), '=');
+    }
+
+    private static function stringifyData(array $data): array
+    {
+        $stringData = [];
+
+        foreach ($data as $key => $value) {
+            $stringData[$key] = is_array($value) || is_object($value) ? json_encode($value) : (string) $value;
+        }
+
+        return $stringData;
     }
 
 

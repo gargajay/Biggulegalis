@@ -60,6 +60,9 @@ class DBSettingsServiceProvider extends ServiceProvider
                         case 'PUSH_NOTIFICATION_SERVER_KEY': {
                                 config([
                                     'settings.push_notification.key' => $value['push_notification_server_key'] ?? NULL,
+                                    'settings.push_notification.project_id' => $value['firebase_project_id'] ?? NULL,
+                                    'settings.push_notification.client_email' => $value['firebase_client_email'] ?? NULL,
+                                    'settings.push_notification.private_key' => $value['firebase_private_key'] ?? NULL,
                                 ]);
                                 break;
                             }

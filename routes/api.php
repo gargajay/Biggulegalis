@@ -137,6 +137,7 @@ Route::group([], function () {
         /******************************-----NOTIFICATION API-----************************************/
         Route::post('get-notification', [NotificationController::class, 'getNotification']);
         Route::post('read-notification', [NotificationController::class, 'readNotification']);
+        Route::post('test-push-notification', [NotificationController::class, 'testPushNotification']);
 
         /******************************-----CHAT API-----************************************/
         Route::post('chat-member-list', [ChatController::class, 'memberList']);

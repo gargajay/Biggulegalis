@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Web;
 
 use App\Exceptions\PublicException;
 use App\Helper\Helper;
+use App\Helper\PushNotification;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
 {
@@ -71,6 +74,9 @@ class SettingsController extends Controller
                     'description' => 'PUSH_NOTIFICATION_SERVER_KEY setting is used to set up the push notification configuration',
                     'value' => json_encode([
                         'push_notification_server_key' => $request->push_notification_server_key,
+                        'firebase_project_id' => $request->firebase_project_id,
+                        'firebase_client_email' => $request->firebase_client_email,
+                        'firebase_private_key' => $request->firebase_private_key,
                     ])
                 ];
                 break;
@@ -140,6 +146,65 @@ class SettingsController extends Controller
 
             // Return a success response with the saved data
             return Helper::SuccessReturn($setting, 'SAVE_SETTINGS');
+        }
+    }
+
+    public function testPushNotification(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'device_token' => ['required', 'string'],
+            'title' => ['nullable', 'string', 'max:255'],
+            'body' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'status' => STATUS_GENERAL_ERROR,
+                'message' => $validator->errors()->first(),
+                'data' => null,
+            ], STATUS_OK);
+        }
+
+        try {
+            $user = Auth::user();
+            $user->device_token = $request->device_token;
+            $user->push_notification = '1';
+            PublicException::NotSave($user->save());
+
+            $response = PushNotification::Notification([[
+                'receiver_id' => [$user->id],
+                'title' => [$request->title ?: 'Firebase test notification'],
+                'body' => [$request->body ?: 'FCM v1 test push sent successfully.'],
+                'type' => 'TEST_PUSH_NOTIFICATION',
+                'app_notification_data' => [
+                    'notification_type' => 'TEST_PUSH_NOTIFICATION',
+                    'user_id' => (string) $user->id,
+                ],
+                'push_notification_data' => [
+                    'notification_type' => 'TEST_PUSH_NOTIFICATION',
+                    'click_action' => 'TEST_PUSH_NOTIFICATION',
+                    'user_id' => (string) $user->id,
+                ],
+                'model_id' => $user->id,
+                'model_name' => get_class($user),
+            ]], true, true, $user->id);
+
+            return response()->json([
+                'success' => true,
+                'status' => STATUS_OK,
+                'message' => 'Test push notification sent.',
+                'data' => [
+                    'firebase_response' => $response,
+                ],
+            ], STATUS_OK);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'success' => false,
+                'status' => STATUS_GENERAL_ERROR,
+                'message' => $exception->getMessage(),
+                'data' => null,
+            ], STATUS_OK);
         }
     }
 }

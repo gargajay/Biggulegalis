@@ -77,6 +77,7 @@ class ChatController extends Controller
                 PublicException::NotSave($chatRequest->save());
                 $chatRequest->load('requester', 'receiver');
                 $this->emitSocketRequestUpdate($chatRequest);
+                $this->sendChatRequestNotification($chatRequest);
             }
 
             return Helper::SuccessReturn($chatRequest->load('requester', 'receiver'), 'CHAT_REQUEST_SENT');
@@ -89,6 +90,7 @@ class ChatController extends Controller
         ]);
         $chatRequest->load('requester', 'receiver');
         $this->emitSocketRequestUpdate($chatRequest);
+        $this->sendChatRequestNotification($chatRequest);
 
         return Helper::SuccessReturn($chatRequest, 'CHAT_REQUEST_SENT');
     }
@@ -141,6 +143,7 @@ class ChatController extends Controller
         PublicException::NotSave($chatRequest->save());
         $chatRequest->load('requester', 'receiver', 'chat');
         $this->emitSocketRequestUpdate($chatRequest);
+        $this->sendChatRequestActionNotification($chatRequest);
 
         return Helper::SuccessReturn($chatRequest, 'CHAT_REQUEST_UPDATED');
     }
@@ -331,33 +334,25 @@ class ChatController extends Controller
     {
         try {
             $senderName = $message->sender_detail->full_name ?? Auth::user()->full_name ?? 'New message';
-            $body = $message->message ?: match ($message->media_display_type) {
-                'image' => 'Sent an image',
-                'document' => 'Sent a document',
-                default => 'Sent a message',
-            };
+            $body = $message->message ?: $this->mediaNotificationBody($message);
+            $payload = [
+                'notification_type' => 'NEW_MESSAGE',
+                'click_action' => 'CHAT_MESSAGE',
+                'chat_id' => (string) $message->chat_id,
+                'message_id' => (string) $message->id,
+                'sender_id' => (string) $message->sender_id,
+                'receiver_id' => (string) $message->receiver_id,
+                'media_type' => (string) $message->media_type,
+                'media_display_type' => (string) $message->media_display_type,
+            ];
 
             PushNotification::Notification([[
                 'receiver_id' => [$message->receiver_id],
                 'title' => [$senderName],
                 'body' => [$body],
                 'type' => 'NEW_MESSAGE',
-                'app_notification_data' => [
-                    'chat_id' => $message->chat_id,
-                    'message_id' => $message->id,
-                    'sender_id' => $message->sender_id,
-                    'receiver_id' => $message->receiver_id,
-                    'media_type' => $message->media_type,
-                    'media_display_type' => $message->media_display_type,
-                ],
-                'push_notification_data' => [
-                    'chat_id' => $message->chat_id,
-                    'message_id' => $message->id,
-                    'sender_id' => $message->sender_id,
-                    'receiver_id' => $message->receiver_id,
-                    'media_type' => $message->media_type,
-                    'media_display_type' => $message->media_display_type,
-                ],
+                'app_notification_data' => $payload,
+                'push_notification_data' => $payload,
                 'model_id' => $message->id,
                 'model_name' => Message::class,
             ]], true, true, $message->sender_id);
@@ -365,6 +360,85 @@ class ChatController extends Controller
             Log::warning('New message notification failed.', [
                 'message_id' => $message->id,
                 'receiver_id' => $message->receiver_id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+    }
+
+    private function mediaNotificationBody(Message $message): string
+    {
+        return match ($message->media_display_type) {
+            'image' => 'Sent an image',
+            'document' => 'Sent a document',
+            default => 'Sent a message',
+        };
+    }
+
+    private function sendChatRequestNotification(ChatRequest $chatRequest): void
+    {
+        try {
+            $requesterName = $chatRequest->requester->full_name ?? Auth::user()->full_name ?? 'New chat request';
+            $payload = [
+                'notification_type' => 'CHAT_REQUEST',
+                'click_action' => 'CHAT_REQUEST',
+                'chat_request_id' => (string) $chatRequest->id,
+                'requester_id' => (string) $chatRequest->requester_id,
+                'receiver_id' => (string) $chatRequest->receiver_id,
+                'status' => (string) $chatRequest->status,
+            ];
+
+            PushNotification::Notification([[
+                'receiver_id' => [$chatRequest->receiver_id],
+                'title' => [$requesterName],
+                'body' => ['Sent you a chat request'],
+                'type' => 'CHAT_REQUEST',
+                'app_notification_data' => $payload,
+                'push_notification_data' => $payload,
+                'model_id' => $chatRequest->id,
+                'model_name' => ChatRequest::class,
+            ]], true, true, $chatRequest->requester_id);
+        } catch (\Exception $exception) {
+            Log::warning('Chat request notification failed.', [
+                'chat_request_id' => $chatRequest->id,
+                'receiver_id' => $chatRequest->receiver_id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+    }
+
+    private function sendChatRequestActionNotification(ChatRequest $chatRequest): void
+    {
+        if (!in_array($chatRequest->status, [1, 2], true)) {
+            return;
+        }
+
+        try {
+            $receiverName = $chatRequest->receiver->full_name ?? Auth::user()->full_name ?? 'Chat request updated';
+            $accepted = (int) $chatRequest->status === 1;
+            $payload = [
+                'notification_type' => $accepted ? 'CHAT_REQUEST_ACCEPTED' : 'CHAT_REQUEST_REJECTED',
+                'click_action' => $accepted ? 'CHAT_MESSAGE' : 'CHAT_REQUEST',
+                'chat_request_id' => (string) $chatRequest->id,
+                'chat_id' => (string) $chatRequest->chat_id,
+                'requester_id' => (string) $chatRequest->requester_id,
+                'receiver_id' => (string) $chatRequest->receiver_id,
+                'status' => (string) $chatRequest->status,
+            ];
+
+            PushNotification::Notification([[
+                'receiver_id' => [$chatRequest->requester_id],
+                'title' => [$receiverName],
+                'body' => [$accepted ? 'Accepted your chat request' : 'Rejected your chat request'],
+                'type' => $payload['notification_type'],
+                'app_notification_data' => $payload,
+                'push_notification_data' => $payload,
+                'model_id' => $chatRequest->id,
+                'model_name' => ChatRequest::class,
+            ]], true, true, $chatRequest->receiver_id);
+        } catch (\Exception $exception) {
+            Log::warning('Chat request action notification failed.', [
+                'chat_request_id' => $chatRequest->id,
+                'requester_id' => $chatRequest->requester_id,
                 'error' => $exception->getMessage(),
             ]);
         }
